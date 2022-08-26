@@ -1,0 +1,8 @@
+# ignore files with no extention:
+*
+!*/
+!*.*
+
+trial.*
+*.sublime-*
+*.out

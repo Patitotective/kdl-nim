@@ -166,6 +166,16 @@ proc validateNumber*(input: string, start: int): ParseReturn =
 
   result.ok = true
 
+proc validateBoolean*(input: string, start: int): ParseReturn = 
+  if input.continuesWith("true", start):
+    result = (true, start + 4)
+  elif input.continuesWith("false", start):
+    result = (true, start + 5)
+
+proc validateNull*(input: string, start: int): ParseReturn = 
+  if input.continuesWith("null", start):
+    result = (true, start + 4)
+
 let input = "13482935.8e3"
 let result = validateNumber(input, 0)
 

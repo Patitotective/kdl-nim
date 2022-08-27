@@ -1,185 +1,64 @@
-import std/[parseutils, strutils, unicode, tables]
+import npeg
 
-type
-  ParseReturn = tuple[ok: bool, until: int]
+const parser* = peg("nodes"):
+  nodes <- *linespace * ?(node * ?nodes) * *linespace
 
-const
-  nonIdenChars = {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'}
-  nonInitialChars = Digits + nonIdenChars
-  escapeTable = {
-    'n': "\u000A", # Line Feed
-    'r': "\u000D", # Carriage Return
-    't': "\u0009", # Character Tabulation (Tab)
-    '\\': "\u005C", # Reverse Solidus (Backslash)
-    '"': "\u0022", # Quotation Mark (Double Quote)
-    'b': "\u0008", # Backspace
-    'f': "\u000C", # Form Feed
-    'u': "", # Unicode
-  }.toTable
+  node <- slashDashComment * ?typeAnnotation * identifier * *(+nodeSpace * nodePropOrArg) * ?(*nodeSpace * nodeChildren * *ws) * *nodeSpace * nodeTerminator
+  nodePropOrArg <- slashDashComment * (prop | value)
+  nodeChildren <- slashDashComment * '{' * nodes * '}'
+  nodeSpace <- *ws * escline * *ws | +ws
+  nodeTerminator <- singleLineComment | newline | ';' | eof
 
-proc peek(input: string, index: int): char = 
-  if index < input.len:
-    result = input[index]
+  identifier <- str | bareIdentifier
+  bareIdentifier <- (startIdentifierChar * *identifierChar | sign * ?((identifierChar - Digit) * *identifierChar)) - (keyword * !identifierChar)
+  startIdentifierChar <- identifierChar - (Digit | sign)
+  identifierChar <- 1 - (linespace | {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'})
+  keyword <- boolean | "null"
+  prop <- identifier * '=' * value
+  value <- ?typeAnnotation * (str | number | keyword)
+  typeAnnotation <- '(' * identifier * ')'
 
-proc validateIden*(input: string, start: int): int = 
-  ## Returns the index until an invalid identifier character or an space was found.
-  result = start
+  str <- rawString | escapedString
+  escapedString <- '"' * *character * '"'
+  character <- '\\' * escape | (1 - {'\\', '"'})
+  escape <- {'"', '\\', '/', 'b', 'f', 'n', 'r', 't'} | i"u" * '{' * Xdigit[1..6] * '}'
 
-  if (let first = input.peek(start); first in nonInitialChars or (first == '-' and input.peek(start + 1) in Digits)):
-    return
-  
-  for rune in input[start..input.high].runes:
-    if rune.int <= 0x20:
-      return
+  rawString <- 'r' * rawStringHash
+  rawStringHash <- R("hashes", *'#') * rawStringQuotes * R("hashes")
+  rawStringQuotes <- '"' * *(!('"' * R("hashes")) * 1) * '"'
 
-    for c in nonIdenChars + {' '}:
-      if rune == Rune(c):
-        return
+  number <- hex | octal | binary | decimal
 
-    result += rune.size
+  decimal <- ?sign * integer * ?('.' * integer) * ?exponent
+  exponent <- i"e" * ?sign * integer
+  integer <- Digit * *(Digit | '_')
+  sign <- {'+', '-'}
 
-proc validateString*(input: string, start: int): ParseReturn =
-  var raw = false
-  var hashes = 0 # Number of hashes after raw string
+  hex <- ?sign * "0x" * Xdigit * *(Xdigit | '_')
+  octal <- ?sign * "0o" * {'0'..'7'} * *{'0'..'7', '_'}
+  binary <- ?sign * "0b" * {'0', '1'} * *{'0', '1', '_'}
 
-  result.until = start
+  boolean <- "true" | "false"
 
-  if input.peek(start) == 'r':
-    raw = true
-    inc result.until
+  escline <- '\\' * *ws * (singleLineComment | newline)
 
-    while result.until < input.len and input.peek(result.until) == '#':
-      inc hashes
-      inc result.until
+  linespace <- newline | ws | singleLineComment
 
-  if input.peek(result.until) != '"':
-    return
+  newline <- "\c" | "\l" | "\c\l" | "\u000C" | "\f" | "\u2028" | "\u2029"
 
-  inc result.until # Consume the quote
+  ws <- bom | unicodeSpace | multiLineComment
 
-  while result.until < input.len:
-    case input.peek(result.until)
-    of '\\':
-      if raw:
-        inc result.until
-        continue
+  bom <- "\uFEFF"
 
-      let next = input.peek(result.until + 1)
-      if next notin escapeTable:
-        return
+  unicodeSpace <- "\u0009" | "\u0020" | "\u00A0" | "\u1680" | "\u2000" | "\u200A" | "\u202F" | "\u205F" | "\u3000"
 
-      inc result.until
+  eof <- !1
 
-      if next == 'u':
-        if input.peek(result.until + 1) != '{':
-          return
+  slashDashComment <- ?("/-" * *nodeSpace)
+  singleLineComment <- "//" * +(1 - newline) * (newline | eof)
+  multiLineComment <- "/*" * commentedBlock
+  commentedBlock <- "*/" | (multiLineComment | '*' | '/' | +(1 - {'*', '/'})) * commentedBlock
 
-        result.until += 2
-
-        while result.until < input.len and input.peek(result.until) in HexDigits:
-          inc result.until
-
-        if input.peek(result.until) != '}':
-          return
-
-    of '"':
-      inc result.until
-
-      if raw:
-        var endHashes = 0
-        while result.until < input.len and input.peek(result.until) == '#':
-          inc endHashes
-          inc result.until
-
-        if hashes != endHashes:
-          return
-
-      result.ok = true
-      break
-    else:
-      inc result.until
-
-proc validateExponent*(input: string, start: int): ParseReturn = 
-  result.until = start
-
-  if input.peek(start) != 'e':
-    return
-
-  inc result.until # Consume the e
-
-  if input.peek(start) in {'-', '+'}:
-    inc result.until  
-
-  if (let digits = input.skipWhile(Digits + {'_'}, result.until); digits > 0):
-    result.until += digits
-  else:
-    return
-
-  result.ok = true
-
-proc validateFloating*(input: string, start: int): ParseReturn = 
-  result.until = start
-  if input.peek(start) != '.':
-    return
-
-  inc result.until # Consume point
-
-  if (let digits = input.skipWhile(Digits + {'_'}, result.until); digits > 0):
-    result.until += digits
-  else:
-    return
-
-  if input.peek(result.until) == 'e':
-    result = input.validateExponent(result.until)
-  else:
-    result.ok = true
-
-proc validateDecimal*(input: string, start: int): ParseReturn = 
-  result.until = start + input.skipWhile(Digits + {'_'}, result.until)
-
-  case input.peek(result.until)
-  of 'e':
-    result = input.validateExponent(result.until)
-  of '.':
-    result = input.validateFloating(result.until)
-  else:
-    result.ok = true
-
-proc validateNumber*(input: string, start: int): ParseReturn = 
-  result.until = start
-
-  if input.peek(start) in {'-', '+'}:
-    inc result.until
-
-  if result.until + 2 >= input.len:
-    return input.validateDecimal(result.until)
-  else:
-    case input[result.until..<result.until+2]
-    of "0b":
-      result.until += input.skipWhile({'0', '1', '_'}, result.until)
-    of "0x":
-      result.until += input.skipWhile(HexDigits + {'_'}, result.until)
-    of "0o":
-      result.until += input.skipWhile({'0'..'7', '_'}, result.until)
-    else:
-      return input.validateDecimal(result.until)
-
-  result.ok = true
-
-proc validateBoolean*(input: string, start: int): ParseReturn = 
-  if input.continuesWith("true", start):
-    result = (true, start + 4)
-  elif input.continuesWith("false", start):
-    result = (true, start + 5)
-
-proc validateNull*(input: string, start: int): ParseReturn = 
-  if input.continuesWith("null", start):
-    result = (true, start + 4)
-
-let input = "13482935.8e3"
-let result = validateNumber(input, 0)
-
-if result.ok:
-  echo input[0..<result.until], " :]"
-else:
-  echo "Failed :/ ", result 
+proc validKDL*(input: string): bool = 
+  let res = parser.match(input)
+  res.ok and res.matchLen == res.matchMax

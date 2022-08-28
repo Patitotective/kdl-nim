@@ -7,7 +7,7 @@ const
   nonIdenChars = {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'}
   nonInitialChars = Digits + nonIdenChars
   whiteSpaces = {0x0009, 0x0020, 0x00A0, 0x1680, 0x2000..0x200A, 0x202F, 0x205F, 0x3000}
-  newLines = {0x000D, 0x000A}
+  newLines = ["\u000D\u000A", "\u000D", "\u000A", "\u0085", "\u000C", "\u2028", "\u2029"]
   escapeTable = {
     'n': "\u000A", # Line Feed
     'r': "\u000D", # Carriage Return
@@ -19,9 +19,28 @@ const
     'u': "", # Unicode
   }.toTable
 
+proc peek(input: string, x: Slice[int]): string = 
+  if x.a > 0 and x.b < input.len:
+    result = input[x]
+
 proc peek(input: string, index: int): char = 
   if index < input.len:
     result = input[index]
+
+proc peek(input: string, index: int, c: char): bool = 
+  input.peek(index) == c
+
+proc peek(input: string, index: int, str: string): bool = 
+  if index + str.len <= input.len:
+    result = input[index..<index+str.len] == str
+
+template validate(pattern: typed) =
+  result = pattern
+  if not result.ok: return
+
+template choice(patterns: varags[typed]) = 
+  if (let res = p; p.ok):
+    result = res
 
 proc validateIdent*(input: string, start: int): ParseResult = 
   result.until = start
@@ -48,15 +67,15 @@ proc validateString*(input: string, start: int): ParseResult =
 
   result.until = start
 
-  if input.peek(start) == 'r':
+  if input.peek(start, 'r'):
     raw = true
     inc result.until
 
-    while result.until < input.len and input.peek(result.until) == '#':
+    while result.until < input.len and input.peek(result.until, '#'):
       inc hashes
       inc result.until
 
-  if input.peek(result.until) != '"':
+  if not input.peek(result.until, '"'):
     return
 
   inc result.until # Consume the quote
@@ -75,7 +94,7 @@ proc validateString*(input: string, start: int): ParseResult =
       inc result.until
 
       if next == 'u':
-        if input.peek(result.until + 1) != '{':
+        if not input.peek(result.until + 1, '{'):
           return
 
         result.until += 2
@@ -83,7 +102,7 @@ proc validateString*(input: string, start: int): ParseResult =
         while result.until < input.len and input.peek(result.until) in HexDigits:
           inc result.until
 
-        if input.peek(result.until) != '}':
+        if not input.peek(result.until, '}'):
           return
 
     of '"':
@@ -91,7 +110,7 @@ proc validateString*(input: string, start: int): ParseResult =
 
       if raw:
         var endHashes = 0
-        while result.until < input.len and input.peek(result.until) == '#':
+        while result.until < input.len and input.peek(result.until, '#'):
           inc endHashes
           inc result.until
 
@@ -106,7 +125,7 @@ proc validateString*(input: string, start: int): ParseResult =
 proc validateExponent*(input: string, start: int): ParseResult = 
   result.until = start
 
-  if input.peek(start) != 'e':
+  if not input.peek(start, 'e'):
     return
 
   inc result.until # Consume the e
@@ -123,7 +142,7 @@ proc validateExponent*(input: string, start: int): ParseResult =
 
 proc validateFloating*(input: string, start: int): ParseResult = 
   result.until = start
-  if input.peek(start) != '.':
+  if not input.peek(start, '.'):
     return
 
   inc result.until # Consume point
@@ -133,7 +152,7 @@ proc validateFloating*(input: string, start: int): ParseResult =
   else:
     return
 
-  if input.peek(result.until) == 'e':
+  if input.peek(result.until, 'e'):
     result = input.validateExponent(result.until)
   else:
     result.ok = true
@@ -161,18 +180,15 @@ proc validateNumber*(input: string, start: int): ParseResult =
   if input.peek(start) in {'-', '+'}:
     inc result.until
 
-  if result.until + 2 >= input.len:
-    return input.validateDecimal(result.until)
+  case input.peek(result.until..<result.until+2)
+  of "0b":
+    result.until += input.skipWhile({'0', '1', '_'}, result.until)
+  of "0x":
+    result.until += input.skipWhile(HexDigits + {'_'}, result.until)
+  of "0o":
+    result.until += input.skipWhile({'0'..'7', '_'}, result.until)
   else:
-    case input[result.until..<result.until+2]
-    of "0b":
-      result.until += input.skipWhile({'0', '1', '_'}, result.until)
-    of "0x":
-      result.until += input.skipWhile(HexDigits + {'_'}, result.until)
-    of "0o":
-      result.until += input.skipWhile({'0'..'7', '_'}, result.until)
-    else:
-      return input.validateDecimal(result.until)
+    return input.validateDecimal(result.until)
 
   result.ok = true
 
@@ -188,16 +204,14 @@ proc validateNull*(input: string, start: int): ParseResult =
 
 proc validateTypeAnnotation*(input: string, start: int): ParseResult = 
   result.until = start
-  if input.peek(start) != '(':
+  if not input.peek(start, '('):
     return
 
   inc result.until
 
-  result = input.validateIdent(result.until)
+  validate input.validateIdent(result.until)
 
-  if not result.ok: return
-
-  if input.peek(result.until) != ')':
+  if not input.peek(result.until, ')'):
     return
 
   inc result.until
@@ -205,10 +219,8 @@ proc validateTypeAnnotation*(input: string, start: int): ParseResult =
   result.ok = true
 
 proc validateValue*(input: string, start: int): ParseResult = 
-  if input.peek(start) == '(':
-    result = input.validateTypeAnnotation(start)
-
-    if not result.ok: return
+  if input.peek(start, '('):
+    validate input.validateTypeAnnotation(start)
 
   if (let res = input.validateNull(start); res.ok):
     result = res
@@ -221,10 +233,8 @@ proc validateValue*(input: string, start: int): ParseResult =
 
 proc validateNodeName*(input: string, start: int): ParseResult = 
   ## Validates wheter input is an identifier or string.
-  if input.peek(start) == '(':
-    result = input.validateTypeAnnotation(start)
-
-    if not result.ok: return
+  if input.peek(start, '('):
+    validate input.validateTypeAnnotation(start)
 
   if (let res = input.validateString(result.until); res.ok):
     result = res
@@ -238,7 +248,7 @@ proc validateWhitespace*(input: string, start: int): ParseResult =
     result.ok = true
     result.until += rune.size
 
-proc skipWhitespaces*(input: string: start: int): int = 
+proc skipWhitespaces*(input: string, start: int): int = 
   ## Returns the index when a non-whitespace character was found since start.
   result = start
 
@@ -248,35 +258,42 @@ proc skipWhitespaces*(input: string: start: int): int =
 proc validateNewLine*(input: string, start: int): ParseResult = 
   result.until = start
 
-  if (let rune = input.runeAt(start); rune.int in whitespaces):
-    result.ok = true
-    result.until += rune.size
+  for nl in newLines:
+    if input.peek(start, nl):
+      result.ok = true
+      result.until += nl.len
+      break
 
 proc validateSingleLineComment*(input: string, start: int): ParseResult = 
   result.until = start
 
-  if input.peek(start) != '/' and input.peek(start + 1) != '/':
+  if not input.peek(start, "//"):
     return
 
   result.until += 2
 
+  while result.until < input.len and (let res = input.validateNewLine(result.until); not res.ok):
+    inc result.until
 
+  result.ok = true
 
 proc validateLineContinuation*(input: string, start: int): ParseResult = 
   result.until = start
 
-  if input.peek(start) != '\\':
+  if not input.peek(start, '\\'):
     return
 
   inc result.until
 
   result.until = input.skipWhitespaces(result.until)
 
-
+  if (let res = input.validateSingleLineComment(result.until); res.ok):
+    result = res
+  else:
+    result = input.validateNewLine(result.until)
 
 proc validateProperty*(input: string, start: int): ParseResult = 
-  result = input.validateNodeName(start)
-  if not result.ok: return
+  validate input.validateNodeName(start)
 
   if input.peek(result.until) != '=':
     result.ok = false
@@ -286,21 +303,27 @@ proc validateProperty*(input: string, start: int): ParseResult =
 
   result = input.validateValue(result.until)
 
-proc validateNode*(input: string, start: int): ParseResult = 
-  result = input.validateNodeName(start)
-  if not result.ok: return
+proc validateNodeSpace*(input: string, start: int): ParseResult = 
+  result.until = input.skipWhitespaces(start)
 
-  result = input.validateWhitespace(result.until)
-  if not result.ok: return
+proc validateNode*(input: string, start: int): ParseResult = 
+  validate input.validateNodeName(start)
+  validate input.validateWhitespace(result.until)
 
   result.until = input.skipWhitespaces(result.until)
 
-  result = input.validateArguments(result.until)
-  if not result.ok: return  
+  while true:
+    valid input.validateProperty(result.until)
+    # if (let res = input.validateProperty(result.until); res.ok):
+      # result = res
+    else:
+      validate input.validateValue(result.until)
 
-const input = "(a)a"
+    validate input.validateWhitespace(result.until)
+
+const input = "//a\nasddd"
 const start = 0
-let result = input.validateProperty(start)
+let result = input.validateSingleLineComment(start)
 
 if result.ok:
   echo input[start..<result.until], " :]"

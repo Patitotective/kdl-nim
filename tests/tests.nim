@@ -11,7 +11,7 @@ suite "spec":
 
     if fileExists(testsDir / "expected_kdl" / filename):
       test "Valid: " & filename:
-        check validKDL(readFile(path))
+        check scanKDL(readFile(path)).ok
     else:
       test "Invalid: " & filename:
-        check not validKDL(readFile(path))
+        check not scanKDL(readFile(path)).ok

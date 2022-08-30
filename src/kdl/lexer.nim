@@ -76,71 +76,7 @@ proc newTOpenBlock*(coord: Coord, lexeme = "{"): Token =
 proc newTCloseBlock*(coord: Coord, lexeme = "}"): Token = 
   Token(coord: coord, lexeme: lexeme, kind: tkCloseBlock)
 
-const lexerPeg* = peg("nodes", lexer: Lexer):
-  nodes <- *linespace * ?(node * ?nodes) * *linespace
-
-  node <- slashDashComment * ?typeAnnotation * strOrIdent * *(+nodeSpace * nodePropOrArg) * ?(*nodeSpace * nodeChildren * *ws) * *nodeSpace * nodeTerminator
-  nodePropOrArg <- slashDashComment * (prop | value)
-  nodeChildren <- slashDashComment * childrenOpen * nodes * childrenClose
-  nodeSpace <- *ws * escline * *ws | +ws
-  nodeTerminator <- singleLineComment | newline | ';' | eof
-
-  strOrIdent <- str | matchIdent
-  matchIdent <- ident:
-    lexer.data.add(newTIdent(lexer.source.getCoord(@0), $0))
-  ident <- (startIdentifierChar * *identifierChar | sign * ?((identifierChar - Digit) * *identifierChar)) - keyword
-
-  startIdentifierChar <- identifierChar - (Digit | sign)
-  identifierChar <- 1 - (linespace | {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'})
-
-  keyword <- boolean | null
-  prop <- strOrIdent * equal * value
-  value <- ?typeAnnotation * (str * !'=' | number | keyword)
-
-  typeAnnotation <- '(' * >ident * ')':
-    lexer.data.add(newTTypeAnnot(lexer.source.getCoord(@0), $0, $1))
-
-  str <- rawString | escapedString
-  escapedString <- '"' * >*character * '"':
-    lexer.data.add(newTString(lexer.source.getCoord(@0), $0, $1, false))
-  character <- '\\' * escape | (1 - {'\\', '"'})
-  escape <- {'"', '\\', '/', 'b', 'f', 'n', 'r', 't'} | i"u" * '{' * Xdigit[1..6] * '}'
-
-  rawString <- 'r' * rawStringHash
-  rawStringHash <- R("hashes", *'#') * rawStringQuotes * R("hashes")
-  rawStringQuotes <- '"' * >*(1 - ('"' * R("hashes"))) * '"':
-    lexer.data.add(newTString(lexer.source.getCoord(@0), $0, $1, true))
-
-  number <- hex | octal | binary | decimal
-
-  decimal <- ?sign * integer * ?('.' * integer) * ?exponent:
-    lexer.data.add(newTNumber(lexer.source.getCoord(@0), $0, nkDec))
-  exponent <- i"e" * ?sign * integer
-  integer <- Digit * *(Digit | '_')
-  sign <- {'+', '-'}
-
-  hex <- ?sign * "0x" * Xdigit * *(Xdigit | '_'):
-    lexer.data.add(newTNumber(lexer.source.getCoord(@0), $0, nkHex))
-  octal <- ?sign * "0o" * {'0'..'7'} * *{'0'..'7', '_'}:
-    lexer.data.add(newTNumber(lexer.source.getCoord(@0), $0, nkOct))
-  binary <- ?sign * "0b" * {'0', '1'} * *{'0', '1', '_'}:
-    lexer.data.add(newTNumber(lexer.source.getCoord(@0), $0, nkBin))
-
-  boolean <- ("true" | "false") * !identifierChar:
-    lexer.data.add(newTBool(lexer.source.getCoord(@0), $0))
-
-  null <- "null" * !identifierChar:
-    lexer.data.add(newTNull(lexer.source.getCoord(@0)))
-
-  equal <- '=':
-    lexer.data.add(newTEqual(lexer.source.getCoord(@0)))
-
-  childrenOpen <- '{':
-    lexer.data.add(newTOpenBlock(lexer.source.getCoord(@0)))
-
-  childrenClose <- '}':
-    lexer.data.add(newTCloseBlock(lexer.source.getCoord(@0)))
-
+grammar "common":
   escline <- '\\' * *ws * (singleLineComment | newline)
 
   linespace <- newline | ws | singleLineComment
@@ -155,10 +91,84 @@ const lexerPeg* = peg("nodes", lexer: Lexer):
 
   eof <- !1
 
-  slashDashComment <- ?("/-" * *nodeSpace)
   singleLineComment <- "//" * +(1 - newline) * (newline | eof)
   multiLineComment <- "/*" * commentedBlock
   commentedBlock <- "*/" | (multiLineComment | '*' | '/' | +(1 - {'*', '/'})) * commentedBlock
+
+  sign <- {'+', '-'}
+
+  equal <- '=':
+    lexer.data.add(newTEqual(lexer.source.getCoord(@0)))
+
+  childrenOpen <- '{':
+    lexer.data.add(newTOpenBlock(lexer.source.getCoord(@0)))
+
+  childrenClose <- '}':
+    lexer.data.add(newTCloseBlock(lexer.source.getCoord(@0)))
+
+grammar "numbers":
+  number <- hex | octal | binary | decimal
+
+  decimal <- ?common.sign * integer * ?('.' * integer) * ?exponent:
+    lexer.data.add(newTNumber(lexer.source.getCoord(@0), $0, nkDec))
+  exponent <- i"e" * ?common.sign * integer
+  integer <- Digit * *(Digit | '_')
+
+  hex <- ?common.sign * "0x" * Xdigit * *(Xdigit | '_'):
+    lexer.data.add(newTNumber(lexer.source.getCoord(@0), $0, nkHex))
+  octal <- ?common.sign * "0o" * {'0'..'7'} * *{'0'..'7', '_'}:
+    lexer.data.add(newTNumber(lexer.source.getCoord(@0), $0, nkOct))
+  binary <- ?common.sign * "0b" * {'0', '1'} * *{'0', '1', '_'}:
+    lexer.data.add(newTNumber(lexer.source.getCoord(@0), $0, nkBin))
+
+grammar "strings":
+  str <- rawString | escapedString
+  escapedString <- '"' * >*character * '"':
+    lexer.data.add(newTString(lexer.source.getCoord(@0), $0, $1, false))
+  character <- '\\' * escape | (1 - {'\\', '"'})
+  escape <- {'"', '\\', '/', 'b', 'f', 'n', 'r', 't'} | i"u" * '{' * Xdigit[1..6] * '}'
+
+  rawString <- 'r' * rawStringHash
+  rawStringHash <- R("hashes", *'#') * rawStringQuotes * R("hashes")
+  rawStringQuotes <- '"' * >*(1 - ('"' * R("hashes"))) * '"':
+    lexer.data.add(newTString(lexer.source.getCoord(@0), $0, $1, true))
+
+const lexerPeg* = peg("nodes", lexer: Lexer):
+  nodes <- *common.linespace * ?(node * ?nodes) * *common.linespace
+
+  node <- slashDashComment * ?typeAnnotation * strOrIdent * *(+nodeSpace * nodePropOrArg) * ?(*nodeSpace * nodeChildren * *common.ws) * *nodeSpace * nodeTerminator
+  nodePropOrArg <- slashDashComment * >+(1 - common.ws):
+    echo $1
+    echo "end"
+  nodeChildren <- slashDashComment * common.childrenOpen * nodes * common.childrenClose
+  nodeSpace <- *common.ws * common.escline * *common.ws | +common.ws
+  nodeTerminator <- common.singleLineComment | common.newline | ';' | common.eof
+
+  slashDashComment <- ?("/-" * *nodeSpace)
+
+  strOrIdent <- strings.str | matchIdent
+
+  matchIdent <- ident:
+    lexer.data.add(newTIdent(lexer.source.getCoord(@0), $0))
+
+  ident <- (startIdentifierChar * *identifierChar | common.sign * ?((identifierChar - Digit) * *identifierChar)) - keyword
+
+  startIdentifierChar <- identifierChar - (Digit | common.sign)
+  identifierChar <- 1 - (common.linespace | {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'})
+
+
+  keyword <- boolean | null
+  prop <- strOrIdent * common.equal * value
+  value <- ?typeAnnotation * (strings.str | numbers.number | keyword)
+
+  typeAnnotation <- '(' * >ident * ')':
+    lexer.data.add(newTTypeAnnot(lexer.source.getCoord(@0), $0, $1))
+
+  boolean <- ("true" | "false") * !identifierChar:
+    lexer.data.add(newTBool(lexer.source.getCoord(@0), $0))
+
+  null <- "null" * !identifierChar:
+    lexer.data.add(newTNull(lexer.source.getCoord(@0)))
 
 proc scanKDL*(source: string): Lexer = 
   result.source = source

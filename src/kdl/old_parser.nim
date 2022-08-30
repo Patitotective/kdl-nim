@@ -1,7 +1,11 @@
-import std/[parseutils, strutils, unicode, tables]
+import std/[parseutils, strformat, strutils, unicode, tables]
 
 type
-  ParseResult = tuple[ok: bool, until: int]
+  Coord = tuple[line, col: int]
+
+  KDLError = object of ValueError
+
+  ParseResult = tuple[ok: bool, until: int, errorMsg: string]
 
 const
   nonIdenChars = {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'}
@@ -18,6 +22,11 @@ const
     'f': "\u000C", # Form Feed
     'u': "", # Unicode
   }.toTable
+
+proc getCoord(str: string, idx: int): Coord =
+  let lines = str[0..<idx].splitLines(keepEol = true)
+
+  result = (lines.len, lines[^1].len+1)
 
 proc peek(input: string, x: Slice[int]): string = 
   if x.a > 0 and x.b < input.len:
@@ -38,12 +47,32 @@ template validate(pattern: typed) =
   result = pattern
   if not result.ok: return
 
-template choice(patterns: varags[typed]) = 
-  if (let res = p; p.ok):
-    result = res
+template optional(pattern: typed) = 
+  result.until = pattern.until
+
+template error(pattern: typed) = 
+  result = pattern
+  if not result.ok:
+    let coord {.inject.} = input.getCoord(result.until)
+    raise newException(KDLError, &"{result.errorMsg} at {coord.line}:{coord.col}")
+
+# macro choice(patterns: varags[typed]) = 
+#   for e, p in pattern:
+#     if e == 0:
+#       quote do:
+#         if (let res = `p`; p.ok):
+#           result = res
+#     elif e < pattern.high:
+#       quote do:
+#         elif (let res = `p`; p.ok):
+#           result = res
+#     else:
+#       quote do:
+#         else:
+#           result = res
 
 proc validateIdent*(input: string, start: int): ParseResult = 
-  result.until = start
+  result = (false, start, "invalid identifier")
 
   if (let first = input.peek(start); first in nonInitialChars or (first == '-' and input.peek(start + 1) in Digits)) or start >= input.len:
     return
@@ -62,10 +91,10 @@ proc validateIdent*(input: string, start: int): ParseResult =
   result.ok = true
 
 proc validateString*(input: string, start: int): ParseResult =
+  result = (false, start, "invalid string")
+
   var raw = false
   var hashes = 0 # Number of hashes after raw string
-
-  result.until = start
 
   if input.peek(start, 'r'):
     raw = true
@@ -194,13 +223,13 @@ proc validateNumber*(input: string, start: int): ParseResult =
 
 proc validateBoolean*(input: string, start: int): ParseResult = 
   if input.continuesWith("true", start):
-    result = (true, start + 4)
+    result = (true, start + 4, "boolean")
   elif input.continuesWith("false", start):
-    result = (true, start + 5)
+    result = (true, start + 5, "boolean")
 
 proc validateNull*(input: string, start: int): ParseResult = 
   if input.continuesWith("null", start):
-    result = (true, start + 4)
+    result = (true, start + 4, "null")
 
 proc validateTypeAnnotation*(input: string, start: int): ParseResult = 
   result.until = start
@@ -244,7 +273,7 @@ proc validateNodeName*(input: string, start: int): ParseResult =
 proc validateWhitespace*(input: string, start: int): ParseResult = 
   result.until = start
 
-  if (let rune = input.runeAt(start); rune.int in whitespaces):
+  if start < input.len and (let rune = input.runeAt(start); rune.int in whitespaces):
     result.ok = true
     result.until += rune.size
 
@@ -306,24 +335,43 @@ proc validateProperty*(input: string, start: int): ParseResult =
 proc validateNodeSpace*(input: string, start: int): ParseResult = 
   result.until = input.skipWhitespaces(start)
 
+  if (let res = input.validateLineContinuation(result.until); res.ok):
+    result.until = input.skipWhitespaces(result.until):
+  else:
+    result.until = start # Unskip whitespaces
+    validate input.validateWhitespace(result.until)
+
+proc validateSlashDashComment*(input: string, start: int): ParseResult = 
+  ## "/-" ws*
+  result.until = start
+
+  if not input.peek(start, "/-"):
+    return
+
+  result.until += 2
+
+  result.until = input.skipWhitespaces(result.until)
+
 proc validateNode*(input: string, start: int): ParseResult = 
-  validate input.validateNodeName(start)
-  validate input.validateWhitespace(result.until)
+  result.until = start
+  optional input.validateSlashDashComment(start)
+  error input.validateNodeName(result.until)
+  error input.validateWhitespace(result.until)
 
   result.until = input.skipWhitespaces(result.until)
 
   while true:
-    valid input.validateProperty(result.until)
-    # if (let res = input.validateProperty(result.until); res.ok):
-      # result = res
+    optional input.validateLineContinuation(result.until)
+    if (let res = input.validateProperty(result.until); res.ok):
+      result = res
     else:
       validate input.validateValue(result.until)
 
-    validate input.validateWhitespace(result.until)
+    validate input.validateNodeSpace(result.until)
 
-const input = "//a\nasddd"
+const input = "a"
 const start = 0
-let result = input.validateSingleLineComment(start)
+let result = input.validateNode(start)
 
 if result.ok:
   echo input[start..<result.until], " :]"

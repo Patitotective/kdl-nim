@@ -1,5 +1,3 @@
-import std/tables
-import npeg
-import kdl/parser
+import kdl/new_lexer
 
-export parser, npeg
+export new_lexer

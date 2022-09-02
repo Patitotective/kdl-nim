@@ -11,7 +11,9 @@ suite "spec":
 
     if fileExists(testsDir / "expected_kdl" / filename):
       test "Valid: " & filename:
-        check scanKDL(readFile(path)).ok
+        let lexer = scanFile(path)
+        check lexer.current == lexer.source.len
     else:
       test "Invalid: " & filename:
-        check not scanKDL(readFile(path)).ok
+        expect(KDLError):
+          let lexer = scanFile(path)

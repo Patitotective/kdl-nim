@@ -1,22 +1,22 @@
 import std/[strformat, strutils, unicode, tables, macros]
 
 type
-  KDLError* = object of ValueError
-  KDLLexerError* = object of KDLError
+  KdlError* = object of ValueError
+  KdlLexerError* = object of KdlError
 
   TokenKind* = enum
-    tkEmpty, 
-    tkNull, 
-    tkBool, 
-    tkEqual, 
-    tkIdent, 
-    tkSemicolon, 
-    tkSlashDash, 
-    tkString, tkRawString, 
-    tkWhitespace, tkNewLine, 
-    tkOpenType, tkCloseType, # Type annotation
-    tkOpenBlock, tkCloseBlock, # Children block
-    tkNumDec, tkNumHex, tkNumBin, tkNumOct, 
+    tkEmpty = "empty", 
+    tkNull = "null", 
+    tkBool = "bool", 
+    tkEqual = "equal", 
+    tkIdent = "identifier", 
+    tkSemicolon = ";", 
+    tkSlashDash = "/-", 
+    tkString = "string", tkRawString = "raw string", 
+    tkWhitespace = "whitespace", tkNewLine = "new line", 
+    tkOpenType = "(", tkCloseType = ")", # Type annotation
+    tkOpenBlock = "{", tkCloseBlock = "}", # Children block
+    tkNumDec = "decimal number", tkNumHex = "hexadecimal number", tkNumBin = "binary number", tkNumOct = "octagonal number", 
 
   Coord* = tuple[line: int, col: int]
 
@@ -35,7 +35,7 @@ const
   nonInitialChars = Digits + nonIdenChars
   whitespaces = {0x0009, 0x0020, 0x00A0, 0x1680, 0x2000..0x200A, 0x202F, 0x205F, 0x3000}
   newLines = ["\c\l", "\r", "\n", "\u0085", "\f", "\u2028", "\u2029"]
-  escapeTable = {
+  escapeTable* = {
     'n': "\u000A", # Line Feed
     'r': "\u000D", # Carriage Return
     't': "\u0009", # Character Tabulation (Tab)
@@ -56,6 +56,23 @@ const
     "{": tkOpenBlock, "}": tkCloseBlock,
     "(": tkOpenType, ")": tkCloseType,
   }
+
+
+proc getCoord(str: string, idx: int): Coord =
+  let lines = str[0..<idx].splitLines(keepEol = true)
+
+  result = (lines.high, lines[^1].len)
+
+proc errorAt*(source: string, coord: tuple[line, col: int]): string = 
+  let lines = source.splitLines
+  if coord.line > lines.len:
+    return &"Invalid line {coord.line}, expected one in 0..{lines.high}"
+
+  let line = lines[coord.line]
+
+  let lineNum = &"{coord.line + 1} | "
+  result.add(&"{lineNum}{line}\n")
+  result.add(&"{repeat(' ', lineNum.len + coord.col)}^\n")
 
 proc `$`*(lexer: Lexer): string = 
   result = &"{(if lexer.current == lexer.source.len: \"SUCCESS\" else: \"FAIL\")} {lexer.current}/{lexer.source.len}\n\t"
@@ -106,11 +123,6 @@ macro lexing(token: TokenKind, body: untyped) =
 
   result = body
 
-proc getCoord(str: string, idx: int): Coord =
-  let lines = str[0..<idx].splitLines(keepEol = true)
-
-  result = (lines.len, lines[^1].len+1)
-
 proc add(lexer: var Lexer, kind: TokenKind, start: int, until = lexer.current) = 
   lexer.stack.add(Token(kind: kind, lexeme: lexer.source[start..<until], coord: lexer.source.getCoord(start)))
 
@@ -127,7 +139,7 @@ proc until(lexer: var Lexer, until: int): string =
 
 proc error(lexer: Lexer, msg: string) = 
   let coord = lexer.source.getCoord(lexer.current)
-  raise newException(KDLLexerError, &"{msg} at {coord.line}:{coord.col}")
+  raise newException(KdlLexerError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{lexer.source.errorAt(coord).indent(2)}")
 
 proc consume(lexer: var Lexer, amount = 1) = 
   lexer.current += amount
@@ -221,10 +233,7 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
   let hashes = lexer.skipWhile({'#'})
 
   if lexer.peek() != '"':
-    if raw:
-      lexer.error "Double quote expected"
-    else:
-      return
+    return
 
   lexer.consume()
 
@@ -277,7 +286,7 @@ proc tokenString(lexer: var Lexer) {.lexing(tkString).} =
 proc tokenRawString(lexer: var Lexer) {.lexing(tkRawString).} =
   lexer.tokenStringBody(raw = true)
 
-proc tokenWhitespacelexer: var Lexer) {.lexing(tkWhitespace).} = 
+proc tokenWhitespace(lexer: var Lexer) {.lexing(tkWhitespace).} = 
   if not lexer.eof() and (let rune = lexer.source.runeAt(lexer.current); rune.int in whitespaces):
     lexer.consume rune.size
 
@@ -363,7 +372,7 @@ proc tokenLitMatches(lexer: var Lexer) {.lexing(tkEmpty).} =
 
   result = before != lexer.current
 
-proc scan*(lexer: var Lexer) = 
+proc scanKdl*(lexer: var Lexer) = 
   const choices = [
     tokenWhitespace, 
     tokenNewLine, 
@@ -390,14 +399,15 @@ proc scan*(lexer: var Lexer) =
         anyMatch = true
         break
       else:
+        ## FIXME: echo "Backtracking: ", lexer != prevLexer
         lexer = prevLexer
 
     if not anyMatch:
       lexer.error "Could not match any pattern"
 
-proc scan*(source: string, start = 0): Lexer = 
+proc scanKdl*(source: string, start = 0): Lexer = 
   result = Lexer(source: source, current: start)
-  result.scan()
+  result.scanKdl()
 
-proc scanFile*(path: string, start = 0): Lexer = 
-  scan(readFile(path), start)
+proc scanKdlFile*(path: string): Lexer = 
+  scanKdl(readFile(path))

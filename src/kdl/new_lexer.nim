@@ -10,13 +10,13 @@ type
     tkBool = "bool", 
     tkEqual = "equal", 
     tkIdent = "identifier", 
-    tkSemicolon = ";", 
-    tkSlashDash = "/-", 
-    tkString = "string", tkRawString = "raw string", 
-    tkWhitespace = "whitespace", tkNewLine = "new line", 
-    tkOpenType = "(", tkCloseType = ")", # Type annotation
-    tkOpenBlock = "{", tkCloseBlock = "}", # Children block
-    tkNumDec = "decimal number", tkNumHex = "hexadecimal number", tkNumBin = "binary number", tkNumOct = "octagonal number", 
+    tkSemicolon = "semicolon", 
+    tkSlashDash = "slash_dash", 
+    tkString = "string", tkRawString = "raw_string", 
+    tkWhitespace = "whitespace", tkNewLine = "new_line", 
+    tkOpenType = "open_parenthesis", tkCloseType = "close_parenthesis", # Type annotation
+    tkOpenBlock = "open_bracket", tkCloseBlock = "close_bracket", # Children block
+    tkNumDec = "decimal_number", tkNumHex = "hexadecimal_number", tkNumBin = "binary_number", tkNumOct = "octagonal_number", 
 
   Coord* = tuple[line: int, col: int]
 
@@ -225,6 +225,8 @@ proc tokenNumOct(lexer: var Lexer) {.lexing(tkNumOct).} =
     lexer.skipWhile({'0'..'7', '_'})
 
 proc tokenStringBody(lexer: var Lexer, raw = false) = 
+  let before = lexer.current
+
   if raw:
     if lexer.peek() != 'r': return
 
@@ -233,6 +235,7 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
   let hashes = lexer.skipWhile({'#'})
 
   if lexer.peek() != '"':
+    lexer.current = before
     return
 
   lexer.consume()
@@ -411,3 +414,5 @@ proc scanKdl*(source: string, start = 0): Lexer =
 
 proc scanKdlFile*(path: string): Lexer = 
   scanKdl(readFile(path))
+
+# echo scanKdl("rata")

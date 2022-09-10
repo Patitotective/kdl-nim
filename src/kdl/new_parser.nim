@@ -21,6 +21,9 @@ proc eof(parser: Parser, extra = 0): bool =
 proc peek(parser: Parser, next = 0): Token = 
   if not parser.eof(next):
     result = parser.stack[parser.current + next]
+  else:
+    let token = parser.stack[parser.current - 1]
+    result = Token(coord: (token.coord.line, token.coord.col + token.lexeme.len))
 
 proc error(parser: Parser, msg: string) = 
   let coord = parser.peek().coord
@@ -30,36 +33,41 @@ proc consume(parser: var Parser, amount = 1) =
   parser.current += amount
 
 template valid(x: bool) = 
+  let val = x
   when result is bool:
-    result = x
+    result = val
   else:
-    result.ok = x
+    result.ok = val
 
-  if not x:
+  if not val:
     return
 
 template invalid(x: bool) = 
+  let val = x
   when result is bool:
-    result = not x
+    result = val
   else:
-    result.ok = not x
+    result.ok = val
 
-  if x:
+  if val:
     return
 
 template valid[T](x: Match[T]): T = 
+  let val = x
   when result is bool:
-    result = x.ok
+    result = val.ok
   else:
-    result.ok = x.ok
+    result.ok = val.ok
 
-  if not x.ok:
+  if not val.ok:
     return
 
-  x.val
+  val.val
 
 proc match(parser: var Parser, x: TokenKind | set[TokenKind], required = true): Match[Token] {.discardable.} = 
   let token = parser.peek()
+
+  # echo token, " in ", x, " == ", (when x is TokenKind: token.kind == x else: token.kind in x)
   if (when x is TokenKind: token.kind == x else: token.kind in x):
     result.ok = true
     result.val = token
@@ -160,12 +168,7 @@ proc parseIdent(token: Token): string =
     ""
 
 proc matchIdent(parser: var Parser, required = true): Match[string] {.discardable.} = 
-  # let temp = parser.match({tkIdent} + strings, required)
-  # result.val = valid(temp).parseIdent()
-  # assert result == (true, "node")
-
   result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent()
-  assert result == (false, "") # It doesn't even reach this part
 
 proc matchTypeAnnot(parser: var Parser, required = true): Match[string] {.discardable.} = 
   discard valid parser.match(tkOpenType, required)
@@ -174,17 +177,18 @@ proc matchTypeAnnot(parser: var Parser, required = true): Match[string] {.discar
 
 proc matchValue(parser: var Parser, required = true): Match[KdlVal] {.discardable.} = 
   let (_, annot) = parser.matchTypeAnnot(false)
-  let token = valid parser.match({tkBool, tkNull} + strings + numbers, required)
 
-  result.val = token.parseValue()
+  result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue()
   result.val.annot = annot
-
-# proc parseProp(parser: Parser): KdlProp = 
 
 proc matchProp(parser: var Parser, required = true): Match[KdlProp] {.discardable.} = 
   let ident = valid parser.matchIdent(required)
-  discard valid parser.match(tkEqual, required)
-  let value = valid parser.matchValue(required)
+  if not parser.match(tkEqual, false).ok:
+    dec parser.current # Unconsume identifier
+    result.ok = false
+    return
+
+  let value = valid parser.matchValue(true)
 
   result.val = initKProp(ident, value)
 
@@ -192,14 +196,18 @@ proc matchNodeEnd(parser: var Parser, required = true): bool {.discardable.} =
   result = parser.eof()
 
   if not result:
-    discard valid parser.match({tkNewLine, tkSemicolon}, required)
+    let token = parser.peek()
+    discard valid parser.match({tkNewLine, tkSemicolon, tkCloseBlock}, required)
+
+    if token.kind == tkCloseBlock: # Unconsume
+      dec parser.current
 
 proc skipLineSpaces(parser: var Parser) = 
   parser.skipWhile({tkNewLine, tkWhitespace})
 
 proc matchNode(parser: var Parser, required = true): Match[KdlNode] {.discardable.}
 
-proc matchNodes(parser: var Parser, children = false): Match[KdlDoc] {.discardable.} = 
+proc matchNodes(parser: var Parser): Match[KdlDoc] {.discardable.} = 
   parser.skipLineSpaces()
   while (let (ok, node) = parser.matchNode(false); ok):
     result.ok = true
@@ -208,17 +216,18 @@ proc matchNodes(parser: var Parser, children = false): Match[KdlDoc] {.discardab
 
 proc matchChildren(parser: var Parser, required = true): Match[KdlDoc] {.discardable.} = 
   discard valid parser.match(tkOpenBlock, required)
-  result.val = valid parser.matchNodes()
+  result.val = parser.matchNodes().val
   discard valid parser.match(tkCloseBlock, true)
 
 proc matchNode(parser: var Parser, required = true): Match[KdlNode] {.discardable.} = 
   let annot = parser.matchTypeAnnot(false).val
   let ident = valid parser.matchIdent(required)
+
   result.val = initKNode(ident, annot = annot)
 
   invalid parser.matchNodeEnd(false)
 
-  valid parser.more(tkWhitespace, required)
+  valid parser.more(tkWhitespace, true)
 
   while true: # Match arguments and properties
     if (let (ok, prop) = parser.matchProp(false); ok):
@@ -229,13 +238,13 @@ proc matchNode(parser: var Parser, required = true): Match[KdlNode] {.discardabl
       else:
         break
 
-    valid not parser.matchNodeEnd(false)
+    invalid parser.matchNodeEnd(false)
 
-    valid parser.more(tkWhitespace, required)
+    valid parser.more(tkWhitespace, true)
 
   result.val.children = parser.matchChildren(false).val
 
-  valid not parser.matchNodeEnd(required)
+  invalid parser.matchNodeEnd(true)
 
 proc parseKdl*(lexer: Lexer): KdlDoc = 
   var parser = Parser(stack: lexer.stack, source: lexer.source)
@@ -246,5 +255,3 @@ proc parseKdl*(source: string, start = 0): KdlDoc =
 
 proc parseKdlFile*(path: string): KdlDoc = 
   parseKdl(readFile(path))
-
-echo parseKdl("node")

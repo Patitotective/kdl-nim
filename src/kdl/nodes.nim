@@ -1,4 +1,4 @@
-import std/strformat
+import std/[strformat, strutils]
 
 type
   KdlValKind* = enum
@@ -70,9 +70,6 @@ proc getBool*(val: KdlVal): bool =
 proc isNull*(val: KdlVal): bool = 
   val.kind == KdlNull
 
-proc isNil*(val: KdlVal): bool = 
-  val.isNull()
-
 proc isEmpty*(val: KdlVal): bool = 
   val.kind == KdlEmpty
 
@@ -97,3 +94,15 @@ proc initKNode*(name: string, annot = "", args = newSeq[KdlVal](), props = newSe
 
 proc initKProp*(key: string, val: KdlVal): KdlProp = 
   KdlProp(key: key, val: val)
+
+proc pretty*(node: KdlNode): string = 
+  if node.annot.len > 0:
+    result = &"({node.annot})"
+
+  result.add node.name
+
+  if node.args.len > 0:
+    result.add node.args.join(" ")
+
+  if node.props.len > 0:
+    result.add node.props.join(" ")

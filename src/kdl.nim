@@ -1,3 +1,3 @@
-import kdl/new_lexer
+import kdl/[new_parser, new_lexer, nodes]
 
-export new_lexer
+export new_parser, new_lexer, nodes

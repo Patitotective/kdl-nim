@@ -186,7 +186,7 @@ proc tokenNumFloat(lexer: var Lexer) =
   if lexer.peek().toLowerAscii() == 'e':
     lexer.tokenNumExp()
 
-proc tokenNumDec*() {.lexing(tkNumDec).} = 
+proc tokenNumDec*() {.lexing: tkNumDec.} = 
   if lexer.peek() in {'-', '+'}:
     lexer.consume()
 
@@ -204,7 +204,7 @@ proc tokenNumDec*() {.lexing(tkNumDec).} =
     lexer.tokenNumFloat()
   else: discard
 
-proc tokenNumBin*() {.lexing(tkNumBin).} = 
+proc tokenNumBin*() {.lexing: tkNumBin.} = 
   if lexer.until(2) == "0b":
     lexer.consume 2
     if lexer.peek() notin {'0', '1'}:
@@ -212,7 +212,7 @@ proc tokenNumBin*() {.lexing(tkNumBin).} =
 
     lexer.skipWhile({'0', '1', '_'})
 
-proc tokenNumHex*() {.lexing(tkNumHex).} = 
+proc tokenNumHex*() {.lexing: tkNumHex.} = 
   if lexer.until(2) == "0x":
     lexer.consume 2
     if lexer.peek() notin HexDigits:
@@ -220,7 +220,7 @@ proc tokenNumHex*() {.lexing(tkNumHex).} =
 
     lexer.skipWhile(HexDigits + {'_'})
 
-proc tokenNumOct*() {.lexing(tkNumOct).} = 
+proc tokenNumOct*() {.lexing: tkNumOct.} = 
   if lexer.until(2) == "0o":
     lexer.consume 2
     if lexer.peek() notin {'0'..'7'}:
@@ -287,21 +287,21 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
   if not terminated:
     lexer.error "Unterminated string"
 
-proc tokenString*() {.lexing(tkString).} =
+proc tokenString*() {.lexing: tkString.} =
   lexer.tokenStringBody()
 
-proc tokenRawString*() {.lexing(tkRawString).} =
+proc tokenRawString*() {.lexing: tkRawString.} =
   lexer.tokenStringBody(raw = true)
 
-proc tokenWhitespace*() {.lexing(tkWhitespace).} = 
+proc tokenWhitespace*() {.lexing: tkWhitespace.} = 
   if not lexer.eof() and (let rune = lexer.source.runeAt(lexer.current); rune.int in whitespaces):
     lexer.consume rune.size
 
-proc skipWhitespaces*() {.lexing(tkEmpty).} = 
+proc skipWhitespaces*() {.lexing: tkEmpty.} = 
   while lexer.tokenWhitespace():
     discard
 
-proc tokenNewLine*() {.lexing(tkNewLine).} = 
+proc tokenNewLine*() {.lexing: tkNewLine.} = 
   for nl in newLines:
     # if lexer.current > 0:
       # echo nl.escape(), " == ", lexer.until(nl.len).escape(), " ", nl == lexer.until(nl.len), " ", escape $lexer.peek()
@@ -309,7 +309,7 @@ proc tokenNewLine*() {.lexing(tkNewLine).} =
       lexer.consume nl.len
       break
 
-proc tokenIdent*() {.lexing(tkIdent).} = 
+proc tokenIdent*() {.lexing: tkIdent.} = 
   if lexer.eof() or lexer.peek() in nonInitialChars:
     # lexer.error &"An identifier cannot start with {nonInitialChars} nor start with a hyphen ('-') and follow a digit"
     return
@@ -331,7 +331,7 @@ proc tokenIdent*() {.lexing(tkIdent).} =
 
       lexer.consume rune.size
 
-proc tokenSingleLineComment*() {.lexing(tkEmpty).} = 
+proc tokenSingleLineComment*() {.lexing: tkEmpty.} = 
   if lexer.until(2) != "//":
     return
 
@@ -342,7 +342,7 @@ proc tokenSingleLineComment*() {.lexing(tkEmpty).} =
       break
     lexer.consume()
 
-proc tokenMultiLineComment*() {.lexing(tkEmpty).} = 
+proc tokenMultiLineComment*() {.lexing: tkEmpty.} = 
   if lexer.until(2) != "/*":
     return
 
@@ -363,7 +363,7 @@ proc tokenMultiLineComment*() {.lexing(tkEmpty).} =
   if nested > 0:
     lexer.error "Expected end of multi-line comment"
 
-proc tokenLineCont*() {.lexing(tkEmpty).} = 
+proc tokenLineCont*() {.lexing: tkEmpty.} = 
   if lexer.peek() != '\\':
     return
 
@@ -373,7 +373,7 @@ proc tokenLineCont*() {.lexing(tkEmpty).} =
   if not lexer.tokenSingleLineComment() and not lexer.tokenNewLine(addToStack = false):
       lexer.error "Expected a new line"
 
-proc tokenLitMatches() {.lexing(tkEmpty).} = 
+proc tokenLitMatches() {.lexing: tkEmpty.} = 
   ## Tries to match any of the litMatches literals.
   let before = lexer.current
 

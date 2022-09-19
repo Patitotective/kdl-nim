@@ -87,7 +87,7 @@ template valid[T](x: Match[T]): T =
 
   val.val
 
-proc match(x: TokenKind | set[TokenKind]) {.parsing(Token).} = 
+proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} = 
   let token = parser.peek()
 
   # echo token, " in ", x, " == ", (when x is TokenKind: token.kind == x else: token.kind in x)
@@ -108,7 +108,7 @@ proc skipWhile(parser: var Parser, kinds: set[TokenKind]) =
     else:
       break
 
-proc more(kind: TokenKind): {.parsing(bool).} = 
+proc more(kind: TokenKind): {.parsing: bool.} = 
   ## Matches one or more tokens of `kind`
   discard valid parser.match(kind, required)
   parser.skipWhile({kind})
@@ -190,21 +190,21 @@ proc parseIdent(token: Token): string =
   else:
     ""
 
-proc matchIdent() {.parsing(string).} = 
+proc matchIdent() {.parsing: string.} = 
   result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent()
 
-proc matchTypeAnnot(): {.parsing(string).} = 
+proc matchTypeAnnot(): {.parsing: string.} = 
   discard valid parser.match(tkOpenType, required)
   result.val = valid(parser.matchIdent(true)).parseIdent()
   discard parser.match(tkCloseType, true)
 
-proc matchValue(): {.parsing(KdlVal).} = 
+proc matchValue(): {.parsing: KdlVal.} = 
   let (_, annot) = parser.matchTypeAnnot(false)
 
   result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue()
   result.val.annot = annot
 
-proc matchProp(): {.parsing(KdlProp).} = 
+proc matchProp(): {.parsing: KdlProp.} = 
   let ident = valid parser.matchIdent(required)
   if not parser.match(tkEqual, false).ok:
     dec parser.current # Unconsume identifier
@@ -215,7 +215,7 @@ proc matchProp(): {.parsing(KdlProp).} =
 
   result.val = (ident, value)
 
-proc matchNodeEnd(): {.parsing(bool).} = 
+proc matchNodeEnd(): {.parsing: bool.} = 
   result.ok = parser.eof()
 
   if not result:
@@ -228,21 +228,21 @@ proc matchNodeEnd(): {.parsing(bool).} =
 proc skipLineSpaces(parser: var Parser) = 
   parser.skipWhile({tkNewLine, tkWhitespace})
 
-proc matchNode(): {.parsing(KdlNode).}
+proc matchNode(): {.parsing: KdlNode.}
 
-proc matchNodes(): {.parsing(KdlDoc).} = 
+proc matchNodes(): {.parsing: KdlDoc.} = 
   parser.skipLineSpaces()
   while (let (ok, node) = parser.matchNode(false); ok):
     result.ok = true
     result.val.add node
     parser.skipLineSpaces()
 
-proc matchChildren(): {.parsing(KdlDoc).} = 
+proc matchChildren(): {.parsing: KdlDoc.} = 
   discard valid parser.match(tkOpenBlock, required)
   result.val = parser.matchNodes().val
   discard valid parser.match(tkCloseBlock, true)
 
-proc matchNode(): {.parsing(KdlNode).} = 
+proc matchNode(): {.parsing: KdlNode.} = 
   
   let annot = parser.matchTypeAnnot(false).val
   let ident = valid parser.matchIdent(required)

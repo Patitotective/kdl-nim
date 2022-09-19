@@ -1,4 +1,4 @@
-import std/[strformat, unittest, os]
+import std/[strformat, strutils, unittest, os]
 
 import kdl
 
@@ -8,12 +8,13 @@ suite "spec":
   for kind, path in walkDir(testsDir / "input"):
     if kind != pcFile: continue
     let filename = path.splitPath.tail
+    let expectedPath = testsDir / "expected_kdl" / filename
 
-    if fileExists(testsDir / "expected_kdl" / filename):
+    if fileExists(expectedPath):
       test "Valid: " & filename:
-        let lexer = scanFile(path)
-        check lexer.current == lexer.source.len
+        # checkpoint &"Expected: {readFile(expectedPath).escape} --- Got: {parseKdlFile(path).pretty().escape}"
+        check readFile(expectedPath) == parseKdlFile(path).pretty()
     else:
       test "Invalid: " & filename:
         expect(KDLError):
-          let lexer = scanFile(path)
+          discard parseKdlFile(path)

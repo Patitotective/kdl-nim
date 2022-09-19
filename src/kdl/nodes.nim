@@ -1,4 +1,4 @@
-import std/[strformat, strutils]
+import std/tables
 
 type
   KdlValKind* = enum
@@ -21,18 +21,19 @@ type
     of KdlEmpty, KdlNull:
       discard
 
-  KdlProp* = object
-    key*: string
-    val*: KdlVal
+  KdlProp* = tuple[key: string, val: KdlVal]
 
   KdlNode* = object
     annot*: string
     name*: string
     args*: seq[KdlVal]
-    props*: seq[KdlProp]
+    props*: Table[string, KdlVal]
     children*: seq[KdlNode]
 
   KdlDoc* = seq[KdlNode]
+
+proc initKNode*(name: string, annot = "", args = newSeq[KdlVal](), props = initTable[string, KdlVal](), children = newSeq[KdlNode]()): KdlNode = 
+  KdlNode(annot: annot, name: name, args: args, props: props, children: children)
 
 proc initKVal*(val: float, annot = ""): KdlVal = 
   KdlVal(annot: annot, kind: KdlNumber, num: val)
@@ -72,37 +73,3 @@ proc isNull*(val: KdlVal): bool =
 
 proc isEmpty*(val: KdlVal): bool = 
   val.kind == KdlEmpty
-
-proc `$`*(val: KdlVal): string = 
-  if val.annot.len > 0:
-    result = &"({val.annot})"
-
-  case val.kind
-  of KdlNumber:
-    result.add $val.getNumber()
-  of KdlString:
-    result.addQuoted val.getString()
-  of KdlBool:
-    result.add $val.getBool()
-  of KdlNull:
-    result.add "null"
-  of KdlEmpty:
-    result.add "empty"
-
-proc initKNode*(name: string, annot = "", args = newSeq[KdlVal](), props = newSeq[KdlProp](), children = newSeq[KdlNode]()): KdlNode = 
-  KdlNode(annot: annot, name: name, args: args, props: props, children: children)
-
-proc initKProp*(key: string, val: KdlVal): KdlProp = 
-  KdlProp(key: key, val: val)
-
-proc pretty*(node: KdlNode): string = 
-  if node.annot.len > 0:
-    result = &"({node.annot})"
-
-  result.add node.name
-
-  if node.args.len > 0:
-    result.add node.args.join(" ")
-
-  if node.props.len > 0:
-    result.add node.props.join(" ")

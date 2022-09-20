@@ -1,12 +1,12 @@
-import std/[algorithm, strformat, strutils, sequtils, tables]
+import std/[algorithm, strformat, strutils, sequtils, options, tables]
 import kdl/[parser, lexer, nodes]
 
 export parser, nodes
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
 proc `$`*(val: KdlVal): string = 
-  if val.annot.len > 0:
-    result = &"({val.annot.escape})"
+  if val.annot.isSome:
+    result = &"({val.annot.get.escape})"
 
   result.add:
     case val.kind
@@ -24,8 +24,8 @@ proc `$`*(val: KdlVal): string =
 proc `$`*(doc: KdlDoc): string
 
 proc `$`*(node: KdlNode): string = 
-  if node.annot.len > 0:
-    result = &"({node.annot.escape})"
+  if node.annot.isSome:
+    result = &"({node.annot.get.escape})"
 
   result.add node.name.escape()
 
@@ -66,8 +66,8 @@ proc prettyIdent*(ident: string): string =
     ident.escape()
 
 proc pretty*(val: KdlVal): string = 
-  if val.annot.len > 0:
-    result = &"({val.annot.prettyIdent})"
+  if val.annot.isSome:
+    result = &"({val.annot.get.prettyIdent})"
 
   result.add:
     case val.kind
@@ -86,8 +86,8 @@ proc pretty*(val: KdlVal): string =
       "empty"
 
 proc pretty*(node: KdlNode): string = 
-  if node.annot.len > 0:
-    result = &"({node.annot.prettyIdent})"
+  if node.annot.isSome:
+    result = &"({node.annot.get.prettyIdent})"
 
   result.add node.name.prettyIdent()
 

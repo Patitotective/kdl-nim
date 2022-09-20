@@ -2,7 +2,7 @@ import std/[parseutils, strformat, strutils, unicode, options, tables, macros]
 import lexer, nodes
 
 type
-  None = distinct void
+  None = object
 
   Parser* = object
     source*: string
@@ -15,7 +15,7 @@ const
   numbers = {tkNumDec, tkNumHex, tkNumBin, tkNumOct}
   strings = {tkString, tkRawString}
 
-proc parsingImpl(x: NimNode, slashdash: bool, body: NimNode): NimNode = 
+macro parsing(x: typedesc, body: untyped): untyped = 
   ## Converts a procedure definition like:
   ## ```nim
   ## proc foo() {.parsing[T].} = 
@@ -23,8 +23,7 @@ proc parsingImpl(x: NimNode, slashdash: bool, body: NimNode): NimNode =
   ## ```
   ## Into
   ## ```nim
-  ## proc foo(parser: var Parser, required: bool = true, slashdash: bool = true): Match[T] {.discardable.} = 
-  ##   result.ignore = parser.matchSlashDash(false).ok
+  ## proc foo(parser: var Parser, required: bool = true): Match[T] {.discardable.} = 
   ##   echo "hi"
   ## ```
 
@@ -35,25 +34,8 @@ proc parsingImpl(x: NimNode, slashdash: bool, body: NimNode): NimNode =
   result.params[0] = nnkBracketExpr.newTree(ident"Match", x) # Return type
   result.params.insert(1, newIdentDefs(ident"parser", newNimNode(nnkVarTy).add(ident"Parser")))
   result.params.add(newIdentDefs(ident"required", ident"bool", newLit(true)))
-  result.params.add(newIdentDefs(ident"slashdash", ident"bool", newLit(slashdash)))
 
   result.addPragma(ident"discardable")
-
-  if result[^1].kind == nnkEmpty:
-    result[^1] = newStmtList()
-
-  result[^1].insert(0, quote do:
-    if slashdash:
-      result.ignore = parser.matchSlashDash(false).ok
-  )
-
-macro parsing(x: typedesc, body: untyped): untyped = 
-  parsingImpl(x, false, body)
-
-macro parsing(x: typedesc, slashdash: static bool, body: untyped): untyped = 
-  parsingImpl(x, slashdash, body)
-
-proc matchSlashDash(parser: var Parser; required: bool = true; slashdash: bool = false): Match[None] {.discardable.}
 
 proc eof(parser: Parser, extra = 0): bool = 
   parser.current + extra >= parser.stack.len
@@ -77,10 +59,6 @@ template invalid[T](x: Match[T]) =
 
   result.ok = val.ok
 
-  when declared(slashDashComment):
-    if slashDashComment:
-      result.ok = false
-
   if val.ok:
     return
 
@@ -88,10 +66,6 @@ template valid[T](x: Match[T]): T =
   let val = x
 
   result.ok = val.ok
-
-  when declared(slashDashComment):
-    if slashDashComment:
-      result.ok = false
 
   if not result.ok:
     return
@@ -219,20 +193,26 @@ proc matchTypeAnnot() {.parsing: Option[string].} =
   result.val = valid parser.matchIdent(true)
   discard parser.match(tkCloseType, true)
 
-proc matchValue() {.parsing: KdlVal.} = 
+proc matchValue(slashdash = false) {.parsing: KdlVal.} = 
+  if slashdash:
+    result.ignore = parser.matchSlashDash(false).ok
+
   let (_, _, annot) = parser.matchTypeAnnot(false)
 
   result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue()
   result.val.annot = annot
 
-proc matchProp() {.parsing(KdlProp, true).} = 
+proc matchProp(slashdash = true) {.parsing: KdlProp.} = 
+  if slashdash:
+    result.ignore = parser.matchSlashDash(false).ok
+
   let ident = valid parser.matchIdent(required)
   if not parser.match(tkEqual, false).ok:
     dec parser.current # Unconsume identifier
     result.ok = false
     return
 
-  let value = valid parser.matchValue(true)
+  let value = valid parser.matchValue(required = true)
 
   result.val = (ident.get, value)
 
@@ -249,13 +229,13 @@ proc matchNodeEnd() {.parsing: None.} =
 proc skipLineSpaces(parser: var Parser) = 
   parser.skipWhile({tkNewLine, tkWhitespace})
 
-proc matchNode() {.parsing(KdlNode, true).}
+proc matchNode(slashdash = true) {.parsing: KdlNode.}
 
 proc matchNodes() {.parsing: KdlDoc.} = 
   parser.skipLineSpaces()
 
   while not parser.eof():
-    if hasValue parser.matchNode(required):
+    if hasValue parser.matchNode(required = required):
       result.ok = true
       result.val.add val
 
@@ -263,12 +243,20 @@ proc matchNodes() {.parsing: KdlDoc.} =
 
     parser.skipLineSpaces()
 
-proc matchChildren() {.parsing(KdlDoc, true).} = 
+proc matchChildren(slashdash = true) {.parsing: KdlDoc.} = 
+  if slashdash:
+    echo "?"
+    echo parser.peek()
+    result.ignore = parser.matchSlashDash(false).ok
+
   discard valid parser.match(tkOpenBlock, required)
   result.val = parser.matchNodes(false).val
   discard valid parser.match(tkCloseBlock, true)
 
-proc matchNode() {.parsing(KdlNode, true).} = 
+proc matchNode(slashdash = true) {.parsing: KdlNode.} = 
+  if slashdash:
+    result.ignore = parser.matchSlashDash(false).ok
+
   let annot = parser.matchTypeAnnot(false).val
   let ident = valid parser.matchIdent(required)
 
@@ -279,10 +267,10 @@ proc matchNode() {.parsing(KdlNode, true).} =
   discard valid parser.more(tkWhitespace, true)
 
   while true: # Match arguments and properties
-    if hasValue parser.matchProp(false):
+    if hasValue parser.matchProp(required = false):
       result.val.props[val.key] = val.val
     else:
-      if hasValue parser.matchValue(false, slashdash = true):
+      if hasValue parser.matchValue(required = false, slashdash = true):
         result.val.args.add val
       else:
         break
@@ -291,9 +279,7 @@ proc matchNode() {.parsing(KdlNode, true).} =
 
     discard valid parser.more(tkWhitespace, true)
 
-  setValue result.val.children, parser.matchChildren(false)
-  # if hasValue parser.matchChildren(false):
-    # result.val.children = val
+  setValue result.val.children, parser.matchChildren(required = false)
 
   invalid parser.matchNodeEnd(true)
 

@@ -15,7 +15,7 @@ const
   numbers = {tkNumDec, tkNumHex, tkNumBin, tkNumOct}
   strings = {tkString, tkRawString}
 
-proc parsing(x: NimNode, slashdash: bool, body: NimNode): NimNode = 
+proc parsingImpl(x: NimNode, slashdash: bool, body: NimNode): NimNode = 
   ## Converts a procedure definition like:
   ## ```nim
   ## proc foo() {.parsing[T].} = 
@@ -48,12 +48,12 @@ proc parsing(x: NimNode, slashdash: bool, body: NimNode): NimNode =
   )
 
 macro parsing(x: typedesc, body: untyped): untyped = 
-  parsing(x, false, body)
+  parsingImpl(x, false, body)
 
 macro parsing(x: typedesc, slashdash: static bool, body: untyped): untyped = 
-  parsing(x, slashdash, body)
+  parsingImpl(x, slashdash, body)
 
-proc matchSlashDash() {.parsing: None.}
+proc matchSlashDash(parser: var Parser; required: bool = true; slashdash: bool = false): Match[None] {.discardable.}
 
 proc eof(parser: Parser, extra = 0): bool = 
   parser.current + extra >= parser.stack.len
@@ -108,7 +108,6 @@ template setValue[T](x: untyped, match: Match[T]) =
 proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} = 
   let token = parser.peek()
 
-  # echo token, " in ", x, " == ", (when x is TokenKind: token.kind == x else: token.kind in x)
   if (when x is TokenKind: token.kind == x else: token.kind in x):
     result.ok = true
     result.val = token

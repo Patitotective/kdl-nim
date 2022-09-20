@@ -2,20 +2,20 @@ import std/[parseutils, strformat, strutils, unicode, tables, macros]
 import lexer, nodes
 
 type
-  KdlParserError* = object of KdlError
+  None = distinct void
 
   Parser* = object
     source*: string
     stack*: seq[Token]
     current*: int
 
-  Match[T] = tuple[ok: bool, val: T]
+  Match[T] = tuple[ok, ignore: bool, val: T]
 
 const
   numbers = {tkNumDec, tkNumHex, tkNumBin, tkNumOct}
   strings = {tkString, tkRawString}
 
-macro parsing(x: typedesc, body: untyped) = 
+proc parsing(x: NimNode, slashdash: bool, body: NimNode): NimNode = 
   ## Converts a procedure definition like:
   ## ```nim
   ## proc foo() {.parsing[T].} = 
@@ -27,15 +27,27 @@ macro parsing(x: typedesc, body: untyped) =
   ##   echo "hi"
   ## ```
 
+
   body.expectKind(nnkProcDef)
 
-  body.params[0] = nnkBracketExpr.newTree(ident"Match", x) # Return type
-  body.params.insert(1, newIdentDefs(ident"parser", newNimNode(nnkVarTy).add(ident"Parser")))
-  body.params.add(newIdentDefs(ident"required", ident"bool", newLit(true)))
-
-  body.addPragma(ident"discardable")
-
   result = body
+
+  result.params[0] = nnkBracketExpr.newTree(ident"Match", x) # Return type
+  result.params.insert(1, newIdentDefs(ident"parser", newNimNode(nnkVarTy).add(ident"Parser")))
+  result.params.add(newIdentDefs(ident"required", ident"bool", newLit(true)))
+  result.params.add(newIdentDefs(ident"slashdash", ident"bool", newLit(slashdash)))
+
+  result.addPragma(ident"discardable")
+
+  result[^1].insert(0, newAssignment(newDotExpr(ident"result", ident"ignore"), newDotExpr(newCall(newDotExpr(ident"parser", ident"matchSlashDash"), ident"false"), ident"ok")))
+
+macro parsing(x: typedesc, body: untyped): untyped = 
+  parsing(x, false, body)
+
+macro parsing(x: typedesc, slashdash: static bool, body: untyped): untyped = 
+  parsing(x, slashdash, body)
+
+proc matchSlashDash() {.parsing: None.}
 
 proc eof(parser: Parser, extra = 0): bool = 
   parser.current + extra >= parser.stack.len
@@ -69,7 +81,6 @@ template invalid[T](x: Match[T]) =
 template valid[T](x: Match[T]): T = 
   let val = x
 
-
   result.ok = val.ok
 
   when declared(slashDashComment):
@@ -80,6 +91,13 @@ template valid[T](x: Match[T]): T =
     return
 
   val.val
+
+template hasValue[T](match: Match[T]): bool = 
+  let (ok, ignore, val {.inject.}) = match; ok and not ignore
+
+template setValue[T](x: untyped, match: Match[T]) = 
+  if hasValue match:
+    x = val
 
 proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} = 
   let token = parser.peek()
@@ -102,7 +120,7 @@ proc skipWhile(parser: var Parser, kinds: set[TokenKind]) =
     else:
       break
 
-proc more(kind: TokenKind) {.parsing: bool.} = 
+proc more(kind: TokenKind) {.parsing: None.} = 
   ## Matches one or more tokens of `kind`
   discard valid parser.match(kind, required)
   parser.skipWhile({kind})
@@ -184,6 +202,10 @@ proc parseIdent(token: Token): string =
   else:
     ""
 
+proc matchSlashDash() {.parsing: None.} = 
+  discard valid parser.match(tkSlashDash, required)
+  parser.skipWhile({tkWhitespace})
+
 proc matchIdent() {.parsing: string.} = 
   result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent()
 
@@ -193,12 +215,12 @@ proc matchTypeAnnot() {.parsing: string.} =
   discard parser.match(tkCloseType, true)
 
 proc matchValue() {.parsing: KdlVal.} = 
-  let (_, annot) = parser.matchTypeAnnot(false)
+  let (_, _, annot) = parser.matchTypeAnnot(false)
 
   result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue()
   result.val.annot = annot
 
-proc matchProp() {.parsing: KdlProp.} = 
+proc matchProp() {.parsing(KdlProp, true).} = 
   let ident = valid parser.matchIdent(required)
   if not parser.match(tkEqual, false).ok:
     dec parser.current # Unconsume identifier
@@ -209,7 +231,7 @@ proc matchProp() {.parsing: KdlProp.} =
 
   result.val = (ident, value)
 
-proc matchNodeEnd() {.parsing: bool.} = 
+proc matchNodeEnd() {.parsing: None.} = 
   result.ok = parser.eof()
 
   if not result.ok:
@@ -222,24 +244,26 @@ proc matchNodeEnd() {.parsing: bool.} =
 proc skipLineSpaces(parser: var Parser) = 
   parser.skipWhile({tkNewLine, tkWhitespace})
 
-proc matchNode() {.parsing: KdlNode.}
+proc matchNode() {.parsing(KdlNode, true).}
 
 proc matchNodes() {.parsing: KdlDoc.} = 
   parser.skipLineSpaces()
-  while not parser.eof():
-    if (let (ok, node) = parser.matchNode(required); ok):
-      result.ok = true
-      result.val.add node
-      parser.skipLineSpaces()
 
-proc matchChildren() {.parsing: KdlDoc.} = 
+  while not parser.eof():
+    if hasValue parser.matchNode(required):
+      result.ok = true
+      result.val.add val
+
+    elif not required: break
+
+    parser.skipLineSpaces()
+
+proc matchChildren() {.parsing(KdlDoc, true).} = 
   discard valid parser.match(tkOpenBlock, required)
-  result.val = parser.matchNodes().val
+  result.val = parser.matchNodes(false).val
   discard valid parser.match(tkCloseBlock, true)
 
-proc matchNode() {.parsing: KdlNode.} = 
-  let slashDashComment = parser.match(tkSlashDash, required = false).ok
-
+proc matchNode() {.parsing(KdlNode, true).} = 
   let annot = parser.matchTypeAnnot(false).val
   let ident = valid parser.matchIdent(required)
 
@@ -250,10 +274,10 @@ proc matchNode() {.parsing: KdlNode.} =
   discard valid parser.more(tkWhitespace, true)
 
   while true: # Match arguments and properties
-    if (let (ok, prop) = parser.matchProp(false); ok):
-      result.val.props[prop.key] = prop.val
+    if hasValue parser.matchProp(false):
+      result.val.props[val.key] = val.val
     else:
-      if (let (ok, val) = parser.matchValue(false); ok):
+      if hasValue parser.matchValue(false, slashdash = true):
         result.val.args.add val
       else:
         break
@@ -262,7 +286,9 @@ proc matchNode() {.parsing: KdlNode.} =
 
     discard valid parser.more(tkWhitespace, true)
 
-  result.val.children = parser.matchChildren(false).val
+  setValue result.val.children, parser.matchChildren(false)
+  # if hasValue parser.matchChildren(false):
+    # result.val.children = val
 
   invalid parser.matchNodeEnd(true)
 

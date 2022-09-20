@@ -21,6 +21,8 @@ proc `$`*(val: KdlVal): string =
     of KdlEmpty:
       "empty"
 
+proc `$`*(doc: KdlDoc): string
+
 proc `$`*(node: KdlNode): string = 
   if node.annot.len > 0:
     result = &"({node.annot.escape})"
@@ -46,6 +48,11 @@ proc `$`*(node: KdlNode): string =
 
       inc count
 
+  if node.children.len > 0:
+    result.add " {\n"
+    result.add indent($node.children, 2)
+    result.add "\n}"
+
 proc `$`*(doc: KdlDoc): string = 
   for e, node in doc:
     result.add $node
@@ -70,7 +77,7 @@ proc pretty*(val: KdlVal): string =
       else:
         $val.getNumber().formatFloat(ffScientific, -1)
     of KdlString:
-      val.getString()
+      val.getString().escape()
     of KdlBool:
       $val.getBool()
     of KdlNull:
@@ -99,6 +106,11 @@ proc pretty*(node: KdlNode): string =
         result.add " "
 
       result.add &"{key.prettyIdent}={val.pretty}"
+
+  if node.children.len > 0:
+    result.add " {\n"
+    result.add indent($node.children, 2)
+    result.add "\n}"
 
 proc pretty*(doc: KdlDoc): string = 
   ## Pretty print a KDL document according to the [translation rules](https://github.com/kdl-org/kdl/tree/main/tests#translation-rules)

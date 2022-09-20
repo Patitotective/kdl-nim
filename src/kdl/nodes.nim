@@ -1,6 +1,10 @@
 import std/tables
 
 type
+  KdlError* = object of ValueError
+  KdlLexerError* = object of KdlError
+  KdlParserError* = object of KdlError
+
   KdlValKind* = enum
     KdlEmpty, 
     KdlNumber, 

@@ -1,9 +1,7 @@
 import std/[strformat, strutils, unicode, tables, macros]
+import nodes
 
 type
-  KdlError* = object of ValueError
-  KdlLexerError* = object of KdlError
-
   TokenKind* = enum
     tkEmpty = "empty", 
     tkNull = "null", 
@@ -57,6 +55,9 @@ const
     "(": tkOpenType, ")": tkCloseType,
   }
 
+
+# proc escapeKdl(str: string): string = 
+  
 
 proc getCoord(str: string, idx: int): Coord =
   let lines = str[0..<idx].splitLines(keepEol = true)

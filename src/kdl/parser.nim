@@ -1,4 +1,4 @@
-import std/[parseutils, strformat, strutils, unicode, tables, macros]
+import std/[parseutils, strformat, strutils, unicode, options, tables, macros]
 import lexer, nodes
 
 type
@@ -23,14 +23,14 @@ proc parsing(x: NimNode, slashdash: bool, body: NimNode): NimNode =
   ## ```
   ## Into
   ## ```nim
-  ## proc foo(parser: var Parser, required: bool = true): Match[T] {.discardable.} = 
+  ## proc foo(parser: var Parser, required: bool = true, slashdash: bool = true): Match[T] {.discardable.} = 
+  ##   result.ignore = parser.matchSlashDash(false).ok
   ##   echo "hi"
   ## ```
 
-
   body.expectKind(nnkProcDef)
 
-  result = body
+  result = body.copyNimTree()
 
   result.params[0] = nnkBracketExpr.newTree(ident"Match", x) # Return type
   result.params.insert(1, newIdentDefs(ident"parser", newNimNode(nnkVarTy).add(ident"Parser")))
@@ -39,7 +39,13 @@ proc parsing(x: NimNode, slashdash: bool, body: NimNode): NimNode =
 
   result.addPragma(ident"discardable")
 
-  result[^1].insert(0, newAssignment(newDotExpr(ident"result", ident"ignore"), newDotExpr(newCall(newDotExpr(ident"parser", ident"matchSlashDash"), ident"false"), ident"ok")))
+  if result[^1].kind == nnkEmpty:
+    result[^1] = newStmtList()
+
+  result[^1].insert(0, quote do:
+    if slashdash:
+      result.ignore = parser.matchSlashDash(false).ok
+  )
 
 macro parsing(x: typedesc, body: untyped): untyped = 
   parsing(x, false, body)
@@ -193,25 +199,25 @@ proc parseValue(token: Token): KdlVal =
     else:
       token.parseNull()
 
-proc parseIdent(token: Token): string = 
+proc parseIdent(token: Token): Option[string] = 
   case token.kind
   of strings:
-    token.parseString().getString()
+    token.parseString().getString().some
   of tkIdent:
-    token.lexeme
+    token.lexeme.some
   else:
-    ""
+    string.none
 
 proc matchSlashDash() {.parsing: None.} = 
   discard valid parser.match(tkSlashDash, required)
   parser.skipWhile({tkWhitespace})
 
-proc matchIdent() {.parsing: string.} = 
+proc matchIdent() {.parsing: Option[string].} = 
   result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent()
 
-proc matchTypeAnnot() {.parsing: string.} = 
+proc matchTypeAnnot() {.parsing: Option[string].} = 
   discard valid parser.match(tkOpenType, required)
-  result.val = valid(parser.matchIdent(true)).parseIdent()
+  result.val = valid parser.matchIdent(true)
   discard parser.match(tkCloseType, true)
 
 proc matchValue() {.parsing: KdlVal.} = 
@@ -229,7 +235,7 @@ proc matchProp() {.parsing(KdlProp, true).} =
 
   let value = valid parser.matchValue(true)
 
-  result.val = (ident, value)
+  result.val = (ident.get, value)
 
 proc matchNodeEnd() {.parsing: None.} = 
   result.ok = parser.eof()
@@ -267,7 +273,7 @@ proc matchNode() {.parsing(KdlNode, true).} =
   let annot = parser.matchTypeAnnot(false).val
   let ident = valid parser.matchIdent(required)
 
-  result.val = initKNode(ident, annot = annot)
+  result.val = initKNode(ident.get, annot = annot)
 
   invalid parser.matchNodeEnd(false)
 

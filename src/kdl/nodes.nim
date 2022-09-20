@@ -1,4 +1,4 @@
-import std/tables
+import std/[options, tables]
 
 type
   KdlError* = object of ValueError
@@ -13,7 +13,7 @@ type
     KdlNull
 
   KdlVal* = object
-    annot*: string # Type annotation
+    annot*: Option[string] # Type annotation
 
     case kind*: KdlValKind
     of KdlNumber:
@@ -28,7 +28,7 @@ type
   KdlProp* = tuple[key: string, val: KdlVal]
 
   KdlNode* = object
-    annot*: string
+    annot*: Option[string]
     name*: string
     args*: seq[KdlVal]
     props*: Table[string, KdlVal]
@@ -36,28 +36,28 @@ type
 
   KdlDoc* = seq[KdlNode]
 
-proc initKNode*(name: string, annot = "", args = newSeq[KdlVal](), props = initTable[string, KdlVal](), children = newSeq[KdlNode]()): KdlNode = 
+proc initKNode*(name: string, annot = string.none, args = newSeq[KdlVal](), props = initTable[string, KdlVal](), children = newSeq[KdlNode]()): KdlNode = 
   KdlNode(annot: annot, name: name, args: args, props: props, children: children)
 
-proc initKVal*(val: float, annot = ""): KdlVal = 
+proc initKVal*(val: float, annot = string.none): KdlVal = 
   KdlVal(annot: annot, kind: KdlNumber, num: val)
 
-proc initKVal*(val: string, annot = ""): KdlVal = 
+proc initKVal*(val: string, annot = string.none): KdlVal = 
   KdlVal(annot: annot, kind: KdlString, str: val)
 
-proc initKVal*(val: bool, annot = ""): KdlVal = 
+proc initKVal*(val: bool, annot = string.none): KdlVal = 
   KdlVal(annot: annot, kind: KdlBool, boolean: val)
 
-proc initKNumber*(val: float = default float, annot = ""): KdlVal = 
+proc initKNumber*(val: float = float.default, annot = string.none): KdlVal = 
   initKVal(val, annot)
 
-proc initKString*(val: string = default string, annot = ""): KdlVal = 
+proc initKString*(val: string = string.default, annot = string.none): KdlVal = 
   initKVal(val, annot)
 
-proc initKBool*(val: bool = default bool, annot = ""): KdlVal = 
+proc initKBool*(val: bool = bool.default, annot = string.none): KdlVal = 
   initKVal(val, annot)
 
-proc initKNull*(annot = ""): KdlVal = 
+proc initKNull*(annot = string.none): KdlVal = 
   KdlVal(annot: annot, kind: KdlNUll)
 
 proc getNumber*(val: KdlVal): float = 

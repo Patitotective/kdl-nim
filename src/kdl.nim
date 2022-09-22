@@ -1,33 +1,36 @@
 import std/[algorithm, strformat, strutils, sequtils, options, tables]
-import kdl/[parser, lexer, nodes]
+import kdl/[parser, lexer, nodes, utils]
 
+export options, tables
 export parser, nodes
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
 proc `$`*(val: KdlVal): string = 
-  if val.annot.isSome:
-    result = &"({val.annot.get.escape})"
+  if val.tag.isSome:
+    result = &"({val.tag.get.quoted})"
 
   result.add:
     case val.kind
-    of KdlNumber:
-      $val.getNumber()
+    of KdlFloat:
+      $val.getFloat()
     of KdlString:
-      val.getString().escape
+      val.getString().quoted
     of KdlBool:
       $val.getBool()
     of KdlNull:
       "null"
+    of KdlInt:
+      $val.getInt()
     of KdlEmpty:
       "empty"
 
 proc `$`*(doc: KdlDoc): string
 
 proc `$`*(node: KdlNode): string = 
-  if node.annot.isSome:
-    result = &"({node.annot.get.escape})"
+  if node.tag.isSome:
+    result = &"({node.tag.get.quoted})"
 
-  result.add node.name.escape()
+  result.add node.name.quoted()
 
   if node.args.len > 0:
     result.add " "
@@ -44,7 +47,7 @@ proc `$`*(node: KdlNode): string =
       if count in 1..<node.props.len:
         result.add " "
 
-      result.add &"{key.escape}={val}"
+      result.add &"{key.quoted}={val}"
 
       inc count
 
@@ -63,31 +66,32 @@ proc prettyIdent*(ident: string): string =
   if validToken(ident, tokenIdent):
     ident
   else:
-    ident.escape()
+    ident.quoted()
 
 proc pretty*(val: KdlVal): string = 
-  if val.annot.isSome:
-    result = &"({val.annot.get.prettyIdent})"
+  if val.tag.isSome:
+    result = &"({val.tag.get.prettyIdent})"
 
   result.add:
     case val.kind
-    of KdlNumber:
-      if val.getNumber() == float int val.getNumber():
-        $int(val.getNumber())
-      else:
-        $val.getNumber().formatFloat(ffScientific, -1)
+    of KdlFloat:
+      $val.getFloat().formatFloat(ffScientific, -1)
     of KdlString:
-      val.getString().escape()
+      val.getString().quoted()
     of KdlBool:
       $val.getBool()
     of KdlNull:
       "null"
+    of KdlInt:
+      $val.getInt()
     of KdlEmpty:
       "empty"
 
+proc pretty*(doc: KdlDoc, newLine = true): string 
+
 proc pretty*(node: KdlNode): string = 
-  if node.annot.isSome:
-    result = &"({node.annot.get.prettyIdent})"
+  if node.tag.isSome:
+    result = &"({node.tag.get.prettyIdent})"
 
   result.add node.name.prettyIdent()
 
@@ -109,12 +113,15 @@ proc pretty*(node: KdlNode): string =
 
   if node.children.len > 0:
     result.add " {\n"
-    result.add indent($node.children, 2)
+    result.add indent(node.children.pretty(newLine = false), 4)
     result.add "\n}"
 
-proc pretty*(doc: KdlDoc): string = 
-  ## Pretty print a KDL document according to the [translation rules](https://github.com/kdl-org/kdl/tree/main/tests#translation-rules)
+proc pretty*(doc: KdlDoc, newLine = true): string = 
+  ## Pretty print a KDL document according to the [translation rules](https://github.com/kdl-org/kdl/tree/main/tests#translation-rules).
+  ## If `newLine`, inserts a new line at the end.
   for e, node in doc:
     result.add node.pretty()
-    if e < doc.len:
+    if e < doc.high:
       result.add "\n"
+
+  if newLine: result.add "\n"

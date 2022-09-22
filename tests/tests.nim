@@ -1,8 +1,11 @@
-import std/[strformat, strutils, unittest, os]
+import std/[strformat, unittest, os]
 
 import kdl
 
 let testsDir = getAppDir() / "test_cases"
+
+proc escaped(x: string): string = 
+  result.addQuoted(x)
 
 suite "spec":
   for kind, path in walkDir(testsDir / "input"):
@@ -12,9 +15,10 @@ suite "spec":
 
     if fileExists(expectedPath):
       test "Valid: " & filename:
-        # checkpoint &"Expected: {readFile(expectedPath).escape} --- Got: {parseKdlFile(path).pretty().escape}"
+        checkpoint &"- Input: {readFile(path).escaped}\n- Expected: {readFile(expectedPath).escaped}\n- Got: {parseKdlFile(path).pretty().escaped}"
         check readFile(expectedPath) == parseKdlFile(path).pretty()
     else:
       test "Invalid: " & filename:
+        checkpoint &"- Input: {readFile(path).escaped}"
         expect(KDLError):
           discard parseKdlFile(path)

@@ -1,5 +1,5 @@
 import std/[strformat, strutils, unicode, tables, macros]
-import nodes
+import utils
 
 type
   TokenKind* = enum
@@ -12,9 +12,9 @@ type
     tkSlashDash = "slash_dash", 
     tkString = "string", tkRawString = "raw_string", 
     tkWhitespace = "whitespace", tkNewLine = "new_line", 
-    tkOpenType = "open_parenthesis", tkCloseType = "close_parenthesis", # Type annotation
+    tkOpenType = "open_parenthesis", tkCloseType = "close_parenthesis", # Type tagation
     tkOpenBlock = "open_bracket", tkCloseBlock = "close_bracket", # Children block
-    tkNumDec = "decimal_number", tkNumHex = "hexadecimal_number", tkNumBin = "binary_number", tkNumOct = "octagonal_number", 
+    tkNumFloat = "float_number", tkNumInt = "integer_number", tkNumHex = "hexadecimal_number", tkNumBin = "binary_number", tkNumOct = "octagonal_number", 
 
   Coord* = tuple[line: int, col: int]
 
@@ -38,6 +38,7 @@ const
     'r': "\u000D", # Carriage Return
     't': "\u0009", # Character Tabulation (Tab)
     '\\': "\u005C", # Reverse Solidus (Backslash)
+    '/': "\u002F", # Solidus (Forwardslash)
     '"': "\u0022", # Quotation Mark (Double Quote)
     'b': "\u0008", # Backspace
     'f': "\u000C", # Form Feed
@@ -54,9 +55,6 @@ const
     "{": tkOpenBlock, "}": tkCloseBlock,
     "(": tkOpenType, ")": tkCloseType,
   }
-
-
-# proc escapeKdl(str: string): string = 
   
 
 proc getCoord(str: string, idx: int): Coord =
@@ -159,6 +157,17 @@ proc skipWhile(lexer: var Lexer, x: set[char]): int {.discardable.} =
     inc result
     lexer.consume()
 
+proc tokenNumWhole(lexer: var Lexer) = 
+  if lexer.peek() in {'-', '+'}:
+    lexer.consume()
+
+  if lexer.peek() notin Digits:
+    return
+
+  lexer.consume()
+
+  lexer.skipWhile(Digits + {'_'})
+
 proc tokenNumExp(lexer: var Lexer) = 
   if lexer.peek().toLowerAscii() != 'e':
     return
@@ -173,37 +182,27 @@ proc tokenNumExp(lexer: var Lexer) =
 
   lexer.skipWhile(Digits + {'_'})
 
-proc tokenNumFloat(lexer: var Lexer) = 
-  if lexer.peek() != '.':
-    return
+proc tokenNumFloat() {.lexing: tkNumFloat.} = 
+  lexer.tokenNumWhole()
 
-  lexer.consume()
-
-  if lexer.peek() notin Digits:
-    lexer.error "Expected one or more digits"
-
-  lexer.skipWhile(Digits + {'_'})
-
-  if lexer.peek().toLowerAscii() == 'e':
-    lexer.tokenNumExp()
-
-proc tokenNumDec*() {.lexing: tkNumDec.} = 
-  if lexer.peek() in {'-', '+'}:
+  if lexer.peek() == '.':
     lexer.consume()
 
-  if lexer.peek() notin Digits:
+    if lexer.peek() notin Digits:
+      lexer.error "Expected one or more digits"
+
+    lexer.skipWhile(Digits + {'_'})
+
+    if lexer.peek().toLowerAscii() == 'e':
+      lexer.tokenNumExp()
+ 
+  elif lexer.peek().toLowerAscii() == 'e':
+    lexer.tokenNumExp()
+  else:
     return
 
-  lexer.consume()
-
-  lexer.skipWhile(Digits + {'_'})
-
-  case lexer.peek()
-  of 'e':
-    lexer.tokenNumExp()
-  of '.':
-    lexer.tokenNumFloat()
-  else: discard
+proc tokenNumInt*() {.lexing: tkNumInt.} = 
+  lexer.tokenNumWhole()
 
 proc tokenNumBin*() {.lexing: tkNumBin.} = 
   if lexer.until(2) == "0b":
@@ -312,18 +311,24 @@ proc tokenNewLine*() {.lexing: tkNewLine.} =
 
 proc tokenIdent*() {.lexing: tkIdent.} = 
   if lexer.eof() or lexer.peek() in nonInitialChars:
-    # lexer.error &"An identifier cannot start with {nonInitialChars} nor start with a hyphen ('-') and follow a digit"
     return
 
-  if lexer.literal("true", consume = false) or lexer.literal("false", consume = false) or 
-    lexer.literal("null", consume = false) or 
-    lexer.tokenNumHex(consume = false) or lexer.tokenNumBin(consume = false) or lexer.tokenNumOct(consume = false) or lexer.tokenNumDec(consume = false):
-    return 
-  
+  let before = lexer.current
+  # Check the identifier is not similar to a boolean, null or number, and if it is it should not follow EOF, whitespace, new line or any non-ident char.
+  if (
+      lexer.literal("true") or lexer.literal("false") or lexer.literal("null") or 
+      lexer.tokenNumHex(addToStack = false) or lexer.tokenNumBin(addToStack = false) or lexer.tokenNumOct(addToStack = false) or lexer.tokenNumInt(addToStack = false) or lexer.tokenNumFloat(addToStack = false)
+    ) and 
+    (lexer.eof() or lexer.tokenWhitespace(addToStack = false) or lexer.tokenNewLine(addToStack = false) or lexer.peek() in nonIdenChars):
+    lexer.current = before
+
+    return
+
+  # lexer.current = before
+
   block outer:
     for rune in lexer.source[lexer.current..^1].runes: # FIXME: slicing copies string, unnecessary, better copy unicode and replace string with openArray[char]
       if rune.int <= 0x20 or lexer.eof() or lexer.tokenWhitespace(consume = false) or lexer.tokenNewLine(consume = false):
-        # lexer.error &"Identifiers cannot have lower codepoints than 32, found {rune.int}"
         break outer
 
       for c in nonIdenChars:
@@ -383,17 +388,13 @@ proc tokenLitMatches() {.lexing: tkEmpty.} =
       lexer.add(kind, before)
       break
 
-  result = before != lexer.current
-
 proc validToken*(input: string, token: proc(lexer: var Lexer, consume = true, addToStack = true): bool): bool = 
   var lexer = Lexer(source: input, current: 0)
 
   try:
-    discard lexer.token()
+    result = lexer.token() and lexer.eof()
   except KdlLexerError:
     return
-
-  result = lexer.eof()
 
 proc scanKdl*(lexer: var Lexer) = 
   const choices = [
@@ -404,12 +405,13 @@ proc scanKdl*(lexer: var Lexer) =
     tokenMultiLineComment, 
     tokenRawString, 
     tokenString, 
+    tokenIdent, 
     tokenNumHex, 
     tokenNumBin, 
     tokenNumOct, 
-    tokenNumDec, 
+    tokenNumFloat, 
+    tokenNumInt, 
     tokenLitMatches, 
-    tokenIdent, 
   ]
 
   while not lexer.eof():
@@ -434,3 +436,5 @@ proc scanKdl*(source: string, start = 0): Lexer =
 
 proc scanKdlFile*(path: string): Lexer = 
   scanKdl(readFile(path))
+
+# echo scanKdl("node 1 2e2 3.10")

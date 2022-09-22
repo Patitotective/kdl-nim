@@ -1,5 +1,5 @@
 import std/[parseutils, strformat, strutils, unicode, options, tables, macros]
-import lexer, nodes
+import lexer, nodes, utils
 
 type
   None = object
@@ -12,7 +12,8 @@ type
   Match[T] = tuple[ok, ignore: bool, val: T]
 
 const
-  numbers = {tkNumDec, tkNumHex, tkNumBin, tkNumOct}
+  numbers = {tkNumFloat, tkNumInt, tkNumHex, tkNumBin, tkNumOct}
+  intNumbers = numbers - {tkNumFloat}
   strings = {tkString, tkRawString}
 
 macro parsing(x: typedesc, body: untyped): untyped = 
@@ -24,6 +25,7 @@ macro parsing(x: typedesc, body: untyped): untyped =
   ## Into
   ## ```nim
   ## proc foo(parser: var Parser, required: bool = true): Match[T] {.discardable.} = 
+  ##   let before = parser.current 
   ##   echo "hi"
   ## ```
 
@@ -36,6 +38,11 @@ macro parsing(x: typedesc, body: untyped): untyped =
   result.params.add(newIdentDefs(ident"required", ident"bool", newLit(true)))
 
   result.addPragma(ident"discardable")
+
+  if result[^1].kind == nnkStmtList: 
+    result[^1].insert(0, quote do: 
+      let before {.inject.} = parser.current
+    )
 
 proc eof(parser: Parser, extra = 0): bool = 
   parser.current + extra >= parser.stack.len
@@ -55,6 +62,7 @@ proc consume(parser: var Parser, amount = 1) =
   parser.current += amount
 
 template invalid[T](x: Match[T]) = 
+  ## Returns if x is ok
   let val = x
 
   result.ok = val.ok
@@ -63,11 +71,14 @@ template invalid[T](x: Match[T]) =
     return
 
 template valid[T](x: Match[T]): T = 
+  ## Returns if x is not ok and gives x.val back
   let val = x
 
   result.ok = val.ok
 
   if not result.ok:
+    result.ignore = false
+    parser.current = before
     return
 
   val.val
@@ -107,19 +118,23 @@ proc more(kind: TokenKind) {.parsing: None.} =
 proc parseNumber(token: Token): KdlVal = 
   assert token.kind in numbers
 
-  result = initKNumber()
+  if token.kind in intNumbers:
+    result = initKInt()
 
-  result.num = 
-    case token.kind
-    of tkNumDec:
-      token.lexeme.parseFloat()
-    of tkNumBin:
-      float token.lexeme.parseBinInt()
-    of tkNumHex:
-      float token.lexeme.parseHexInt()
-    of tkNumOct:
-      float token.lexeme.parseOctInt()
-    else: 0f
+    result.num = 
+      case token.kind
+      of tkNumInt:
+        token.lexeme.parseBiggestInt()
+      of tkNumBin:
+        token.lexeme.parseBinInt()
+      of tkNumHex:
+        token.lexeme.parseHexInt()
+      of tkNumOct:
+        token.lexeme.parseOctInt()
+      else: 0
+  else:
+    result = initKFloat()
+    result.fnum = token.lexeme.parseFloat()
 
 proc escapeString(str: string, x = 0..str.high): string = 
   var i = x.a
@@ -188,29 +203,27 @@ proc matchSlashDash() {.parsing: None.} =
 proc matchIdent() {.parsing: Option[string].} = 
   result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent()
 
-proc matchTypeAnnot() {.parsing: Option[string].} = 
+proc matchTag() {.parsing: Option[string].} = 
   discard valid parser.match(tkOpenType, required)
-  result.val = valid parser.matchIdent(true)
+  result.val = valid parser.matchIdent(required = true)
   discard parser.match(tkCloseType, true)
 
 proc matchValue(slashdash = false) {.parsing: KdlVal.} = 
   if slashdash:
-    result.ignore = parser.matchSlashDash(false).ok
+    result.ignore = parser.matchSlashDash(required = false).ok
 
-  let (_, _, annot) = parser.matchTypeAnnot(false)
+  let (_, _, tag) = parser.matchTag(required = false)
 
   result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue()
-  result.val.annot = annot
+  result.val.tag = tag
 
 proc matchProp(slashdash = true) {.parsing: KdlProp.} = 
   if slashdash:
-    result.ignore = parser.matchSlashDash(false).ok
+    result.ignore = parser.matchSlashDash(required = false).ok
 
-  let ident = valid parser.matchIdent(required)
-  if not parser.match(tkEqual, false).ok:
-    dec parser.current # Unconsume identifier
-    result.ok = false
-    return
+  let ident = valid parser.matchIdent(required = false)
+
+  discard valid parser.match(tkEqual, required)
 
   let value = valid parser.matchValue(required = true)
 
@@ -245,43 +258,44 @@ proc matchNodes() {.parsing: KdlDoc.} =
 
 proc matchChildren(slashdash = true) {.parsing: KdlDoc.} = 
   if slashdash:
-    echo "?"
-    echo parser.peek()
-    result.ignore = parser.matchSlashDash(false).ok
+    result.ignore = parser.matchSlashDash(required = false).ok
 
   discard valid parser.match(tkOpenBlock, required)
-  result.val = parser.matchNodes(false).val
+  result.val = parser.matchNodes(required = false).val
   discard valid parser.match(tkCloseBlock, true)
 
 proc matchNode(slashdash = true) {.parsing: KdlNode.} = 
   if slashdash:
-    result.ignore = parser.matchSlashDash(false).ok
+    result.ignore = parser.matchSlashDash(required = false).ok
 
-  let annot = parser.matchTypeAnnot(false).val
+  let tag = parser.matchTag(required = false).val
   let ident = valid parser.matchIdent(required)
 
-  result.val = initKNode(ident.get, annot = annot)
+  result.val = initKNode(ident.get, tag = tag)
 
-  invalid parser.matchNodeEnd(false)
+  invalid parser.matchNodeEnd(required = false)
 
   discard valid parser.more(tkWhitespace, true)
 
   while true: # Match arguments and properties
-    if hasValue parser.matchProp(required = false):
+    let propMatch = parser.matchProp(required = false)
+
+    if hasValue propMatch:
       result.val.props[val.key] = val.val
     else:
-      if hasValue parser.matchValue(required = false, slashdash = true):
+      let valMatch = parser.matchValue(required = false, slashdash = true)
+
+      if hasValue valMatch:
         result.val.args.add val
-      else:
+      elif not valMatch.ignore and not propMatch.ignore:
         break
 
-    invalid parser.matchNodeEnd(false)
-
-    discard valid parser.more(tkWhitespace, true)
+    if not parser.more(tkWhitespace, required = false).ok:
+      invalid parser.matchNodeEnd(required = true)
 
   setValue result.val.children, parser.matchChildren(required = false)
 
-  invalid parser.matchNodeEnd(true)
+  invalid parser.matchNodeEnd(required = true)
 
 proc parseKdl*(lexer: Lexer): KdlDoc = 
   var parser = Parser(stack: lexer.stack, source: lexer.source)
@@ -292,3 +306,5 @@ proc parseKdl*(source: string, start = 0): KdlDoc =
 
 proc parseKdlFile*(path: string): KdlDoc = 
   parseKdl(readFile(path))
+
+# echo parseKdl("node (type)")

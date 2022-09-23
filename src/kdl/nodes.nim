@@ -153,18 +153,18 @@ proc setInt*(val: var KdlVal, x: SomeInteger) =
   assert val.isInt()
   val.num = x
 
-proc setVal*[T: SomeNumber or string or bool](val: var KdlVal, x: T) = 
+proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) = 
   ## Tries to set val to x, raises an error when it cannot.
   runnableExamples:
     var val = initKFloat(3.14)
 
-    val.setVal(100u8)
+    val.setTo(100u8)
 
-    assert val.getInt() == 100
+    assert val.getFloat() == 100
 
-    val.setVal(20.12e2f)
-    echo val
-    # assert val.get(float32) == 3.14f
+    val.setTo(20.12e2f)
+
+    assert val.get(float32) == 20.12e2f
 
   when T is string:
     assert val.isString

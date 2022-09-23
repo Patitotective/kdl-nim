@@ -1,4 +1,7 @@
 KdlError	kdl/utils.html#KdlError	utils: KdlError	
 KdlLexerError	kdl/utils.html#KdlLexerError	utils: KdlLexerError	
 KdlParserError	kdl/utils.html#KdlParserError	utils: KdlParserError	
+Coord	kdl/utils.html#Coord	utils: Coord	
 quoted	kdl/utils.html#quoted,string	utils: quoted(x: string): string	
+getCoord	kdl/utils.html#getCoord,string,int	utils: getCoord(str: string; idx: int): Coord	
+errorAt	kdl/utils.html#errorAt,string,tuple[int,int]	utils: errorAt(source: string; coord: tuple[line, col: int]): string	

@@ -20,11 +20,9 @@ tkNumBin	kdl/lexer.html#tkNumBin	TokenKind.tkNumBin
 tkNumOct	kdl/lexer.html#tkNumOct	TokenKind.tkNumOct	
 tkLineCont	kdl/lexer.html#tkLineCont	TokenKind.tkLineCont	
 TokenKind	kdl/lexer.html#TokenKind	lexer: TokenKind	
-Coord	kdl/lexer.html#Coord	lexer: Coord	
 Token	kdl/lexer.html#Token	lexer: Token	
 Lexer	kdl/lexer.html#Lexer	lexer: Lexer	
 escapeTable	kdl/lexer.html#escapeTable	lexer: escapeTable	
-errorAt	kdl/lexer.html#errorAt,string,tuple[int,int]	lexer: errorAt(source: string; coord: tuple[line, col: int]): string	
 `$`	kdl/lexer.html#$,Lexer	lexer: `$`(lexer: Lexer): string	
 tokenNumInt	kdl/lexer.html#tokenNumInt,Lexer,bool,bool	lexer: tokenNumInt(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
 tokenNumBin	kdl/lexer.html#tokenNumBin,Lexer,bool,bool	lexer: tokenNumBin(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	

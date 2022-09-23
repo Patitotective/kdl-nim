@@ -52,10 +52,10 @@ proc peek(parser: Parser, next = 0): Token =
     result = parser.stack[parser.current + next]
   else:
     let token = parser.stack[parser.current - 1]
-    result = Token(coord: (token.coord.line, token.coord.col + token.lexeme.len))
+    result = Token(start: token.start + token.lexeme.len)
 
 proc error(parser: Parser, msg: string) = 
-  let coord = parser.peek().coord
+  let coord = parser.source.getCoord(parser.peek().start)
   raise newException(KdlParserError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{parser.source.errorAt(coord).indent(2)}")
 
 proc consume(parser: var Parser, amount = 1) = 
@@ -92,7 +92,6 @@ template setValue[T](x: untyped, match: Match[T]) =
 
 proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} = 
   let token = parser.peek()
-
   if (when x is TokenKind: token.kind == x else: token.kind in x):
     result.ok = true
     result.val = token

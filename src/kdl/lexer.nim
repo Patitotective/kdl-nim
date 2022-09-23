@@ -18,11 +18,9 @@ type
     # tkComment = "comment",  # Only multi-line comments are scanned
     tkLineCont = "line_continuation"
 
-  Coord* = tuple[line: int, col: int]
-
   Token* = object
     lexeme*: string
-    coord*: Coord
+    start*: int
     kind*: TokenKind
 
   Lexer* = object
@@ -57,22 +55,6 @@ const
     "{": tkOpenBlock, "}": tkCloseBlock,
     "(": tkOpenType, ")": tkCloseType,
   }
-  
-proc getCoord(str: string, idx: int): Coord =
-  let lines = str[0..<idx].splitLines(keepEol = true)
-
-  result = (lines.high, lines[^1].len)
-
-proc errorAt*(source: string, coord: tuple[line, col: int]): string = 
-  let lines = source.splitLines
-  if coord.line > lines.len:
-    return &"Invalid line {coord.line}, expected one in 0..{lines.high}"
-
-  let line = lines[coord.line]
-
-  let lineNum = &"{coord.line + 1} | "
-  result.add(&"{lineNum}{line}\n")
-  result.add(&"{repeat(' ', lineNum.len + coord.col)}^\n")
 
 proc `$`*(lexer: Lexer): string = 
   result = &"{(if lexer.current == lexer.source.len: \"SUCCESS\" else: \"FAIL\")} {lexer.current}/{lexer.source.len}\n\t"
@@ -127,7 +109,7 @@ macro lexing(token: TokenKind, body: untyped) =
   result = body
 
 proc add(lexer: var Lexer, kind: TokenKind, start: int, until = lexer.current) = 
-  lexer.stack.add(Token(kind: kind, lexeme: lexer.source[start..<until], coord: lexer.source.getCoord(start)))
+  lexer.stack.add(Token(kind: kind, lexeme: lexer.source[start..<until], start: start))
 
 proc eof(lexer: Lexer, extra = 0): bool = 
   lexer.current + extra >= lexer.source.len
@@ -410,7 +392,6 @@ proc scanKdl*(lexer: var Lexer) =
     tokenNewLine, 
     tokenLineCont, 
     tokenSingleLineComment, 
-    # tokenMultiLineComment, 
     tokenRawString, 
     tokenString, 
     tokenIdent, 
@@ -426,14 +407,9 @@ proc scanKdl*(lexer: var Lexer) =
     var anyMatch = false
 
     for choice in choices:
-      let prevLexer = lexer
-
       if lexer.choice():
         anyMatch = true
         break
-      else:
-        ## FIXME: echo "Backtracking: ", lexer != prevLexer
-        lexer = prevLexer
 
     if not anyMatch:
       lexer.error "Could not match any pattern"

@@ -118,6 +118,7 @@ proc pretty*(node: KdlNode): string =
 
 proc pretty*(doc: KdlDoc, newLine = true): string = 
   ## Pretty print a KDL document according to the [translation rules](https://github.com/kdl-org/kdl/tree/main/tests#translation-rules).
+  ## 
   ## If `newLine`, inserts a new line at the end.
   for e, node in doc:
     result.add node.pretty()

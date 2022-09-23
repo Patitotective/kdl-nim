@@ -1,0 +1,45 @@
+tkEmpty	kdl/lexer.html#tkEmpty	TokenKind.tkEmpty	
+tkNull	kdl/lexer.html#tkNull	TokenKind.tkNull	
+tkBool	kdl/lexer.html#tkBool	TokenKind.tkBool	
+tkEqual	kdl/lexer.html#tkEqual	TokenKind.tkEqual	
+tkIdent	kdl/lexer.html#tkIdent	TokenKind.tkIdent	
+tkSemicolon	kdl/lexer.html#tkSemicolon	TokenKind.tkSemicolon	
+tkSlashDash	kdl/lexer.html#tkSlashDash	TokenKind.tkSlashDash	
+tkString	kdl/lexer.html#tkString	TokenKind.tkString	
+tkRawString	kdl/lexer.html#tkRawString	TokenKind.tkRawString	
+tkWhitespace	kdl/lexer.html#tkWhitespace	TokenKind.tkWhitespace	
+tkNewLine	kdl/lexer.html#tkNewLine	TokenKind.tkNewLine	
+tkOpenType	kdl/lexer.html#tkOpenType	TokenKind.tkOpenType	
+tkCloseType	kdl/lexer.html#tkCloseType	TokenKind.tkCloseType	
+tkOpenBlock	kdl/lexer.html#tkOpenBlock	TokenKind.tkOpenBlock	
+tkCloseBlock	kdl/lexer.html#tkCloseBlock	TokenKind.tkCloseBlock	
+tkNumFloat	kdl/lexer.html#tkNumFloat	TokenKind.tkNumFloat	
+tkNumInt	kdl/lexer.html#tkNumInt	TokenKind.tkNumInt	
+tkNumHex	kdl/lexer.html#tkNumHex	TokenKind.tkNumHex	
+tkNumBin	kdl/lexer.html#tkNumBin	TokenKind.tkNumBin	
+tkNumOct	kdl/lexer.html#tkNumOct	TokenKind.tkNumOct	
+tkLineCont	kdl/lexer.html#tkLineCont	TokenKind.tkLineCont	
+TokenKind	kdl/lexer.html#TokenKind	lexer: TokenKind	
+Coord	kdl/lexer.html#Coord	lexer: Coord	
+Token	kdl/lexer.html#Token	lexer: Token	
+Lexer	kdl/lexer.html#Lexer	lexer: Lexer	
+escapeTable	kdl/lexer.html#escapeTable	lexer: escapeTable	
+errorAt	kdl/lexer.html#errorAt,string,tuple[int,int]	lexer: errorAt(source: string; coord: tuple[line, col: int]): string	
+`$`	kdl/lexer.html#$,Lexer	lexer: `$`(lexer: Lexer): string	
+tokenNumInt	kdl/lexer.html#tokenNumInt,Lexer,bool,bool	lexer: tokenNumInt(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenNumBin	kdl/lexer.html#tokenNumBin,Lexer,bool,bool	lexer: tokenNumBin(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenNumHex	kdl/lexer.html#tokenNumHex,Lexer,bool,bool	lexer: tokenNumHex(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenNumOct	kdl/lexer.html#tokenNumOct,Lexer,bool,bool	lexer: tokenNumOct(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenString	kdl/lexer.html#tokenString,Lexer,bool,bool	lexer: tokenString(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenRawString	kdl/lexer.html#tokenRawString,Lexer,bool,bool	lexer: tokenRawString(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenMultiLineComment	kdl/lexer.html#tokenMultiLineComment,Lexer,bool,bool	lexer: tokenMultiLineComment(lexer: var Lexer; consume: bool = true;\n                      addToStack: bool = true): bool	
+tokenWhitespace	kdl/lexer.html#tokenWhitespace,Lexer,bool,bool	lexer: tokenWhitespace(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+skipWhitespaces	kdl/lexer.html#skipWhitespaces,Lexer,bool,bool	lexer: skipWhitespaces(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenNewLine	kdl/lexer.html#tokenNewLine,Lexer,bool,bool	lexer: tokenNewLine(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenIdent	kdl/lexer.html#tokenIdent,Lexer,bool,bool	lexer: tokenIdent(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+tokenSingleLineComment	kdl/lexer.html#tokenSingleLineComment,Lexer,bool,bool	lexer: tokenSingleLineComment(lexer: var Lexer; consume: bool = true;\n                       addToStack: bool = true): bool	
+tokenLineCont	kdl/lexer.html#tokenLineCont,Lexer,bool,bool	lexer: tokenLineCont(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
+validToken	kdl/lexer.html#validToken,string,proc(Lexer,,)	lexer: validToken(input: string; token: proc (lexer: var Lexer; consume = true;\n                                       addToStack = true): bool): bool	
+scanKdl	kdl/lexer.html#scanKdl,Lexer	lexer: scanKdl(lexer: var Lexer)	
+scanKdl	kdl/lexer.html#scanKdl,string,int	lexer: scanKdl(source: string; start = 0): Lexer	
+scanKdlFile	kdl/lexer.html#scanKdlFile,string	lexer: scanKdlFile(path: string): Lexer	

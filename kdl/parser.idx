@@ -1,0 +1,4 @@
+Parser	kdl/parser.html#Parser	parser: Parser	
+parseKdl	kdl/parser.html#parseKdl,Lexer	parser: parseKdl(lexer: Lexer): KdlDoc	
+parseKdl	kdl/parser.html#parseKdl,string,int	parser: parseKdl(source: string; start = 0): KdlDoc	
+parseKdlFile	kdl/parser.html#parseKdlFile,string	parser: parseKdlFile(path: string): KdlDoc	

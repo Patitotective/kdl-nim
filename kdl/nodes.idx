@@ -1,0 +1,53 @@
+KdlEmpty	kdl/nodes.html#KdlEmpty	KdlValKind.KdlEmpty	
+KdlString	kdl/nodes.html#KdlString	KdlValKind.KdlString	
+KdlFloat	kdl/nodes.html#KdlFloat	KdlValKind.KdlFloat	
+KdlBool	kdl/nodes.html#KdlBool	KdlValKind.KdlBool	
+KdlNull	kdl/nodes.html#KdlNull	KdlValKind.KdlNull	
+KdlInt	kdl/nodes.html#KdlInt	KdlValKind.KdlInt	
+KdlValKind	kdl/nodes.html#KdlValKind	nodes: KdlValKind	
+KdlVal	kdl/nodes.html#KdlVal	nodes: KdlVal	
+KdlProp	kdl/nodes.html#KdlProp	nodes: KdlProp	
+KdlNode	kdl/nodes.html#KdlNode	nodes: KdlNode	
+KdlDoc	kdl/nodes.html#KdlDoc	nodes: KdlDoc	
+initKNode	kdl/nodes.html#initKNode,string,openArray[KdlVal],openArray[KdlNode]	nodes: initKNode(name: string; tag = string.none;\n          args: openArray[KdlVal] = newSeq[KdlVal](); props = initTable();\n          children: openArray[KdlNode] = newSeq[KdlNode]()): KdlNode	
+initKVal	kdl/nodes.html#initKVal,string	nodes: initKVal(val: string; tag = string.none): KdlVal	
+initKVal	kdl/nodes.html#initKVal,SomeFloat	nodes: initKVal(val: SomeFloat; tag = string.none): KdlVal	
+initKVal	kdl/nodes.html#initKVal,bool	nodes: initKVal(val: bool; tag = string.none): KdlVal	
+initKVal	kdl/nodes.html#initKVal,SomeInteger	nodes: initKVal(val: SomeInteger; tag = string.none): KdlVal	
+initKVal	kdl/nodes.html#initKVal,KdlVal	nodes: initKVal(val: KdlVal): KdlVal	
+initKString	kdl/nodes.html#initKString	nodes: initKString(val = string.default; tag = string.none): KdlVal	
+initKFloat	kdl/nodes.html#initKFloat,SomeFloat	nodes: initKFloat(val: SomeFloat = float.default; tag = string.none): KdlVal	
+initKBool	kdl/nodes.html#initKBool	nodes: initKBool(val = bool.default; tag = string.none): KdlVal	
+initKNull	kdl/nodes.html#initKNull	nodes: initKNull(tag = string.none): KdlVal	
+initKInt	kdl/nodes.html#initKInt,SomeInteger	nodes: initKInt(val: SomeInteger = int64.default; tag = string.none): KdlVal	
+isString	kdl/nodes.html#isString,KdlVal	nodes: isString(val: KdlVal): bool	
+isFloat	kdl/nodes.html#isFloat,KdlVal	nodes: isFloat(val: KdlVal): bool	
+isBool	kdl/nodes.html#isBool,KdlVal	nodes: isBool(val: KdlVal): bool	
+isInt	kdl/nodes.html#isInt,KdlVal	nodes: isInt(val: KdlVal): bool	
+isNull	kdl/nodes.html#isNull,KdlVal	nodes: isNull(val: KdlVal): bool	
+isEmpty	kdl/nodes.html#isEmpty,KdlVal	nodes: isEmpty(val: KdlVal): bool	
+getString	kdl/nodes.html#getString,KdlVal	nodes: getString(val: KdlVal): string	
+getFloat	kdl/nodes.html#getFloat,KdlVal	nodes: getFloat(val: KdlVal): float	
+getBool	kdl/nodes.html#getBool,KdlVal	nodes: getBool(val: KdlVal): bool	
+getInt	kdl/nodes.html#getInt,KdlVal	nodes: getInt(val: KdlVal): int64	
+get	kdl/nodes.html#get,KdlVal,typedesc[T]	nodes: get[T: SomeNumber or string or bool](val: KdlVal; x: typedesc[T]): T	
+setString	kdl/nodes.html#setString,KdlVal,string	nodes: setString(val: var KdlVal; x: string)	
+setFloat	kdl/nodes.html#setFloat,KdlVal,SomeFloat	nodes: setFloat(val: var KdlVal; x: SomeFloat)	
+setBool	kdl/nodes.html#setBool,KdlVal,bool	nodes: setBool(val: var KdlVal; x: bool)	
+setInt	kdl/nodes.html#setInt,KdlVal,SomeInteger	nodes: setInt(val: var KdlVal; x: SomeInteger)	
+setTo	kdl/nodes.html#setTo,KdlVal,T	nodes: setTo[T: SomeNumber or string or bool](val: var KdlVal; x: T)	
+`==`	kdl/nodes.html#==,KdlVal,KdlVal	nodes: `==`(val1, val2: KdlVal): bool	
+`==`	kdl/nodes.html#==,KdlVal,T	nodes: `==`[T: SomeNumber or string or bool](val: KdlVal; x: T): bool	
+`[]`	kdl/nodes.html#[],KdlNode,	nodes: `[]`(node: KdlNode; idx: int | BackwardsIndex): KdlVal	
+`[]`	kdl/nodes.html#[],KdlNode,string	nodes: `[]`(node: KdlNode; key: string): KdlVal	
+`[]=`	kdl/nodes.html#[]=,KdlNode,string,KdlVal	nodes: `[]=`(node: var KdlNode; key: string; val: KdlVal)	
+hasKey	kdl/nodes.html#hasKey,KdlNode,string	nodes: hasKey(node: KdlNode; key: string): bool	
+contains	kdl/nodes.html#contains,KdlNode,string	nodes: contains(node: KdlNode; key: string): bool	
+contains	kdl/nodes.html#contains,KdlNode,KdlVal	nodes: contains(node: KdlNode; val: KdlVal): bool	
+len	kdl/nodes.html#len,KdlNode	nodes: len(node: KdlNode): int	
+add	kdl/nodes.html#add,KdlNode,KdlVal	nodes: add(node: var KdlNode; val: KdlVal)	
+items	kdl/nodes.html#items.i,KdlNode	nodes: items(node: KdlNode): KdlVal	
+pairs	kdl/nodes.html#pairs.i,KdlNode	nodes: pairs(node: KdlNode): (string, KdlVal)	
+toKdlVal	kdl/nodes.html#toKdlVal.m,untyped	nodes: toKdlVal(body: untyped): untyped	
+toKdlNode	kdl/nodes.html#toKdlNode.m,untyped	nodes: toKdlNode(body: untyped): untyped	
+toKdl	kdl/nodes.html#toKdl.m,untyped	nodes: toKdl(body: untyped): untyped	

@@ -1,0 +1,4 @@
+KdlError	kdl/utils.html#KdlError	utils: KdlError	
+KdlLexerError	kdl/utils.html#KdlLexerError	utils: KdlLexerError	
+KdlParserError	kdl/utils.html#KdlParserError	utils: KdlParserError	
+quoted	kdl/utils.html#quoted,string	utils: quoted(x: string): string	

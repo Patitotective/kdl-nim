@@ -15,6 +15,8 @@ type
     tkOpenType = "open_parenthesis", tkCloseType = "close_parenthesis", # Type tagation
     tkOpenBlock = "open_bracket", tkCloseBlock = "close_bracket", # Children block
     tkNumFloat = "float_number", tkNumInt = "integer_number", tkNumHex = "hexadecimal_number", tkNumBin = "binary_number", tkNumOct = "octagonal_number", 
+    # tkComment = "comment",  # Only multi-line comments are scanned
+    tkLineCont = "line_continuation"
 
   Coord* = tuple[line: int, col: int]
 
@@ -56,7 +58,6 @@ const
     "(": tkOpenType, ")": tkCloseType,
   }
   
-
 proc getCoord(str: string, idx: int): Coord =
   let lines = str[0..<idx].splitLines(keepEol = true)
 
@@ -157,11 +158,13 @@ proc skipWhile(lexer: var Lexer, x: set[char]): int {.discardable.} =
     inc result
     lexer.consume()
 
-proc tokenNumWhole(lexer: var Lexer) = 
+proc tokenNumWhole() {.lexing: tkEmpty.} = 
+  let before = lexer.current
   if lexer.peek() in {'-', '+'}:
     lexer.consume()
 
   if lexer.peek() notin Digits:
+    lexer.current = before
     return
 
   lexer.consume()
@@ -183,7 +186,10 @@ proc tokenNumExp(lexer: var Lexer) =
   lexer.skipWhile(Digits + {'_'})
 
 proc tokenNumFloat() {.lexing: tkNumFloat.} = 
-  lexer.tokenNumWhole()
+  let before = lexer.current
+  if not lexer.tokenNumWhole():
+    lexer.current = before
+    return
 
   if lexer.peek() == '.':
     lexer.consume()
@@ -199,6 +205,7 @@ proc tokenNumFloat() {.lexing: tkNumFloat.} =
   elif lexer.peek().toLowerAscii() == 'e':
     lexer.tokenNumExp()
   else:
+    lexer.current = before
     return
 
 proc tokenNumInt*() {.lexing: tkNumInt.} = 
@@ -293,9 +300,32 @@ proc tokenString*() {.lexing: tkString.} =
 proc tokenRawString*() {.lexing: tkRawString.} =
   lexer.tokenStringBody(raw = true)
 
+proc tokenMultiLineComment*() {.lexing: tkEmpty.} = 
+  if lexer.until(2) != "/*":
+    return
+
+  lexer.consume 2
+
+  var nested = 1
+
+  while not lexer.eof() and nested > 0:
+    if lexer.until(2) == "*/":
+      dec nested
+      lexer.consume 2
+    elif lexer.until(2) == "/*":
+      inc nested
+      lexer.consume 2
+    else:
+      lexer.consume()
+
+  if nested > 0:
+    lexer.error "Expected end of multi-line comment"
+
 proc tokenWhitespace*() {.lexing: tkWhitespace.} = 
   if not lexer.eof() and (let rune = lexer.source.runeAt(lexer.current); rune.int in whitespaces):
     lexer.consume rune.size
+  else:
+    lexer.tokenMultiLineComment()
 
 proc skipWhitespaces*() {.lexing: tkEmpty.} = 
   while lexer.tokenWhitespace():
@@ -314,15 +344,14 @@ proc tokenIdent*() {.lexing: tkIdent.} =
     return
 
   let before = lexer.current
-  # Check the identifier is not similar to a boolean, null or number, and if it is it should not follow EOF, whitespace, new line or any non-ident char.
+  # Check the identifier is similar to a boolean, null or number, and if it is it should follow the EOF, a whitespace, a new line or any non-ident char in order to be discarded.
   if (
       lexer.literal("true") or lexer.literal("false") or lexer.literal("null") or 
-      lexer.tokenNumHex(addToStack = false) or lexer.tokenNumBin(addToStack = false) or lexer.tokenNumOct(addToStack = false) or lexer.tokenNumInt(addToStack = false) or lexer.tokenNumFloat(addToStack = false)
-    ) and 
-    (lexer.eof() or lexer.tokenWhitespace(addToStack = false) or lexer.tokenNewLine(addToStack = false) or lexer.peek() in nonIdenChars):
-    lexer.current = before
-
-    return
+      lexer.tokenNumHex(addToStack = false) or lexer.tokenNumBin(addToStack = false) or lexer.tokenNumOct(addToStack = false) or lexer.tokenNumFloat(addToStack = false) or lexer.tokenNumInt(addToStack = false)
+    ):
+    if (lexer.eof() or lexer.tokenWhitespace(addToStack = false) or lexer.tokenNewLine(addToStack = false) or lexer.peek() in nonIdenChars):
+      lexer.current = before
+      return
 
   # lexer.current = before
 
@@ -348,28 +377,7 @@ proc tokenSingleLineComment*() {.lexing: tkEmpty.} =
       break
     lexer.consume()
 
-proc tokenMultiLineComment*() {.lexing: tkEmpty.} = 
-  if lexer.until(2) != "/*":
-    return
-
-  lexer.consume 2
-
-  var nested = 1
-
-  while not lexer.eof() and nested > 0:
-    if lexer.until(2) == "*/":
-      dec nested
-      lexer.consume 2
-    elif lexer.until(2) == "/*":
-      inc nested
-      lexer.consume 2
-    else:
-      lexer.consume()
-
-  if nested > 0:
-    lexer.error "Expected end of multi-line comment"
-
-proc tokenLineCont*() {.lexing: tkEmpty.} = 
+proc tokenLineCont*() {.lexing: tkLineCont.} = 
   if lexer.peek() != '\\':
     return
 
@@ -402,7 +410,7 @@ proc scanKdl*(lexer: var Lexer) =
     tokenNewLine, 
     tokenLineCont, 
     tokenSingleLineComment, 
-    tokenMultiLineComment, 
+    # tokenMultiLineComment, 
     tokenRawString, 
     tokenString, 
     tokenIdent, 
@@ -436,5 +444,3 @@ proc scanKdl*(source: string, start = 0): Lexer =
 
 proc scanKdlFile*(path: string): Lexer = 
   scanKdl(readFile(path))
-
-# echo scanKdl("node 1 2e2 3.10")

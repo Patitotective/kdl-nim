@@ -1,8 +1,8 @@
 import std/[algorithm, strformat, strutils, sequtils, options, tables]
 import kdl/[parser, lexer, nodes, utils]
 
-export options, tables
 export parser, nodes
+export utils except quoted
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
 proc `$`*(val: KdlVal): string = 
@@ -75,7 +75,7 @@ proc pretty*(val: KdlVal): string =
   result.add:
     case val.kind
     of KdlFloat:
-      $val.getFloat().formatFloat(ffScientific, -1)
+      $val.getFloat().formatFloat(ffScientific, 1)
     of KdlString:
       val.getString().quoted()
     of KdlBool:

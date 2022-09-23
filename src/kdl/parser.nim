@@ -76,7 +76,7 @@ template valid[T](x: Match[T]): T =
 
   result.ok = val.ok
 
-  if not result.ok:
+  if not val.ok:
     result.ignore = false
     parser.current = before
     return
@@ -103,17 +103,18 @@ proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} =
     else:
       parser.error &"Expected one of {x} but found {token.kind}"
 
-proc skipWhile(parser: var Parser, kinds: set[TokenKind]) = 
+proc skipWhile(parser: var Parser, kinds: set[TokenKind]): int {.discardable.} = 
   while not parser.eof():
     if parser.peek().kind in kinds:
       parser.consume()
+      inc result
     else:
       break
 
 proc more(kind: TokenKind) {.parsing: None.} = 
   ## Matches one or more tokens of `kind`
   discard valid parser.match(kind, required)
-  parser.skipWhile({kind})
+  discard parser.skipWhile({kind})
 
 proc parseNumber(token: Token): KdlVal = 
   assert token.kind in numbers
@@ -132,6 +133,7 @@ proc parseNumber(token: Token): KdlVal =
       of tkNumOct:
         token.lexeme.parseOctInt()
       else: 0
+
   else:
     result = initKFloat()
     result.fnum = token.lexeme.parseFloat()
@@ -196,9 +198,21 @@ proc parseIdent(token: Token): Option[string] =
   else:
     string.none
 
+proc skipLineSpaces(parser: var Parser) = 
+  parser.skipWhile({tkNewLine, tkWhitespace})
+
+proc matchLineCont() {.parsing: None.} = 
+  parser.skipWhile({tkWhitespace})
+  discard valid parser.match(tkLineCont, required)
+  discard parser.skipWhile({tkWhitespace})
+
+proc matchNodeSpace() {.parsing: None.} = 
+  invalid parser.matchLineCont(required = false)
+  discard valid parser.more(tkWhitespace, required)
+
 proc matchSlashDash() {.parsing: None.} = 
   discard valid parser.match(tkSlashDash, required)
-  parser.skipWhile({tkWhitespace})
+  while parser.matchNodeSpace(required = false).ok: discard 
 
 proc matchIdent() {.parsing: Option[string].} = 
   result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent()
@@ -214,7 +228,12 @@ proc matchValue(slashdash = false) {.parsing: KdlVal.} =
 
   let (_, _, tag) = parser.matchTag(required = false)
 
+  # try:
   result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue()
+  # except RangeDefect:
+    # dec parser.current
+    # parser.error(getCurrentExceptionMsg())
+
   result.val.tag = tag
 
 proc matchProp(slashdash = true) {.parsing: KdlProp.} = 
@@ -238,9 +257,6 @@ proc matchNodeEnd() {.parsing: None.} =
 
     if token.kind == tkCloseBlock: # Unconsume
       dec parser.current
-
-proc skipLineSpaces(parser: var Parser) = 
-  parser.skipWhile({tkNewLine, tkWhitespace})
 
 proc matchNode(slashdash = true) {.parsing: KdlNode.}
 
@@ -275,7 +291,7 @@ proc matchNode(slashdash = true) {.parsing: KdlNode.} =
 
   invalid parser.matchNodeEnd(required = false)
 
-  discard valid parser.more(tkWhitespace, true)
+  discard valid parser.matchNodeSpace(required = true)
 
   while true: # Match arguments and properties
     let propMatch = parser.matchProp(required = false)
@@ -284,13 +300,12 @@ proc matchNode(slashdash = true) {.parsing: KdlNode.} =
       result.val.props[val.key] = val.val
     else:
       let valMatch = parser.matchValue(required = false, slashdash = true)
-
       if hasValue valMatch:
         result.val.args.add val
       elif not valMatch.ignore and not propMatch.ignore:
         break
 
-    if not parser.more(tkWhitespace, required = false).ok:
+    if not parser.matchNodeSpace(required = false).ok:
       invalid parser.matchNodeEnd(required = true)
 
   setValue result.val.children, parser.matchChildren(required = false)
@@ -306,5 +321,3 @@ proc parseKdl*(source: string, start = 0): KdlDoc =
 
 proc parseKdlFile*(path: string): KdlDoc = 
   parseKdl(readFile(path))
-
-# echo parseKdl("node (type)")

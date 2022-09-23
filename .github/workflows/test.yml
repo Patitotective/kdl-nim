@@ -1,0 +1,17 @@
+name: Run tests in ubuntu-latest and windows-latest
+on: [push, pull_request]
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: iffy/install-nim@v4.1.1
+      - run: nimble install -y
+      - run: nimble test # amd64
+      - run: nimble --cpu:i386 --passC:"-m32" --passL:"-m32" test # i386

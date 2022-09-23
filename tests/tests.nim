@@ -1,4 +1,4 @@
-import std/[strformat, unittest, os]
+import std/[unittest, os]
 
 import kdl
 
@@ -15,10 +15,8 @@ suite "spec":
 
     if fileExists(expectedPath):
       test "Valid: " & filename:
-        checkpoint &"- Input: {readFile(path).escaped}\n- Expected: {readFile(expectedPath).escaped}\n- Got: {parseKdlFile(path).pretty().escaped}"
         check readFile(expectedPath) == parseKdlFile(path).pretty()
     else:
       test "Invalid: " & filename:
-        checkpoint &"- Input: {readFile(path).escaped}"
         expect(KDLError):
           discard parseKdlFile(path)

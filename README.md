@@ -15,7 +15,7 @@ nimble install https://github.com/Patitotective/kdl-nim
 
 ## Overview
 ```nim
-import src/kdl
+import kdl
 
 var doc = parseKdl("""
 // Nodes can be separated into multiple lines

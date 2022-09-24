@@ -77,7 +77,7 @@ Documentation is live at https://patitotective.github.io/kdl-nim/.
 
 ## About
 - GitHub: https://github.com/Patitotective/kdl-nim.
-- Discord: https://discord.gg/as85Q4GnR6.
+- Discord: https://discord.gg/gdcPVjazCG.
 - Docs: https://patitotective.github.io/kdl-nim/.
 
 Contact me:

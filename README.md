@@ -8,6 +8,10 @@ KDL Nim implementation.
 ```
 nimble install kdl
 ```
+Or directly from this repository:
+```
+nimble install https://github.com/Patitotective/kdl-nim
+```
 
 ## Overview
 ```nim

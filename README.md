@@ -1,4 +1,7 @@
 # kdl-nim
+[![Nim](https://img.shields.io/badge/Made%20with%3A-Nim-yellow?style=flat&logo=nim&logoColor=white)](https://nim-lang.org)
+[![Tests](https://github.com/Patitotective/kdl-nim/actions/workflows/test.yml/badge.svg)](https://github.com/Patitotective/kdl-nim/actions/workflows/test.yml)
+
 KDL Nim implementation.
 
 ## Installation

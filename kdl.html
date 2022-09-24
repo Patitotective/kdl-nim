@@ -99,10 +99,13 @@ window.addEventListener('DOMContentLoaded', main);
   </div>
   <ul class="simple simple-toc" id="toc-list">
 <li><a class="reference" id="kdlminusnim_toc" href="#kdlminusnim">kdl-nim</a></li>
-<ul class="simple"><li><a class="reference" id="kdlminusnim-reading-nodes_toc" href="#kdlminusnim-reading-nodes">Reading nodes</a></li>
-<li><a class="reference" id="kdlminusnim-reading-values_toc" href="#kdlminusnim-reading-values">Reading values</a></li>
-<li><a class="reference" id="kdlminusnim-creating-kdl_toc" href="#kdlminusnim-creating-kdl">Creating KDL</a></li>
-</ul><li>
+<ul class="simple"><li><a class="reference" id="kdlminusnim-installation_toc" href="#kdlminusnim-installation">Installation</a></li>
+<li><a class="reference" id="kdlminusnim-overview_toc" href="#kdlminusnim-overview">Overview</a></li>
+<ul class="simple"><li><a class="reference" id="overview-parsing-kdl_toc" href="#overview-parsing-kdl">Parsing KDL</a></li>
+<li><a class="reference" id="overview-reading-nodes_toc" href="#overview-reading-nodes">Reading nodes</a></li>
+<li><a class="reference" id="overview-reading-values_toc" href="#overview-reading-values">Reading values</a></li>
+<li><a class="reference" id="overview-creating-kdl_toc" href="#overview-creating-kdl">Creating KDL</a></li>
+</ul></ul><li>
   <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
   <ul class="simple simple-toc-section">
     
@@ -166,10 +169,14 @@ class="link-seesrc" target="_blank">Source</a>
   <div id="tocRoot"></div>
   
   <p class="module-desc">
-<h1><a class="toc-backref" id="kdlminusnim" href="#kdlminusnim">kdl-nim</a></h1><p>kdl-nim is an implementation of the <a class="reference external" href="https://kdl.dev">KDL document language</a> in the Nim programming language. ## Installation</p>
-<p><pre class="listing">
+<h1><a class="toc-backref" id="kdlminusnim" href="#kdlminusnim">kdl-nim</a></h1><p>kdl-nim is an implementation of the <a class="reference external" href="https://kdl.dev">KDL document language</a> in the Nim programming language.</p>
+
+<h2><a class="toc-backref" id="kdlminusnim-installation" href="#kdlminusnim-installation">Installation</a></h2><p><pre class="listing">
 nimble install kdl
-</pre> ## Overview ### Parsing KDL kdl-nim parses strings (or files) into a <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlDoc</span></span></tt> which is a sequence of <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlNode</span></span></tt>s.</p>
+</pre></p>
+
+<h2><a class="toc-backref" id="kdlminusnim-overview" href="#kdlminusnim-overview">Overview</a></h2>
+<h3><a class="toc-backref" id="overview-parsing-kdl" href="#overview-parsing-kdl">Parsing KDL</a></h3><p>kdl-nim parses strings (or files) into a <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlDoc</span></span></tt> which is a sequence of <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlNode</span></span></tt>s.</p>
 <p>Each <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlNode</span></span></tt> holds a name, an optional type annotation (tag), zero ore more arguments, zero or more properties and optionally children nodes.</p>
 <p>Arguments and properties' values are represented by an object variant <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt>. <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt> can be any of <tt class="docutils literal"><span class="pre"><span class="Identifier">KString</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">KFloat</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">KBool</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">KNull</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">KInt</span></span></tt>.</p>
 
@@ -181,7 +188,7 @@ nimble install kdl
 <span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">isNull</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Comment"># null</span>
 <span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">isString</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Comment"># &quot;abc&quot;</span>
 <span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">isBool</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Comment"># true</span></pre>
-<h3><a class="toc-backref" id="kdlminusnim-reading-nodes" href="#kdlminusnim-reading-nodes">Reading nodes</a></h3>
+<h3><a class="toc-backref" id="overview-reading-nodes" href="#overview-reading-nodes">Reading nodes</a></h3>
 <p><strong class="examples_text">Example:</strong></p>
 <pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
 <span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;(tag)node 1 null key=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">val</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> {child </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> true}&quot;</span><span class="Punctuation">)</span>
@@ -190,7 +197,7 @@ nimble install kdl
 <span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">tag</span><span class="Operator">.</span><span class="Identifier">isSome</span> <span class="Keyword">and</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">tag</span><span class="Operator">.</span><span class="Identifier">get</span> <span class="Operator">==</span> <span class="StringLit">&quot;tag&quot;</span> <span class="Comment"># Tags are Option[string]</span>
 <span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="StringLit">&quot;key&quot;</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="StringLit">&quot;val&quot;</span> <span class="Comment"># Same as doc[0].props[&quot;key&quot;]</span>
 <span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="StringLit">&quot;abc&quot;</span> <span class="Comment"># Same as doc[0].children[0].args[0]</span></pre>
-<h3><a class="toc-backref" id="kdlminusnim-reading-values" href="#kdlminusnim-reading-values">Reading values</a></h3><p>Accessing to the inner value of any <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt> can be achieved by using any of the following procedures:</p>
+<h3><a class="toc-backref" id="overview-reading-values" href="#overview-reading-values">Reading values</a></h3><p>Accessing to the inner value of any <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt> can be achieved by using any of the following procedures:</p>
 <ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">getString</span></span></tt></li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">getFloat</span></span></tt></li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">getBool</span></span></tt></li>
@@ -228,7 +235,7 @@ nimble install kdl
 
 <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">setTo</span><span class="Punctuation">(</span><span class="StringLit">&quot;def&quot;</span><span class="Punctuation">)</span>
 <span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="StringLit">&quot;def&quot;</span></pre>
-<h3><a class="toc-backref" id="kdlminusnim-creating-kdl" href="#kdlminusnim-creating-kdl">Creating KDL</a></h3><p>To create KDL documents, nodes or values without parsing you can also use the <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdl</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdlNode</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdlVal</span></span></tt> macros which have a similar syntax to KDL:</p>
+<h3><a class="toc-backref" id="overview-creating-kdl" href="#overview-creating-kdl">Creating KDL</a></h3><p>To create KDL documents, nodes or values without parsing you can also use the <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdl</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdlNode</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdlVal</span></span></tt> macros which have a similar syntax to KDL:</p>
 
 <p><strong class="examples_text">Example:</strong></p>
 <pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
@@ -259,9 +266,9 @@ nimble install kdl
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L155"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L157"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L155" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L157" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -272,9 +279,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L125"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L127"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L125" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L127" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -284,9 +291,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L104"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L106"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L104" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L106" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -297,9 +304,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L94"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L96"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L94" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L96" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -312,9 +319,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>If <tt class="docutils literal"><span class="pre"><span class="Identifier">newLine</span></span></tt>, inserts a new line at the end.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L215"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L217"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L215" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L217" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -325,9 +332,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L188"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L190"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L188" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L190" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -337,9 +344,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L167"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L169"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L167" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L169" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -350,9 +357,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L161"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L163"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L161" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L163" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -364,9 +371,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Writes <tt class="docutils literal"><span class="pre"><span class="Identifier">doc</span></span></tt> to path. Set <tt class="docutils literal"><span class="pre"><span class="Identifier">pretty</span></span></tt> to true to use <tt class="docutils literal"><span class="pre"><span class="Identifier">pretty</span></span></tt> instead of <tt class="docutils literal"><span class="pre"><span class="Operator">$</span></span></tt>.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L226"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L228"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L226" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L228" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -385,7 +392,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-24 03:04:53 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-24 03:09:35 UTC</small>
       </div>
     </div>
   </div>

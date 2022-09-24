@@ -8,6 +8,9 @@ pretty	kdl.html#pretty,KdlNode	kdl: pretty(node: KdlNode): string
 pretty	kdl.html#pretty,KdlDoc	kdl: pretty(doc: KdlDoc; newLine = true): string	
 writeFile	kdl.html#writeFile,KdlDoc,string	kdl: writeFile(doc: KdlDoc; path: string; pretty = false)	
 kdl-nim	kdl.html#kdlminusnim	 kdl-nim	
-Reading nodes	kdl.html#kdlminusnim-reading-nodes	   Reading nodes	
-Reading values	kdl.html#kdlminusnim-reading-values	   Reading values	
-Creating KDL	kdl.html#kdlminusnim-creating-kdl	   Creating KDL	
+Installation	kdl.html#kdlminusnim-installation	  Installation	
+Overview	kdl.html#kdlminusnim-overview	  Overview	
+Parsing KDL	kdl.html#overview-parsing-kdl	   Parsing KDL	
+Reading nodes	kdl.html#overview-reading-nodes	   Reading nodes	
+Reading values	kdl.html#overview-reading-values	   Reading values	
+Creating KDL	kdl.html#overview-creating-kdl	   Creating KDL	

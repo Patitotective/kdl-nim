@@ -91,6 +91,18 @@ export parser, nodes
 export utils except quoted
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
+func indent*(s: string, count: Natural, padding = " ", newLine = "\n"): string =
+  var i = 0
+  for line in s.splitLines:
+    if i > 0:
+      result.add newLine
+
+    for j in 1..count:
+      result.add padding
+
+    result.add line
+    inc i
+
 proc `$`*(val: KdlVal): string = 
   if val.tag.isSome:
     result = &"({val.tag.get.quoted})"
@@ -198,9 +210,9 @@ proc pretty*(node: KdlNode): string =
       result.add &"{key.prettyIdent}={val.pretty}"
 
   if node.children.len > 0:
-    result.add " {\n"
-    result.add indent(node.children.pretty(newLine = false), 4)
-    result.add "\n}"
+    result.add " {\p"
+    result.add indent(node.children.pretty(newLine = false), 4, newLine = "\p")
+    result.add "\p}"
 
 proc pretty*(doc: KdlDoc, newLine = true): string = 
   ## Pretty print a KDL document according to the [translation rules](https://github.com/kdl-org/kdl/tree/main/tests#translation-rules).
@@ -209,9 +221,9 @@ proc pretty*(doc: KdlDoc, newLine = true): string =
   for e, node in doc:
     result.add node.pretty()
     if e < doc.high:
-      result.add "\n"
+      result.add "\p"
 
-  if newLine: result.add "\n"
+  if newLine: result.add "\p"
 
 proc writeFile*(doc: KdlDoc, path: string, pretty = false) = 
   ## Writes `doc` to path. Set `pretty` to true to use `pretty` instead of `$`.

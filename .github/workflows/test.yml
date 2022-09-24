@@ -1,4 +1,4 @@
-name: Run tests in ubuntu-latest and windows-latest
+name: Tests
 on: [push, pull_request]
 jobs:
   build:

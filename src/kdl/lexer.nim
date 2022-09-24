@@ -65,7 +65,7 @@ proc `$`*(lexer: Lexer): string =
 macro lexing(token: TokenKind, body: untyped) = 
   ## Converts a procedure definition like:
   ## ```nim
-  ## proc foo() {.lexing.} = 
+  ## proc foo() {.lexing: tkEmpty.} = 
   ##   echo "hi"
   ## ```
   ## Into
@@ -76,7 +76,7 @@ macro lexing(token: TokenKind, body: untyped) =
   ##   result = before != lexer.current
   ##   if not consume:
   ##     lexer.current = before
-  ##   if result and addToStack:
+  ##   if result and addToStack: # Only when token is not tkEmpty
   ##     lexer.add(token, before)
   ## ```
 
@@ -92,19 +92,22 @@ macro lexing(token: TokenKind, body: untyped) =
   # Modify the procedure statements list (body)
   let before = genSym(nskLet, "before")
 
-  body[^1].insert(0, newNimNode(nnkLetSection).add(newNimNode(nnkIdentDefs).add(before).add(newEmptyNode()).add(newDotExpr(ident"lexer", ident"current"))))
-  body[^1].add(newAssignment(ident"result", infix(before, "!=", newDotExpr(ident"lexer", ident"current"))))
-  body[^1].add(newIfStmt(
-    (prefix(ident"consume", "not"), newStmtList(
-      newAssignment(newDotExpr(ident"lexer", ident"current"), before)
-    ))
-  ))
+  body[^1].insert(0, quote do:
+    let `before` = lexer.current
+  )
+  body[^1].add(quote do:
+    result = `before` != lexer.current
+  )
+  body[^1].add(quote do:
+    if not consume:
+      lexer.current = `before`
+  )
+
   if token != bindSym"tkEmpty":
-    body[^1].add(newIfStmt(
-      (infix(ident"result", "and", ident"addToStack"), newStmtList(
-        newCall(newDotExpr(ident"lexer", ident"add"), token, before)
-      ))
-    ))
+    body[^1].add(quote do:
+      if result and addToStack:
+        lexer.add(`token`, `before`)
+    )
 
   result = body
 

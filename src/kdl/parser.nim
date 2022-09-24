@@ -92,7 +92,13 @@ template setValue[T](x: untyped, match: Match[T]) =
 
 proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} = 
   let token = parser.peek()
-  if (when x is TokenKind: token.kind == x else: token.kind in x):
+  let matches =
+    when x is TokenKind:
+     token.kind == x
+   else:
+     token.kind in x
+  
+  if matches:
     result.ok = true
     result.val = token
     parser.consume()

@@ -167,18 +167,13 @@ proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) =
     assert val.get(float32) == 20.12e2f
 
   when T is string:
-    assert val.isString
     val.setString(x)
   elif T is SomeNumber:
-    assert val.isFloat or val.isInt
-
     if val.isInt:
       val.setInt(x.int64)
     else:
       val.setFloat(x.float)
   elif T is bool:
-    assert val.isBool
-
     val.setBool(x)
 
 # ----- Operators -----

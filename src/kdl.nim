@@ -84,7 +84,7 @@ runnableExamples:
 
   assert toKdlVal("abc") == parseKdl("node \"abc\"")[0][0]
 
-import std/[algorithm, strformat, strutils, sequtils, options, tables]
+import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
 import kdl/[parser, lexer, nodes, utils]
 
 export parser, nodes
@@ -92,16 +92,14 @@ export utils except quoted
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
 func indent*(s: string, count: Natural, padding = " ", newLine = "\n"): string =
-  var i = 0
-  for line in s.splitLines:
-    if i > 0:
+  for e, line in enumerate(s.splitLines):
+    if e > 0:
       result.add newLine
 
     for j in 1..count:
       result.add padding
 
     result.add line
-    inc i
 
 proc `$`*(val: KdlVal): string = 
   if val.tag.isSome:

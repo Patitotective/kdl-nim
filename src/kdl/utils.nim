@@ -15,11 +15,7 @@ proc getCoord*(str: string, idx: int): Coord =
   result = (lines.high, lines[^1].len)
 
 proc errorAt*(source: string, coord: tuple[line, col: int]): string = 
-  let lines = source.splitLines
-  if coord.line > lines.len:
-    return &"Invalid line {coord.line}, expected one in 0..{lines.high}"
-
-  let line = lines[coord.line]
+  let line = source.splitLines[coord.line]
 
   let lineNum = &"{coord.line + 1} | "
   result.add(&"{lineNum}{line}\n")

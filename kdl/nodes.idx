@@ -1,9 +1,9 @@
-KdlEmpty	kdl/nodes.html#KdlEmpty	KdlValKind.KdlEmpty	
-KdlString	kdl/nodes.html#KdlString	KdlValKind.KdlString	
-KdlFloat	kdl/nodes.html#KdlFloat	KdlValKind.KdlFloat	
-KdlBool	kdl/nodes.html#KdlBool	KdlValKind.KdlBool	
-KdlNull	kdl/nodes.html#KdlNull	KdlValKind.KdlNull	
-KdlInt	kdl/nodes.html#KdlInt	KdlValKind.KdlInt	
+KEmpty	kdl/nodes.html#KEmpty	KdlValKind.KEmpty	
+KString	kdl/nodes.html#KString	KdlValKind.KString	
+KFloat	kdl/nodes.html#KFloat	KdlValKind.KFloat	
+KBool	kdl/nodes.html#KBool	KdlValKind.KBool	
+KNull	kdl/nodes.html#KNull	KdlValKind.KNull	
+KInt	kdl/nodes.html#KInt	KdlValKind.KInt	
 KdlValKind	kdl/nodes.html#KdlValKind	nodes: KdlValKind	
 KdlVal	kdl/nodes.html#KdlVal	nodes: KdlVal	
 KdlProp	kdl/nodes.html#KdlProp	nodes: KdlProp	
@@ -40,6 +40,8 @@ setTo	kdl/nodes.html#setTo,KdlVal,T	nodes: setTo[T: SomeNumber or string or bool
 `==`	kdl/nodes.html#==,KdlVal,T	nodes: `==`[T: SomeNumber or string or bool](val: KdlVal; x: T): bool	
 `[]`	kdl/nodes.html#[],KdlNode,	nodes: `[]`(node: KdlNode; idx: int | BackwardsIndex): KdlVal	
 `[]`	kdl/nodes.html#[],KdlNode,string	nodes: `[]`(node: KdlNode; key: string): KdlVal	
+`[]`	kdl/nodes.html#[],KdlNode,_2	nodes: `[]`(node: var KdlNode; idx: int | BackwardsIndex): var KdlVal	
+`[]`	kdl/nodes.html#[],KdlNode,string_2	nodes: `[]`(node: var KdlNode; key: string): var KdlVal	
 `[]=`	kdl/nodes.html#[]=,KdlNode,string,KdlVal	nodes: `[]=`(node: var KdlNode; key: string; val: KdlVal)	
 hasKey	kdl/nodes.html#hasKey,KdlNode,string	nodes: hasKey(node: KdlNode; key: string): bool	
 contains	kdl/nodes.html#contains,KdlNode,string	nodes: contains(node: KdlNode; key: string): bool	

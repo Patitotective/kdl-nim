@@ -95,7 +95,11 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="nodes: `[]`(node: KdlNode; idx: int | BackwardsIndex): KdlVal" href="kdl/nodes.html#%5B%5D%2CKdlNode%2C">nodes: `[]`(node: KdlNode; idx: int | BackwardsIndex): KdlVal</a></li>
           <li><a class="reference external"
+          data-doc-search-tag="nodes: `[]`(node: var KdlNode; idx: int | BackwardsIndex): var KdlVal" href="kdl/nodes.html#%5B%5D%2CKdlNode%2C_2">nodes: `[]`(node: var KdlNode; idx: int | BackwardsIndex): var KdlVal</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="nodes: `[]`(node: KdlNode; key: string): KdlVal" href="kdl/nodes.html#%5B%5D%2CKdlNode%2Cstring">nodes: `[]`(node: KdlNode; key: string): KdlVal</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="nodes: `[]`(node: var KdlNode; key: string): var KdlVal" href="kdl/nodes.html#%5B%5D%2CKdlNode%2Cstring_2">nodes: `[]`(node: var KdlNode; key: string): var KdlVal</a></li>
           </ul></dd>
 <dt><a name="add" href="#add"><span>add:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -215,29 +219,17 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="nodes: items(node: KdlNode): KdlVal" href="kdl/nodes.html#items.i%2CKdlNode">nodes: items(node: KdlNode): KdlVal</a></li>
           </ul></dd>
-<dt><a name="KdlBool" href="#KdlBool"><span>KdlBool:</span></a></dt><dd><ul class="simple">
+<dt><a name="KBool" href="#KBool"><span>KBool:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KdlBool" href="kdl/nodes.html#KdlBool">KdlValKind.KdlBool</a></li>
+          data-doc-search-tag="KdlValKind.KBool" href="kdl/nodes.html#KBool">KdlValKind.KBool</a></li>
           </ul></dd>
 <dt><a name="KdlDoc" href="#KdlDoc"><span>KdlDoc:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="nodes: KdlDoc" href="kdl/nodes.html#KdlDoc">nodes: KdlDoc</a></li>
           </ul></dd>
-<dt><a name="KdlEmpty" href="#KdlEmpty"><span>KdlEmpty:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KdlEmpty" href="kdl/nodes.html#KdlEmpty">KdlValKind.KdlEmpty</a></li>
-          </ul></dd>
 <dt><a name="KdlError" href="#KdlError"><span>KdlError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="utils: KdlError" href="kdl/utils.html#KdlError">utils: KdlError</a></li>
-          </ul></dd>
-<dt><a name="KdlFloat" href="#KdlFloat"><span>KdlFloat:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KdlFloat" href="kdl/nodes.html#KdlFloat">KdlValKind.KdlFloat</a></li>
-          </ul></dd>
-<dt><a name="KdlInt" href="#KdlInt"><span>KdlInt:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KdlInt" href="kdl/nodes.html#KdlInt">KdlValKind.KdlInt</a></li>
           </ul></dd>
 <dt><a name="KdlLexerError" href="#KdlLexerError"><span>KdlLexerError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -247,10 +239,6 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="nodes: KdlNode" href="kdl/nodes.html#KdlNode">nodes: KdlNode</a></li>
           </ul></dd>
-<dt><a name="KdlNull" href="#KdlNull"><span>KdlNull:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KdlNull" href="kdl/nodes.html#KdlNull">KdlValKind.KdlNull</a></li>
-          </ul></dd>
 <dt><a name="KdlParserError" href="#KdlParserError"><span>KdlParserError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="utils: KdlParserError" href="kdl/utils.html#KdlParserError">utils: KdlParserError</a></li>
@@ -259,10 +247,6 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="nodes: KdlProp" href="kdl/nodes.html#KdlProp">nodes: KdlProp</a></li>
           </ul></dd>
-<dt><a name="KdlString" href="#KdlString"><span>KdlString:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KdlString" href="kdl/nodes.html#KdlString">KdlValKind.KdlString</a></li>
-          </ul></dd>
 <dt><a name="KdlVal" href="#KdlVal"><span>KdlVal:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="nodes: KdlVal" href="kdl/nodes.html#KdlVal">nodes: KdlVal</a></li>
@@ -270,6 +254,26 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="KdlValKind" href="#KdlValKind"><span>KdlValKind:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="nodes: KdlValKind" href="kdl/nodes.html#KdlValKind">nodes: KdlValKind</a></li>
+          </ul></dd>
+<dt><a name="KEmpty" href="#KEmpty"><span>KEmpty:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="KdlValKind.KEmpty" href="kdl/nodes.html#KEmpty">KdlValKind.KEmpty</a></li>
+          </ul></dd>
+<dt><a name="KFloat" href="#KFloat"><span>KFloat:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="KdlValKind.KFloat" href="kdl/nodes.html#KFloat">KdlValKind.KFloat</a></li>
+          </ul></dd>
+<dt><a name="KInt" href="#KInt"><span>KInt:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="KdlValKind.KInt" href="kdl/nodes.html#KInt">KdlValKind.KInt</a></li>
+          </ul></dd>
+<dt><a name="KNull" href="#KNull"><span>KNull:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="KdlValKind.KNull" href="kdl/nodes.html#KNull">KdlValKind.KNull</a></li>
+          </ul></dd>
+<dt><a name="KString" href="#KString"><span>KString:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="KdlValKind.KString" href="kdl/nodes.html#KString">KdlValKind.KString</a></li>
           </ul></dd>
 <dt><a name="len" href="#len"><span>len:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -509,12 +513,16 @@ window.addEventListener('DOMContentLoaded', main);
                                        addToStack = true): bool): bool" href="kdl/lexer.html#validToken%2Cstring%2Cproc%28Lexer%2C%2C%29">lexer: validToken(input: string; token: proc (lexer: var Lexer; consume = true;
                                        addToStack = true): bool): bool</a></li>
           </ul></dd>
+<dt><a name="writeFile" href="#writeFile"><span>writeFile:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="kdl: writeFile(doc: KdlDoc; path: string; pretty = false)" href="kdl.html#writeFile%2CKdlDoc%2Cstring">kdl: writeFile(doc: KdlDoc; path: string; pretty = false)</a></li>
+          </ul></dd>
 </dl>
     <div class="row">
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-23 22:11:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-24 00:25:24 UTC</small>
       </div>
     </div>
   </div>

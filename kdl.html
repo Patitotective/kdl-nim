@@ -98,7 +98,11 @@ window.addEventListener('DOMContentLoaded', main);
     </select>
   </div>
   <ul class="simple simple-toc" id="toc-list">
-<li>
+<li><a class="reference" id="kdlminusnim_toc" href="#kdlminusnim">kdl-nim</a></li>
+<ul class="simple"><li><a class="reference" id="kdlminusnim-reading-nodes_toc" href="#kdlminusnim-reading-nodes">Reading nodes</a></li>
+<li><a class="reference" id="kdlminusnim-reading-values_toc" href="#kdlminusnim-reading-values">Reading values</a></li>
+<li><a class="reference" id="kdlminusnim-creating-kdl_toc" href="#kdlminusnim-creating-kdl">Creating KDL</a></li>
+</ul><li>
   <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
   <ul class="simple simple-toc-section">
     
@@ -130,6 +134,11 @@ window.addEventListener('DOMContentLoaded', main);
     title="prettyIdent(ident: string): string">prettyIdent(ident: string): string</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">writeFile
+      <li><a class="reference" href="#writeFile%2CKdlDoc%2Cstring"
+    title="writeFile(doc: KdlDoc; path: string; pretty = false)">writeFile(doc: KdlDoc; path: string; pretty = false)</a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -151,7 +160,85 @@ class="link-seesrc" target="_blank">Source</a>
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc"></p>
+  <p class="module-desc">
+<h1><a class="toc-backref" id="kdlminusnim" href="#kdlminusnim">kdl-nim</a></h1><p>kdl-nim is an implementation of the <a class="reference external" href="https://kdl.dev">KDL document language</a> in the Nim programming language. ## Installation</p>
+<p><pre class="listing">
+nimble install kdl
+</pre> ## Overview ### Parsing KDL kdl-nim parses strings (or files) into a <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlDoc</span></span></tt> which is a sequence of <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlNode</span></span></tt>s.</p>
+<p>Each <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlNode</span></span></tt> holds a name, an optional type annotation (tag), zero ore more arguments, zero or more properties and optionally children nodes.</p>
+<p>Arguments and properties' values are represented by an object variant <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt>. <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt> can be any of <tt class="docutils literal"><span class="pre"><span class="Identifier">KString</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">KFloat</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">KBool</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">KNull</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">KInt</span></span></tt>.</p>
+
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
+<span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;node 1 null {child </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> true}&quot;</span><span class="Punctuation">)</span> <span class="Comment"># You can also read files using parseKdlFile(&quot;file.kdl&quot;)</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">isInt</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Comment"># 1</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">isNull</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Comment"># null</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">isString</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Comment"># &quot;abc&quot;</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">isBool</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Comment"># true</span></pre>
+<h3><a class="toc-backref" id="kdlminusnim-reading-nodes" href="#kdlminusnim-reading-nodes">Reading nodes</a></h3>
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
+<span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;(tag)node 1 null key=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">val</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> {child </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> true}&quot;</span><span class="Punctuation">)</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">name</span> <span class="Operator">==</span> <span class="StringLit">&quot;node&quot;</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">tag</span><span class="Operator">.</span><span class="Identifier">isSome</span> <span class="Keyword">and</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">tag</span><span class="Operator">.</span><span class="Identifier">get</span> <span class="Operator">==</span> <span class="StringLit">&quot;tag&quot;</span> <span class="Comment"># Tags are Option[string]</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="StringLit">&quot;key&quot;</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="StringLit">&quot;val&quot;</span> <span class="Comment"># Same as doc[0].props[&quot;key&quot;]</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="StringLit">&quot;abc&quot;</span> <span class="Comment"># Same as doc[0].children[0].args[0]</span></pre>
+<h3><a class="toc-backref" id="kdlminusnim-reading-values" href="#kdlminusnim-reading-values">Reading values</a></h3><p>Accessing to the inner value of any <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt> can be achieved by using any of the following procedures:</p>
+<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">getString</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">getFloat</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">getBool</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">getInt</span></span></tt></li>
+</ul>
+
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
+<span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;node 1 3.14 {child </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> true}&quot;</span><span class="Punctuation">)</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">getInt</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="DecNumber">1</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">getFloat</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="FloatNumber">3.14</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">getString</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="StringLit">&quot;abc&quot;</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">getBool</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">true</span></pre>There's also a generic procedure that converts <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlValue</span></span></tt> to the given type, consider this example:
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
+<span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;node 1 3.14 255&quot;</span><span class="Punctuation">)</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">get</span><span class="Punctuation">(</span><span class="Identifier">float32</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="DecNumber">1</span><span class="Identifier">f</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">get</span><span class="Punctuation">(</span><span class="Identifier">int</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="DecNumber">3</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">2</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">get</span><span class="Punctuation">(</span><span class="Identifier">uint8</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="DecNumber">255</span><span class="Identifier">u8</span></pre>It only converts between numbers, you can't <tt class="docutils literal"><span class="pre"><span class="Identifier">val</span><span class="Operator">.</span><span class="Identifier">get</span><span class="Punctuation">(</span><span class="Identifier">string</span><span class="Punctuation">)</span></span></tt> if <tt class="docutils literal"><span class="pre"><span class="Identifier">val</span><span class="Operator">.</span><span class="Identifier">isBool</span><span class="Punctuation">(</span><span class="Punctuation">)</span></span></tt>. ### Setting values
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
+<span class="Keyword">var</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;node 1 3.14 {child </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> true}&quot;</span><span class="Punctuation">)</span>
+
+<span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">setInt</span><span class="Punctuation">(</span><span class="DecNumber">10</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="DecNumber">10</span>
+
+<span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">setBool</span><span class="Punctuation">(</span><span class="Identifier">false</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">1</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="Identifier">false</span>
+
+<span class="Comment"># You can also use the generic procedure `setTo`</span>
+<span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">setTo</span><span class="Punctuation">(</span><span class="FloatNumber">3.14</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="DecNumber">3</span>
+
+<span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">setTo</span><span class="Punctuation">(</span><span class="StringLit">&quot;def&quot;</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">children</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span> <span class="Operator">==</span> <span class="StringLit">&quot;def&quot;</span></pre>
+<h3><a class="toc-backref" id="kdlminusnim-creating-kdl" href="#kdlminusnim-creating-kdl">Creating KDL</a></h3><p>To create KDL documents, nodes or values without parsing you can also use the <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdl</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdlNode</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdlVal</span></span></tt> macros which have a similar syntax to KDL:</p>
+
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
+<span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">toKdl</span><span class="Punctuation">:</span>
+  <span class="Identifier">node</span><span class="Punctuation">[</span><span class="Identifier">tag</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="Identifier">true</span><span class="Punctuation">,</span> <span class="Keyword">nil</span><span class="Punctuation">,</span> <span class="Identifier">key</span><span class="Operator">=</span><span class="StringLit">&quot;val&quot;</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
+    <span class="Identifier">child</span><span class="Punctuation">(</span><span class="FloatNumber">3.14</span><span class="Punctuation">[</span><span class="Identifier">pi</span><span class="Punctuation">]</span><span class="Punctuation">)</span>
+
+  <span class="Identifier">person</span><span class="Punctuation">(</span><span class="Identifier">name</span><span class="Operator">=</span><span class="StringLit">&quot;pat&quot;</span><span class="Punctuation">)</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">doc</span> <span class="Operator">==</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;(tag)node 1 true null key=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">val</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> {child (pi)3.14}; person name=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">pat</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">&quot;</span><span class="Punctuation">)</span>
+
+<span class="Keyword">let</span> <span class="Identifier">node</span> <span class="Operator">=</span> <span class="Identifier">toKdlNode</span><span class="Punctuation">:</span> <span class="Identifier">numbers</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="FloatNumber">2.13</span><span class="Punctuation">,</span> <span class="FloatNumber">3.1e-10</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">node</span> <span class="Operator">==</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;numbers 1 2.13 3.1e-10&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">toKdlVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;abc&quot;</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;node </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span></pre></p>
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
@@ -167,9 +254,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L59"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L145"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L59" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L145" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -180,9 +267,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L29"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L115"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L29" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L115" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -192,9 +279,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L8"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L94"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L8" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L94" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -207,9 +294,9 @@ class="link-seesrc" target="_blank">Source</a>
 <p>If <tt class="docutils literal"><span class="pre"><span class="Identifier">newLine</span></span></tt>, inserts a new line at the end.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L119"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L205"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L119" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L205" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -220,9 +307,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L92"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L178"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L92" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L178" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -232,9 +319,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L71"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L157"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L71" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L157" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -245,9 +332,23 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L65"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L151"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L65" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L151" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="writeFile,KdlDoc,string">
+<dt><pre><span class="Keyword">proc</span> <a href="#writeFile%2CKdlDoc%2Cstring"><span class="Identifier">writeFile</span></a><span class="Other">(</span><span class="Identifier">doc</span><span class="Other">:</span> <a href="kdl/nodes.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">path</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">pretty</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KdlLexerError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+Writes <tt class="docutils literal"><span class="pre"><span class="Identifier">doc</span></span></tt> to path. Set <tt class="docutils literal"><span class="pre"><span class="Identifier">pretty</span></span></tt> to true to use <tt class="docutils literal"><span class="pre"><span class="Identifier">pretty</span></span></tt> instead of <tt class="docutils literal"><span class="pre"><span class="Operator">$</span></span></tt>.
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L216"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L216" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -256,7 +357,7 @@ class="link-seesrc" target="_blank">Source</a>
 <div class="section" id="19">
 <h1><a class="toc-backref" href="#19">Exports</a></h1>
 <dl class="item">
-<a href="kdl/parser.html#parseKdlFile,string"><span class="Identifier">parseKdlFile</span></a>, <a href="kdl/parser.html#parseKdl,Lexer"><span class="Identifier">parseKdl</span></a>, <a href="kdl/parser.html#parseKdl,string,int"><span class="Identifier">parseKdl</span></a>, <a href="kdl/parser.html#Parser"><span class="Identifier">Parser</span></a>, <a href="kdl/nodes.html#initKVal,SomeFloat"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#initKVal,bool"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#isNull,KdlVal"><span class="Identifier">isNull</span></a>, <a href="kdl/nodes.html#initKString"><span class="Identifier">initKString</span></a>, <a href="kdl/nodes.html#initKVal,SomeInteger"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#setFloat,KdlVal,SomeFloat"><span class="Identifier">setFloat</span></a>, <a href="kdl/nodes.html#toKdlVal.m,untyped"><span class="Identifier">toKdlVal</span></a>, <a href="kdl/nodes.html#KdlValKind"><span class="Identifier">KdlValKind</span></a>, <a href="kdl/nodes.html#==,KdlVal,T"><span class="Identifier">==</span></a>, <a href="kdl/nodes.html#isInt,KdlVal"><span class="Identifier">isInt</span></a>, <a href="kdl/nodes.html#initKFloat,SomeFloat"><span class="Identifier">initKFloat</span></a>, <a href="kdl/nodes.html#isFloat,KdlVal"><span class="Identifier">isFloat</span></a>, <a href="kdl/nodes.html#contains,KdlNode,KdlVal"><span class="Identifier">contains</span></a>, <a href="kdl/nodes.html#[],KdlNode,"><span class="Identifier">[]</span></a>, <a href="kdl/nodes.html#initKNode,string,openArray[KdlVal],openArray[KdlNode]"><span class="Identifier">initKNode</span></a>, <a href="kdl/nodes.html#setBool,KdlVal,bool"><span class="Identifier">setBool</span></a>, <a href="kdl/nodes.html#KdlVal"><span class="Identifier">KdlVal</span></a>, <a href="kdl/nodes.html#getBool,KdlVal"><span class="Identifier">getBool</span></a>, <a href="kdl/nodes.html#isBool,KdlVal"><span class="Identifier">isBool</span></a>, <a href="kdl/nodes.html#initKVal,KdlVal"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#get,KdlVal,typedesc[T]"><span class="Identifier">get</span></a>, <a href="kdl/nodes.html#hasKey,KdlNode,string"><span class="Identifier">hasKey</span></a>, <a href="kdl/nodes.html#contains,KdlNode,string"><span class="Identifier">contains</span></a>, <a href="kdl/nodes.html#getString,KdlVal"><span class="Identifier">getString</span></a>, <a href="kdl/nodes.html#KdlProp"><span class="Identifier">KdlProp</span></a>, <a href="kdl/nodes.html#initKVal,string"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#items.i,KdlNode"><span class="Identifier">items</span></a>, <a href="kdl/nodes.html#setInt,KdlVal,SomeInteger"><span class="Identifier">setInt</span></a>, <a href="kdl/nodes.html#[]=,KdlNode,string,KdlVal"><span class="Identifier">[]=</span></a>, <a href="kdl/nodes.html#[],KdlNode,string"><span class="Identifier">[]</span></a>, <a href="kdl/nodes.html#getInt,KdlVal"><span class="Identifier">getInt</span></a>, <a href="kdl/nodes.html#toKdl.m,untyped"><span class="Identifier">toKdl</span></a>, <a href="kdl/nodes.html#add,KdlNode,KdlVal"><span class="Identifier">add</span></a>, <a href="kdl/nodes.html#len,KdlNode"><span class="Identifier">len</span></a>, <a href="kdl/nodes.html#isString,KdlVal"><span class="Identifier">isString</span></a>, <a href="kdl/nodes.html#toKdlNode.m,untyped"><span class="Identifier">toKdlNode</span></a>, <a href="kdl/nodes.html#initKInt,SomeInteger"><span class="Identifier">initKInt</span></a>, <a href="kdl/nodes.html#==,KdlVal,KdlVal"><span class="Identifier">==</span></a>, <a href="kdl/nodes.html#isEmpty,KdlVal"><span class="Identifier">isEmpty</span></a>, <a href="kdl/nodes.html#setTo,KdlVal,T"><span class="Identifier">setTo</span></a>, <a href="kdl/nodes.html#KdlNode"><span class="Identifier">KdlNode</span></a>, <a href="kdl/nodes.html#getFloat,KdlVal"><span class="Identifier">getFloat</span></a>, <a href="kdl/nodes.html#setString,KdlVal,string"><span class="Identifier">setString</span></a>, <a href="kdl/nodes.html#initKBool"><span class="Identifier">initKBool</span></a>, <a href="kdl/nodes.html#KdlDoc"><span class="Identifier">KdlDoc</span></a>, <a href="kdl/nodes.html#pairs.i,KdlNode"><span class="Identifier">pairs</span></a>, <a href="kdl/nodes.html#initKNull"><span class="Identifier">initKNull</span></a>, <a href="kdl/utils.html#KdlLexerError"><span class="Identifier">KdlLexerError</span></a>, <a href="kdl/utils.html#errorAt,string,tuple[int,int]"><span class="Identifier">errorAt</span></a>, <a href="kdl/utils.html#KdlError"><span class="Identifier">KdlError</span></a>, <a href="kdl/utils.html#getCoord,string,int"><span class="Identifier">getCoord</span></a>, <a href="kdl/utils.html#KdlParserError"><span class="Identifier">KdlParserError</span></a>, <a href="kdl/utils.html#Coord"><span class="Identifier">Coord</span></a>, <a href="kdl/lexer.html#scanKdl,Lexer"><span class="Identifier">scanKdl</span></a>, <a href="kdl/lexer.html#scanKdl,string,int"><span class="Identifier">scanKdl</span></a>, <a href="kdl/lexer.html#scanKdlFile,string"><span class="Identifier">scanKdlFile</span></a>, <a href="kdl/lexer.html#$,Lexer"><span class="Identifier">$</span></a>
+<a href="kdl/parser.html#parseKdlFile,string"><span class="Identifier">parseKdlFile</span></a>, <a href="kdl/parser.html#parseKdl,Lexer"><span class="Identifier">parseKdl</span></a>, <a href="kdl/parser.html#parseKdl,string,int"><span class="Identifier">parseKdl</span></a>, <a href="kdl/parser.html#Parser"><span class="Identifier">Parser</span></a>, <a href="kdl/nodes.html#initKVal,SomeFloat"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#initKVal,bool"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#isNull,KdlVal"><span class="Identifier">isNull</span></a>, <a href="kdl/nodes.html#initKString"><span class="Identifier">initKString</span></a>, <a href="kdl/nodes.html#initKVal,SomeInteger"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#setFloat,KdlVal,SomeFloat"><span class="Identifier">setFloat</span></a>, <a href="kdl/nodes.html#toKdlVal.m,untyped"><span class="Identifier">toKdlVal</span></a>, <a href="kdl/nodes.html#KdlValKind"><span class="Identifier">KdlValKind</span></a>, <a href="kdl/nodes.html#==,KdlVal,KdlVal"><span class="Identifier">==</span></a>, <a href="kdl/nodes.html#isInt,KdlVal"><span class="Identifier">isInt</span></a>, <a href="kdl/nodes.html#initKFloat,SomeFloat"><span class="Identifier">initKFloat</span></a>, <a href="kdl/nodes.html#isFloat,KdlVal"><span class="Identifier">isFloat</span></a>, <a href="kdl/nodes.html#contains,KdlNode,string"><span class="Identifier">contains</span></a>, <a href="kdl/nodes.html#[],KdlNode,"><span class="Identifier">[]</span></a>, <a href="kdl/nodes.html#initKNode,string,openArray[KdlVal],openArray[KdlNode]"><span class="Identifier">initKNode</span></a>, <a href="kdl/nodes.html#KdlVal"><span class="Identifier">KdlVal</span></a>, <a href="kdl/nodes.html#isBool,KdlVal"><span class="Identifier">isBool</span></a>, <a href="kdl/nodes.html#initKVal,KdlVal"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#isEmpty,KdlVal"><span class="Identifier">isEmpty</span></a>, <a href="kdl/nodes.html#hasKey,KdlNode,string"><span class="Identifier">hasKey</span></a>, <a href="kdl/nodes.html#[],KdlNode,string"><span class="Identifier">[]</span></a>, <a href="kdl/nodes.html#getString,KdlVal"><span class="Identifier">getString</span></a>, <a href="kdl/nodes.html#KdlProp"><span class="Identifier">KdlProp</span></a>, <a href="kdl/nodes.html#initKVal,string"><span class="Identifier">initKVal</span></a>, <a href="kdl/nodes.html#items.i,KdlNode"><span class="Identifier">items</span></a>, <a href="kdl/nodes.html#setInt,KdlVal,SomeInteger"><span class="Identifier">setInt</span></a>, <a href="kdl/nodes.html#==,KdlVal,T"><span class="Identifier">==</span></a>, <a href="kdl/nodes.html#[],KdlNode,string_2"><span class="Identifier">[]</span></a>, <a href="kdl/nodes.html#getInt,KdlVal"><span class="Identifier">getInt</span></a>, <a href="kdl/nodes.html#toKdl.m,untyped"><span class="Identifier">toKdl</span></a>, <a href="kdl/nodes.html#add,KdlNode,KdlVal"><span class="Identifier">add</span></a>, <a href="kdl/nodes.html#len,KdlNode"><span class="Identifier">len</span></a>, <a href="kdl/nodes.html#[],KdlNode,_2"><span class="Identifier">[]</span></a>, <a href="kdl/nodes.html#isString,KdlVal"><span class="Identifier">isString</span></a>, <a href="kdl/nodes.html#toKdlNode.m,untyped"><span class="Identifier">toKdlNode</span></a>, <a href="kdl/nodes.html#[]=,KdlNode,string,KdlVal"><span class="Identifier">[]=</span></a>, <a href="kdl/nodes.html#contains,KdlNode,KdlVal"><span class="Identifier">contains</span></a>, <a href="kdl/nodes.html#getBool,KdlVal"><span class="Identifier">getBool</span></a>, <a href="kdl/nodes.html#setBool,KdlVal,bool"><span class="Identifier">setBool</span></a>, <a href="kdl/nodes.html#initKInt,SomeInteger"><span class="Identifier">initKInt</span></a>, <a href="kdl/nodes.html#get,KdlVal,typedesc[T]"><span class="Identifier">get</span></a>, <a href="kdl/nodes.html#initKNull"><span class="Identifier">initKNull</span></a>, <a href="kdl/nodes.html#setTo,KdlVal,T"><span class="Identifier">setTo</span></a>, <a href="kdl/nodes.html#KdlNode"><span class="Identifier">KdlNode</span></a>, <a href="kdl/nodes.html#getFloat,KdlVal"><span class="Identifier">getFloat</span></a>, <a href="kdl/nodes.html#setString,KdlVal,string"><span class="Identifier">setString</span></a>, <a href="kdl/nodes.html#initKBool"><span class="Identifier">initKBool</span></a>, <a href="kdl/nodes.html#KdlDoc"><span class="Identifier">KdlDoc</span></a>, <a href="kdl/nodes.html#pairs.i,KdlNode"><span class="Identifier">pairs</span></a>, <a href="kdl/utils.html#KdlLexerError"><span class="Identifier">KdlLexerError</span></a>, <a href="kdl/utils.html#errorAt,string,tuple[int,int]"><span class="Identifier">errorAt</span></a>, <a href="kdl/utils.html#KdlError"><span class="Identifier">KdlError</span></a>, <a href="kdl/utils.html#getCoord,string,int"><span class="Identifier">getCoord</span></a>, <a href="kdl/utils.html#KdlParserError"><span class="Identifier">KdlParserError</span></a>, <a href="kdl/utils.html#Coord"><span class="Identifier">Coord</span></a>, <a href="kdl/lexer.html#scanKdl,Lexer"><span class="Identifier">scanKdl</span></a>, <a href="kdl/lexer.html#scanKdl,string,int"><span class="Identifier">scanKdl</span></a>, <a href="kdl/lexer.html#scanKdlFile,string"><span class="Identifier">scanKdlFile</span></a>, <a href="kdl/lexer.html#$,Lexer"><span class="Identifier">$</span></a>
 </dl></div>
 
   </div>
@@ -266,7 +367,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-23 22:11:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-24 00:25:24 UTC</small>
       </div>
     </div>
   </div>

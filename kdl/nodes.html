@@ -116,23 +116,23 @@ window.addEventListener('DOMContentLoaded', main);
     title="KdlVal = object
   tag*: Option[string]
   case kind*: KdlValKind
-  of KdlString:
+  of KString:
       str*: string
 
-  of KdlFloat:
+  of KFloat:
       fnum*: float
 
-  of KdlBool:
+  of KBool:
       boolean*: bool
 
-  of KdlNull, KdlEmpty:
+  of KNull, KEmpty:
       nil
 
-  of KdlInt:
+  of KInt:
       num*: int64">KdlVal</a></li>
   <li><a class="reference" href="#KdlValKind"
     title="KdlValKind = enum
-  KdlEmpty, KdlString, KdlFloat, KdlBool, KdlNull, KdlInt">KdlValKind</a></li>
+  KEmpty, KString, KFloat, KBool, KNull, KInt">KdlValKind</a></li>
 
   </ul>
 </li>
@@ -151,6 +151,10 @@ window.addEventListener('DOMContentLoaded', main);
     title="`[]`(node: KdlNode; idx: int | BackwardsIndex): KdlVal">`[]`(node: KdlNode; idx: int | BackwardsIndex): KdlVal</a></li>
   <li><a class="reference" href="#%5B%5D%2CKdlNode%2Cstring"
     title="`[]`(node: KdlNode; key: string): KdlVal">`[]`(node: KdlNode; key: string): KdlVal</a></li>
+  <li><a class="reference" href="#%5B%5D%2CKdlNode%2C_2"
+    title="`[]`(node: var KdlNode; idx: int | BackwardsIndex): var KdlVal">`[]`(node: var KdlNode; idx: int | BackwardsIndex): var KdlVal</a></li>
+  <li><a class="reference" href="#%5B%5D%2CKdlNode%2Cstring_2"
+    title="`[]`(node: var KdlNode; key: string): var KdlVal">`[]`(node: var KdlNode; key: string): var KdlVal</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">[]=
@@ -409,19 +413,19 @@ class="link-seesrc" target="_blank">Source</a>
 <dt><pre><a href="nodes.html#KdlVal"><span class="Identifier">KdlVal</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">tag</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span>
   <span class="Keyword">case</span> <span class="Identifier">kind</span><span class="Operator">*</span><span class="Other">:</span> <a href="nodes.html#KdlValKind"><span class="Identifier">KdlValKind</span></a>
-  <span class="Keyword">of</span> <span class="Identifier">KdlString</span><span class="Other">:</span>
+  <span class="Keyword">of</span> <span class="Identifier">KString</span><span class="Other">:</span>
       <span class="Identifier">str</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
 
-  <span class="Keyword">of</span> <span class="Identifier">KdlFloat</span><span class="Other">:</span>
+  <span class="Keyword">of</span> <span class="Identifier">KFloat</span><span class="Other">:</span>
       <span class="Identifier">fnum</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">float</span>
 
-  <span class="Keyword">of</span> <span class="Identifier">KdlBool</span><span class="Other">:</span>
+  <span class="Keyword">of</span> <span class="Identifier">KBool</span><span class="Other">:</span>
       <span class="Identifier">boolean</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
 
-  <span class="Keyword">of</span> <span class="Identifier">KdlNull</span><span class="Other">,</span> <span class="Identifier">KdlEmpty</span><span class="Other">:</span>
+  <span class="Keyword">of</span> <span class="Identifier">KNull</span><span class="Other">,</span> <span class="Identifier">KEmpty</span><span class="Other">:</span>
       <span class="Keyword">nil</span>
 
-  <span class="Keyword">of</span> <span class="Identifier">KdlInt</span><span class="Other">:</span>
+  <span class="Keyword">of</span> <span class="Identifier">KInt</span><span class="Other">:</span>
       <span class="Identifier">num</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int64</span>
 
   </pre></dt>
@@ -437,7 +441,7 @@ class="link-seesrc" target="_blank">Source</a>
 </div>
 <div id="KdlValKind">
 <dt><pre><a href="nodes.html#KdlValKind"><span class="Identifier">KdlValKind</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">KdlEmpty</span><span class="Other">,</span> <span class="Identifier">KdlString</span><span class="Other">,</span> <span class="Identifier">KdlFloat</span><span class="Other">,</span> <span class="Identifier">KdlBool</span><span class="Other">,</span> <span class="Identifier">KdlNull</span><span class="Other">,</span> <span class="Identifier">KdlInt</span></pre></dt>
+  <span class="Identifier">KEmpty</span><span class="Other">,</span> <span class="Identifier">KString</span><span class="Other">,</span> <span class="Identifier">KFloat</span><span class="Other">,</span> <span class="Identifier">KBool</span><span class="Other">,</span> <span class="Identifier">KNull</span><span class="Other">,</span> <span class="Identifier">KInt</span></pre></dt>
 <dd>
 
 
@@ -483,9 +487,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Sets the key property to val in node.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L230"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L238"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L230" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L238" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -513,15 +517,40 @@ class="link-seesrc" target="_blank">Source</a>
 
 </dd>
 </div>
+<div id="[],KdlNode,_2">
+<dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CKdlNode%2C_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="nodes.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">idx</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">BackwardsIndex</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="nodes.html#KdlVal"><span class="Identifier">KdlVal</span></a></pre></dt>
+<dd>
+
+Gets the argument at idx.
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L230"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L230" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="[],KdlNode,string_2">
+<dt><pre><span class="Keyword">proc</span> <a href="#%5B%5D%2CKdlNode%2Cstring_2"><span class="Identifier">`[]`</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="nodes.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="nodes.html#KdlVal"><span class="Identifier">KdlVal</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L234"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L234" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
 <div id="add,KdlNode,KdlVal">
 <dt><pre><span class="Keyword">proc</span> <a href="#add%2CKdlNode%2CKdlVal"><span class="Identifier">add</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="nodes.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">val</span><span class="Other">:</span> <a href="nodes.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 Adds val to node's arguments.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L250"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L258"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L250" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L258" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -531,9 +560,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Checks if node has the key property.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L238"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L246"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L238" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L246" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -543,9 +572,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Checks if node has the val argument.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L242"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L250"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L242" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L250" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -622,9 +651,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Checks if node has the key property.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L234"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L242"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L234" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L242" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -843,9 +872,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Node's arguments length.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L246"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L254"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L246" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L254" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -901,7 +930,7 @@ class="link-seesrc" target="_blank">Source</a>
 <dt><pre><span class="Keyword">proc</span> <a href="#setTo%2CKdlVal%2CT"><span class="Identifier">setTo</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">SomeNumber</span> <span class="Keyword">or</span> <span class="Identifier">string</span> <span class="Keyword">or</span> <span class="Identifier">bool</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">val</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="nodes.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
 <dd>
 
-Tries to set val to x, raises an error when it cannot.
+Tries to set val to x, raises an error when types are not compatible.
 <p><strong class="examples_text">Example:</strong></p>
 <pre class="listing"><span class="Keyword">var</span> <span class="Identifier">val</span> <span class="Operator">=</span> <span class="Identifier">initKFloat</span><span class="Punctuation">(</span><span class="FloatNumber">3.14</span><span class="Punctuation">)</span>
 
@@ -930,9 +959,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Yields arguments.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L257"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L265"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L257" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L265" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -942,9 +971,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 Yields properties.
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L262"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L270"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L262" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L270" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -958,12 +987,12 @@ class="link-seesrc" target="_blank">Source</a>
 <dd>
 
 <p>Generate a KdlDoc from Nim's AST that is somewhat similar to KDL's syntax.</p>
-<p>See also <a class="reference external" href="#toKdlNode,untyped">toKdlNode</a>.</p>
+<p>See also <a class="reference external" href="#toKdlNode.m,untyped">toKdlNode</a>.</p>
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L352"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L365"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L352" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L365" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -980,11 +1009,16 @@ Generate a KdlNode from Nim's AST that is somewhat similar to KDL's syntax.<ul c
 <pre class="listing"><span class="Keyword">let</span> <span class="Identifier">node</span> <span class="Operator">=</span> <span class="Identifier">toKdlNode</span><span class="Punctuation">:</span>
   <span class="Identifier">numbers</span><span class="Punctuation">(</span><span class="DecNumber">10</span><span class="Punctuation">[</span><span class="Identifier">u8</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="DecNumber">20</span><span class="Punctuation">[</span><span class="Identifier">i32</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="Identifier">myfloat</span><span class="Operator">=</span><span class="FloatNumber">1.5</span><span class="Punctuation">[</span><span class="Identifier">f32</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
     <span class="Identifier">strings</span><span class="Punctuation">(</span><span class="StringLit">&quot;123e4567-e89b-12d3-a456-426614174000&quot;</span><span class="Punctuation">[</span><span class="Identifier">uuid</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="StringLit">&quot;2021-02-03&quot;</span><span class="Punctuation">[</span><span class="Identifier">date</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="Identifier">filter</span><span class="Operator">=</span><span class="RawData">r&quot;$\d+&quot;</span><span class="Punctuation">[</span><span class="Identifier">regex</span><span class="Punctuation">]</span><span class="Punctuation">)</span>
-    <span class="Identifier">person</span><span class="Punctuation">[</span><span class="Identifier">author</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Identifier">name</span><span class="Operator">=</span><span class="StringLit">&quot;Alex&quot;</span><span class="Punctuation">)</span></pre>
+    <span class="Identifier">person</span><span class="Punctuation">[</span><span class="Identifier">author</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="Identifier">name</span><span class="Operator">=</span><span class="StringLit">&quot;Alex&quot;</span><span class="Punctuation">)</span>
+<span class="Comment"># It is the same as: </span>
+<span class="Comment"># numbers (u8)10 (i32)20 myfloat=(f32)1.5 {</span>
+<span class="Comment">#   strings (uuid)&quot;123e4567-e89b-12d3-a456-426614174000&quot; (date)&quot;2021-02-03&quot; filter=(regex)r&quot;$\d+&quot;</span>
+<span class="Comment">#   (author)person name=&quot;Alex&quot;</span>
+<span class="Comment"># }</span></pre>
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L339"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L347"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L339" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L347" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -996,9 +1030,9 @@ Generate a KdlVal from Nim's AST that is somehat similar to KDL's syntax.<ul cla
 </ul>
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L333"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/nodes.nim#L341"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L333" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/nodes.nim#L341" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -1012,7 +1046,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-23 22:11:41 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-24 00:25:22 UTC</small>
       </div>
     </div>
   </div>

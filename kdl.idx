@@ -5,3 +5,8 @@ prettyIdent	kdl.html#prettyIdent,string	kdl: prettyIdent(ident: string): string
 pretty	kdl.html#pretty,KdlVal	kdl: pretty(val: KdlVal): string	
 pretty	kdl.html#pretty,KdlNode	kdl: pretty(node: KdlNode): string	
 pretty	kdl.html#pretty,KdlDoc	kdl: pretty(doc: KdlDoc; newLine = true): string	
+writeFile	kdl.html#writeFile,KdlDoc,string	kdl: writeFile(doc: KdlDoc; path: string; pretty = false)	
+kdl-nim	kdl.html#kdlminusnim	 kdl-nim	
+Reading nodes	kdl.html#kdlminusnim-reading-nodes	   Reading nodes	
+Reading values	kdl.html#kdlminusnim-reading-values	   Reading values	
+Creating KDL	kdl.html#kdlminusnim-creating-kdl	   Creating KDL	

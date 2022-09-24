@@ -198,9 +198,9 @@ proc pretty*(node: KdlNode): string =
       result.add &"{key.prettyIdent}={val.pretty}"
 
   if node.children.len > 0:
-    result.add " {\n"
+    result.add " {\p"
     result.add indent(node.children.pretty(newLine = false), 4)
-    result.add "\n}"
+    result.add "\p}"
 
 proc pretty*(doc: KdlDoc, newLine = true): string = 
   ## Pretty print a KDL document according to the [translation rules](https://github.com/kdl-org/kdl/tree/main/tests#translation-rules).
@@ -209,9 +209,9 @@ proc pretty*(doc: KdlDoc, newLine = true): string =
   for e, node in doc:
     result.add node.pretty()
     if e < doc.high:
-      result.add "\n"
+      result.add "\p"
 
-  if newLine: result.add "\n"
+  if newLine: result.add "\p"
 
 proc writeFile*(doc: KdlDoc, path: string, pretty = false) = 
   ## Writes `doc` to path. Set `pretty` to true to use `pretty` instead of `$`.

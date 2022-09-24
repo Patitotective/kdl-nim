@@ -4,9 +4,6 @@ import kdl
 
 let testsDir = getAppDir() / "test_cases"
 
-proc escaped(x: string): string = 
-  result.addQuoted(x)
-
 suite "spec":
   for kind, path in walkDir(testsDir / "input"):
     if kind != pcFile: continue

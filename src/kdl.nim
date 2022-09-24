@@ -91,6 +91,18 @@ export parser, nodes
 export utils except quoted
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
+func indent*(s: string, count: Natural, padding = " ", newLine = "\n"): string =
+  var i = 0
+  for line in s.splitLines:
+    if i > 0:
+      result.add newLine
+
+    for j in 1..count:
+      result.add padding
+
+    result.add line
+    inc i
+
 proc `$`*(val: KdlVal): string = 
   if val.tag.isSome:
     result = &"({val.tag.get.quoted})"
@@ -199,7 +211,7 @@ proc pretty*(node: KdlNode): string =
 
   if node.children.len > 0:
     result.add " {\p"
-    result.add indent(node.children.pretty(newLine = false), 4)
+    result.add indent(node.children.pretty(newLine = false), 4, newLine = "\p")
     result.add "\p}"
 
 proc pretty*(doc: KdlDoc, newLine = true): string = 

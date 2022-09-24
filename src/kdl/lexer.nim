@@ -269,7 +269,9 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
         break
       elif endHashes > hashes:
         lexer.error &"Expected {hashes} hashes but found {endHashes}"
-
+    elif lexer.literal("\r\n", consume = false): # Replace CRLF with LF
+      lexer.source[lexer.current..lexer.current + 1] = "\n"
+      lexer.consume()
     else:
       lexer.consume()
 

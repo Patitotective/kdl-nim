@@ -1,3 +1,4 @@
+indent	kdl.html#indent,string,Natural,string,string	kdl: indent(s: string; count: Natural; padding = &quot; &quot;; newLine = &quot;\n&quot;): string	
 `$`	kdl.html#$,KdlVal	kdl: `$`(val: KdlVal): string	
 `$`	kdl.html#$,KdlNode	kdl: `$`(node: KdlNode): string	
 `$`	kdl.html#$,KdlDoc	kdl: `$`(doc: KdlDoc): string	

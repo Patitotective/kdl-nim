@@ -4,26 +4,26 @@ export options, tables
 
 type
   KdlValKind* = enum
-    KdlEmpty, 
-    KdlString, 
-    KdlFloat, 
-    KdlBool, 
-    KdlNull
-    KdlInt, 
+    KEmpty, 
+    KString, 
+    KFloat, 
+    KBool, 
+    KNull
+    KInt, 
 
   KdlVal* = object
     tag*: Option[string] # Type annotation
 
     case kind*: KdlValKind
-    of KdlString:
+    of KString:
       str*: string
-    of KdlFloat:
+    of KFloat:
       fnum*: float
-    of KdlBool:
+    of KBool:
       boolean*: bool
-    of KdlNull, KdlEmpty:
+    of KNull, KEmpty:
       discard
-    of KdlInt:
+    of KInt:
       num*: int64
 
   KdlProp* = tuple[key: string, val: KdlVal]
@@ -43,16 +43,16 @@ proc initKNode*(name: string, tag = string.none, args: openArray[KdlVal] = newSe
   KdlNode(tag: tag, name: name, args: @args, props: props, children: @children)
 
 proc initKVal*(val: string, tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KdlString, str: val)
+  KdlVal(tag: tag, kind: KString, str: val)
 
 proc initKVal*(val: SomeFloat, tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KdlFloat, fnum: val)
+  KdlVal(tag: tag, kind: KFloat, fnum: val)
 
 proc initKVal*(val: bool, tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KdlBool, boolean: val)
+  KdlVal(tag: tag, kind: KBool, boolean: val)
 
 proc initKVal*(val: SomeInteger, tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KdlInt, num: val)
+  KdlVal(tag: tag, kind: KInt, num: val)
 
 proc initKVal*(val: KdlVal): KdlVal = val
 
@@ -66,7 +66,7 @@ proc initKBool*(val = bool.default, tag = string.none): KdlVal =
   initKVal(val, tag)
 
 proc initKNull*(tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KdlNUll)
+  KdlVal(tag: tag, kind: KNUll)
 
 proc initKInt*(val: SomeInteger = int64.default, tag = string.none): KdlVal = 
   initKVal(val, tag)
@@ -74,22 +74,22 @@ proc initKInt*(val: SomeInteger = int64.default, tag = string.none): KdlVal =
 # ----- Comparisions -----
 
 proc isString*(val: KdlVal): bool = 
-  val.kind == KdlString
+  val.kind == KString
 
 proc isFloat*(val: KdlVal): bool = 
-  val.kind == KdlFloat
+  val.kind == KFloat
 
 proc isBool*(val: KdlVal): bool = 
-  val.kind == KdlBool
+  val.kind == KBool
 
 proc isInt*(val: KdlVal): bool = 
-  val.kind == KdlInt
+  val.kind == KInt
 
 proc isNull*(val: KdlVal): bool = 
-  val.kind == KdlNull
+  val.kind == KNull
 
 proc isEmpty*(val: KdlVal): bool = 
-  val.kind == KdlEmpty
+  val.kind == KEmpty
 
 # ----- Getters -----
 
@@ -154,7 +154,7 @@ proc setInt*(val: var KdlVal, x: SomeInteger) =
   val.num = x
 
 proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) = 
-  ## Tries to set val to x, raises an error when it cannot.
+  ## Tries to set val to x, raises an error when types are not compatible.
   runnableExamples:
     var val = initKFloat(3.14)
 
@@ -189,15 +189,15 @@ proc `==`*(val1, val2: KdlVal): bool =
   assert val1.kind == val2.kind
 
   case val1.kind
-  of KdlString:
+  of KString:
     val1.getString() == val2.getString()
-  of KdlFloat:
+  of KFloat:
     val1.getFloat() == val2.getFloat()
-  of KdlBool:
+  of KBool:
     val1.getBool() == val2.getBool()
-  of KdlNull, KdlEmpty:
+  of KNull, KEmpty:
     true
-  of KdlInt:
+  of KInt:
     val1.getInt() == val2.getInt()
 
 proc `==`*[T: SomeNumber or string or bool](val: KdlVal, x: T): bool = 
@@ -224,6 +224,14 @@ proc `[]`*(node: KdlNode, idx: int | BackwardsIndex): KdlVal =
   node.args[idx]
 
 proc `[]`*(node: KdlNode, key: string): KdlVal = 
+  ## Gets the value of the key property.
+  node.props[key]
+
+proc `[]`*(node: var KdlNode, idx: int | BackwardsIndex): var KdlVal = 
+  ## Gets the argument at idx.
+  node.args[idx]
+
+proc `[]`*(node: var KdlNode, key: string): var KdlVal = 
   ## Gets the value of the key property.
   node.props[key]
 
@@ -346,13 +354,18 @@ macro toKdlNode*(body: untyped): untyped =
       numbers(10[u8], 20[i32], myfloat=1.5[f32]):
         strings("123e4567-e89b-12d3-a456-426614174000"[uuid], "2021-02-03"[date], filter=r"$\d+"[regex])
         person[author](name="Alex")
+    # It is the same as: 
+    # numbers (u8)10 (i32)20 myfloat=(f32)1.5 {
+    #   strings (uuid)"123e4567-e89b-12d3-a456-426614174000" (date)"2021-02-03" filter=(regex)r"$\d+"
+    #   (author)person name="Alex"
+    # }
 
   toKdlNodeImpl(body)
 
 macro toKdl*(body: untyped): untyped = 
   ## Generate a KdlDoc from Nim's AST that is somewhat similar to KDL's syntax.
   ## 
-  ## See also [toKdlNode](#toKdlNode,untyped).
+  ## See also [toKdlNode](#toKdlNode.m,untyped).
 
   if body.kind == nnkStmtList:
     let doc = newNimNode(nnkBracket)

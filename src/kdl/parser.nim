@@ -223,9 +223,9 @@ proc matchIdent() {.parsing: Option[string].} =
   result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent()
 
 proc matchTag() {.parsing: Option[string].} = 
-  discard valid parser.match(tkOpenType, required)
+  discard valid parser.match(tkOpenPar, required)
   result.val = valid parser.matchIdent(required = true)
-  discard parser.match(tkCloseType, true)
+  discard parser.match(tkClosePar, true)
 
 proc matchValue(slashdash = false) {.parsing: KdlVal.} = 
   if slashdash:
@@ -233,12 +233,7 @@ proc matchValue(slashdash = false) {.parsing: KdlVal.} =
 
   let (_, _, tag) = parser.matchTag(required = false)
 
-  # try:
   result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue()
-  # except RangeDefect:
-    # dec parser.current
-    # parser.error(getCurrentExceptionMsg())
-
   result.val.tag = tag
 
 proc matchProp(slashdash = true) {.parsing: KdlProp.} = 
@@ -258,9 +253,9 @@ proc matchNodeEnd() {.parsing: None.} =
 
   if not result.ok:
     let token = parser.peek()
-    discard valid parser.match({tkNewLine, tkSemicolon, tkCloseBlock}, required)
+    discard valid parser.match({tkNewLine, tkSemicolon, tkCloseBra}, required)
 
-    if token.kind == tkCloseBlock: # Unconsume
+    if token.kind == tkCloseBra: # Unconsume
       dec parser.current
 
 proc matchNode(slashdash = true) {.parsing: KdlNode.}
@@ -281,9 +276,9 @@ proc matchChildren(slashdash = true) {.parsing: KdlDoc.} =
   if slashdash:
     result.ignore = parser.matchSlashDash(required = false).ok
 
-  discard valid parser.match(tkOpenBlock, required)
+  discard valid parser.match(tkOpenBra, required)
   result.val = parser.matchNodes(required = false).val
-  discard valid parser.match(tkCloseBlock, true)
+  discard valid parser.match(tkCloseBra, true)
 
 proc matchNode(slashdash = true) {.parsing: KdlNode.} = 
   if slashdash:

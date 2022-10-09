@@ -3,7 +3,7 @@ import std/[options, tables, macros]
 export options, tables
 
 type
-  KdlValKind* = enum
+  KValKind* = enum
     KEmpty, 
     KString, 
     KFloat, 
@@ -14,7 +14,7 @@ type
   KdlVal* = object
     tag*: Option[string] # Type annotation
 
-    case kind*: KdlValKind
+    case kind*: KValKind
     of KString:
       str*: string
     of KFloat:

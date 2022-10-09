@@ -5,18 +5,26 @@ type
   TokenKind* = enum
     tkEmpty = "empty", 
     tkNull = "null", 
+    tkStar = "star", 
+    tkPlus = "plus", 
     tkBool = "bool", 
-    tkEqual = "equal", 
+    tkTilde = "tilde", 
+    tkComma = "comma", 
+    tkCaret = "caret", 
+    tkDollar = "dollar", 
     tkIdent = "identifier", 
     tkSemicolon = "semicolon", 
+    tkGreater = "greater_than", 
     tkSlashDash = "slash_dash", 
+    tkDoublePipe = "double_pipe", 
+    tkLineCont = "line_continuation"
+    tkEqual = "equal", tkNotEqual = "not_equal", 
     tkString = "string", tkRawString = "raw_string", 
     tkWhitespace = "whitespace", tkNewLine = "new_line", 
-    tkOpenType = "open_parenthesis", tkCloseType = "close_parenthesis", # Type tagation
-    tkOpenBlock = "open_bracket", tkCloseBlock = "close_bracket", # Children block
+    tkOpenPar = "open_parenthesis", tkClosePar = "close_parenthesis", # Type tagation
+    tkOpenBra = "open_bracket", tkCloseBra = "close_bracket", # Children block
+    tkOpenSqu = "open_square_bracket", tkCloseSqu = "close_square_bracket", 
     tkNumFloat = "float_number", tkNumInt = "integer_number", tkNumHex = "hexadecimal_number", tkNumBin = "binary_number", tkNumOct = "octagonal_number", 
-    # tkComment = "comment",  # Only multi-line comments are scanned
-    tkLineCont = "line_continuation"
 
   Token* = object
     lexeme*: string
@@ -46,14 +54,22 @@ const
   }.toTable
 
   litMatches = {
-    "=": tkEqual, 
+    "*": tkStar, 
+    "+": tkPlus, 
+    "~": tkTilde, 
+    "^": tkCaret, 
+    ",": tkComma, 
+    "$": tkDollar, 
+    ">": tkGreater,  
     "null": tkNull, 
     "true": tkBool, 
     "false": tkBool, 
     ";": tkSemicolon, 
     "/-": tkSlashDash,  
-    "{": tkOpenBlock, "}": tkCloseBlock,
-    "(": tkOpenType, ")": tkCloseType,
+    "||": tkDoublePipe, 
+    "=": tkEqual, "!=": tkNotEqual, 
+    "(": tkOpenPar, ")": tkClosePar,
+    "[": tkOpenSqu, "]": tkCloseSqu,
   }
 
 proc `$`*(lexer: Lexer): string = 
@@ -340,11 +356,9 @@ proc tokenIdent*() {.lexing: tkIdent.} =
       lexer.current = before
       return
 
-  # lexer.current = before
-
   block outer:
     for rune in lexer.source[lexer.current..^1].runes: # FIXME: slicing copies string, unnecessary, better copy unicode and replace string with openArray[char]
-      if rune.int <= 0x20 or lexer.eof() or lexer.tokenWhitespace(consume = false) or lexer.tokenNewLine(consume = false):
+      if rune.int <= 0x20 or rune.int > 0x10FFFF or lexer.eof() or lexer.tokenWhitespace(consume = false) or lexer.tokenNewLine(consume = false):
         break outer
 
       for c in nonIdenChars:

@@ -13,6 +13,10 @@ Or directly from this repository:
 nimble install https://github.com/Patitotective/kdl-nim
 ```
 
+## Features
+- [JSON-in-KDL](https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md) ([JiK](https://patitotective.github.io/kdl-nim/kdl/jik.html))
+- [XML-in-KDL](https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md) ([Xik](https://patitotective.github.io/kdl-nim/kdl/xik.html))
+
 ## Overview
 ```nim
 import kdl
@@ -42,6 +46,14 @@ foo123~!@#$%^&*.:'|?+ "weeee"
 // interspersed with each other, much like CLI commands.
 foo bar=true "baz" quux=false 1 2 3
 """) # You can also read files using parseKdlFile("file.kdl")
+
+# Nodes are represented like:
+# type KdlNode* = object
+#   tag*: Option[string]
+#   name*: string
+#   args*: seq[KdlVal]
+#   props*: Table[string, KdlVal]
+#   children*: seq[KdlNode]
 
 assert doc[0][0].isString() # title "Some title"
 

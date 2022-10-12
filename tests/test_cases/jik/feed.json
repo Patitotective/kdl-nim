@@ -1,0 +1,1939 @@
+{
+    "version": 1,
+    "home_page_url": "https://appimage.github.io/",
+    "feed_url": "https://appimage.github.io/feed.json",
+    "description": "AppImage applications for Linux without installation",
+    "icon": "https://appimage.github.io/apple-touch-icon.png",
+    "favicon": "https://appimage.github.io/favicon.ico",
+    "expired": false,
+    "items":
+    [
+        {
+            "name": "86Box",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "86Box",
+                    "url": "https://github.com/86Box"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "86Box/86Box"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/86Box/86Box/releases"
+                }
+            ],
+            "icons":
+            [
+                "86Box/icons/512x512/86box.png"
+            ],
+            "screenshots":
+            [
+                "86Box/screenshot.png"
+            ]
+        },
+        {
+            "name": "AKASHA",
+            "description": "Akasha platform",
+            "categories":
+            [
+                "Network"
+            ],
+            "authors":
+            [
+                {
+                    "name": "AkashaProject",
+                    "url": "https://github.com/AkashaProject"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "AkashaProject/Community"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/AkashaProject/Community/releases"
+                }
+            ],
+            "icons":
+            [
+                "AKASHA/icons/128x128/akasha.png"
+            ],
+            "screenshots":
+            [
+                "AKASHA/screenshot.png"
+            ]
+        },
+        {
+            "name": "ANT_Downloader",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "anatasluo",
+                    "url": "https://github.com/anatasluo"
+                }
+            ],
+            "license": "MPL-2.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "anatasluo/ant"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/anatasluo/ant/releases"
+                }
+            ],
+            "icons":
+            [
+                "ANT_Downloader/icons/989x652/ant-downloader.png"
+            ],
+            "screenshots":
+            [
+                "ANT_Downloader/screenshot.png"
+            ]
+        },
+        {
+            "name": "APK_Editor_Studio",
+            "description": "Edit APK resources",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "kefir500",
+                    "url": "https://github.com/kefir500"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "kefir500/apk-editor-studio"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/kefir500/apk-editor-studio/releases"
+                }
+            ],
+            "icons":
+            [
+                "APK_Editor_Studio/icons/128x128/apk-editor-studio.png"
+            ],
+            "screenshots":
+            [
+                "APK_Editor_Studio/screenshot.png"
+            ]
+        },
+        {
+            "name": "APhotoToolLibre",
+            "description": "<p>Easy to use photo editing software.</p>\n<p>Fix and modify your jpeg photos to look even greater.\n      Supports several other imageformats also.</p>\n<p>Change exposure, contrast and color.\n      Turn color photos in to black and white images with control how color is handled.\n      Rotate, crop, straighten and resize photos.</p>\n<p>Copyright (C) 2022 Jari Ahola</p>\n<p>Lisensed under GNU GPLv3. Full source code available at https://github.com/aphototool/A-Photo-Tool-Libre</p>",
+            "categories":
+            [
+                "Graphics"
+            ],
+            "authors":
+            [
+                {
+                    "name": "aphototool",
+                    "url": "https://github.com/aphototool"
+                }
+            ],
+            "license": "GPL-3.0-or-later",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "aphototool/A-Photo-Tool-Libre"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/aphototool/A-Photo-Tool-Libre/releases"
+                }
+            ],
+            "icons":
+            [
+                "APhotoToolLibre/icons/scalable/aphototoollibre.svg"
+            ],
+            "screenshots":
+            [
+                "https://raw.githubusercontent.com/aphototool/A-Photo-Tool-Libre/main/pics/APhotoTool(Libre)Debian.png"
+            ]
+        },
+        {
+            "name": "ARAnyM",
+            "description": "Virtual Machine for Atari 32-bit applications",
+            "categories":
+            [
+                "System"
+            ],
+            "authors":
+            [
+                {
+                    "name": "aranym",
+                    "url": "https://github.com/aranym"
+                }
+            ],
+            "license": "GPL-2.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "aranym/aranym"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/aranym/aranym/releases"
+                }
+            ],
+            "icons":
+            [
+                "ARAnyM/icons/48x48/aranym.png"
+            ],
+            "screenshots":
+            [
+                "ARAnyM/screenshot.png"
+            ]
+        },
+        {
+            "name": "ATSDB",
+            "description": "Air Traffic Surveillance DataBase",
+            "categories":
+            [
+                "Science"
+            ],
+            "authors":
+            [
+                {
+                    "name": "hpuhr",
+                    "url": "https://github.com/hpuhr"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "hpuhr/ATSDB"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/hpuhr/ATSDB/releases"
+                }
+            ],
+            "icons":
+            [
+                "ATSDB/icons/806x797/atsdb.png"
+            ],
+            "screenshots":
+            [
+                "ATSDB/screenshot.png"
+            ]
+        },
+        {
+            "name": "Addaps",
+            "description": "Addap’s, join the new wave of internet social browsing",
+            "categories":
+            [
+                "Chat"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons": null,
+            "screenshots":
+            [
+                "Addaps/screenshot.png"
+            ]
+        },
+        {
+            "name": "Advanced_Rest_Client",
+            "description": "The Advanced REST Client desktop application.",
+            "categories":
+            [
+                "Development"
+            ],
+            "authors":
+            [
+                {
+                    "name": "advanced-rest-client",
+                    "url": "https://github.com/advanced-rest-client"
+                }
+            ],
+            "license": "Apache-2.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "advanced-rest-client/arc-electron"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/advanced-rest-client/arc-electron/releases"
+                }
+            ],
+            "icons":
+            [
+                "Advanced_Rest_Client/icons/128x128/advanced-rest-client.png"
+            ],
+            "screenshots":
+            [
+                "Advanced_Rest_Client/screenshot.png"
+            ]
+        },
+        {
+            "name": "Agora",
+            "description": "Simple File Conversion Application",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "Agora/icons/512x512/agora.png"
+            ],
+            "screenshots":
+            [
+                "Agora/screenshot.png"
+            ]
+        },
+        {
+            "name": "Airspaces",
+            "description": "An online map for your X-Plane flight sessions",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "foucdeg",
+                    "url": "https://github.com/foucdeg"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "foucdeg/x-plane-map-electron"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/foucdeg/x-plane-map-electron/releases"
+                }
+            ],
+            "icons":
+            [
+                "Airspaces/icons/512x512/airspaces-electron.png"
+            ],
+            "screenshots":
+            [
+                "Airspaces/screenshot.png"
+            ]
+        },
+        {
+            "name": "Alduin",
+            "description": "An Atom and RSS feed aggregator",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "Xstoudi",
+                    "url": "https://github.com/Xstoudi"
+                }
+            ],
+            "license": "MIT",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "Xstoudi/alduin"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/Xstoudi/alduin/releases"
+                }
+            ],
+            "icons":
+            [
+                "Alduin/icons/514x512/alduin.png"
+            ],
+            "screenshots":
+            [
+                "Alduin/screenshot.png"
+            ]
+        },
+        {
+            "name": "Altitude",
+            "description": "The Altitude wallet by Linda Project Inc.",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "TheLindaProjectInc",
+                    "url": "https://github.com/TheLindaProjectInc"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "TheLindaProjectInc/Altitude"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/TheLindaProjectInc/Altitude/releases"
+                }
+            ],
+            "icons":
+            [
+                "Altitude/icons/128x128/altitude.png"
+            ],
+            "screenshots":
+            [
+                "Altitude/screenshot.png"
+            ]
+        },
+        {
+            "name": "Altus",
+            "description": "Electron-based desktop wrapper for WhatsApp Web",
+            "categories":
+            [
+                "Chat"
+            ],
+            "authors":
+            [
+                {
+                    "name": "amanharwara",
+                    "url": "https://github.com/amanharwara"
+                }
+            ],
+            "license": "GPL-3.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "amanharwara/altus"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/amanharwara/altus/releases"
+                }
+            ],
+            "icons":
+            [
+                "Altus/icons/256x256/altus.png"
+            ],
+            "screenshots":
+            [
+                "Altus/screenshot.png"
+            ]
+        },
+        {
+            "name": "AnaVis",
+            "description": "AnaVis is a tool to visualize musical form",
+            "categories":
+            [
+                "Education"
+            ],
+            "authors":
+            [
+                {
+                    "name": "learningmedia",
+                    "url": "https://github.com/learningmedia"
+                }
+            ],
+            "license": "MIT",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "learningmedia/anavis"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/learningmedia/anavis/releases"
+                }
+            ],
+            "icons":
+            [
+                "AnaVis/icons/128x128/anavis.png"
+            ],
+            "screenshots":
+            [
+                "AnaVis/screenshot.png"
+            ]
+        },
+        {
+            "name": "Anchor",
+            "description": "An EOSIO Light Wallet with simple tools for basic activities and advanced tools for power users.",
+            "categories":
+            [
+                "Network"
+            ],
+            "authors":
+            [
+                {
+                    "name": "greymass",
+                    "url": "https://github.com/greymass"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "greymass/anchor"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/greymass/anchor/releases"
+                }
+            ],
+            "icons":
+            [
+                "Anchor/icons/128x128/anchor-wallet.png"
+            ],
+            "screenshots":
+            [
+                "Anchor/screenshot.png"
+            ]
+        },
+        {
+            "name": "AngularConsole",
+            "description": "Angular Console",
+            "categories":
+            [
+                "Development"
+            ],
+            "authors":
+            [
+                {
+                    "name": "nrwl",
+                    "url": "https://github.com/nrwl"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "nrwl/angular-console"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/nrwl/angular-console/releases"
+                }
+            ],
+            "icons":
+            [
+                "AngularConsole/icons/1024x1024/angularconsole.png"
+            ],
+            "screenshots":
+            [
+                "AngularConsole/screenshot.png"
+            ]
+        },
+        {
+            "name": "AnimaShooter",
+            "description": "User-friendly Stop-Motion Animation Software",
+            "categories":
+            [
+                "Graphics"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "AnimaShooter/icons/1582x1582/pioneer_install_icon.png"
+            ],
+            "screenshots":
+            [
+                "AnimaShooter/screenshot.png"
+            ]
+        },
+        {
+            "name": "Another_Redis_Desktop_Manager",
+            "description": "A faster, better and more stable redis desktop manager.",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "qishibo",
+                    "url": "https://github.com/qishibo"
+                }
+            ],
+            "license": "MIT",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "qishibo/AnotherRedisDesktopManager"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/qishibo/AnotherRedisDesktopManager/releases"
+                }
+            ],
+            "icons":
+            [
+                "Another_Redis_Desktop_Manager/icons/512x512/another-redis-manager.png"
+            ],
+            "screenshots":
+            [
+                "Another_Redis_Desktop_Manager/screenshot.png"
+            ]
+        },
+        {
+            "name": "Antares",
+            "description": "A cross-platform easy to use SQL client.",
+            "categories":
+            [
+                "Development"
+            ],
+            "authors":
+            [
+                {
+                    "name": "Fabio286",
+                    "url": "https://github.com/Fabio286"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "Fabio286/antares"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/Fabio286/antares/releases"
+                }
+            ],
+            "icons":
+            [
+                "Antares/icons/128x128/antares.png"
+            ],
+            "screenshots":
+            [
+                "Antares/screenshot.png"
+            ]
+        },
+        {
+            "name": "AnzeigenChef",
+            "description": "AnzeigenChef verwaltet Deine Kleinanzeigen",
+            "categories":
+            [
+                "Office"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "AnzeigenChef/icons/512x512/Organization_512.png"
+            ],
+            "screenshots":
+            [
+                "AnzeigenChef/screenshot.png"
+            ]
+        },
+        {
+            "name": "Apache_NetBeans",
+            "categories":
+            [
+                "Development"
+            ],
+            "authors":
+            [
+                {
+                    "name": "codelerity",
+                    "url": "https://github.com/codelerity"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "codelerity/netbeans-installers"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/codelerity/netbeans-installers/releases"
+                }
+            ],
+            "icons":
+            [
+                "Apache_NetBeans/icons/48x48/netbeans.png"
+            ],
+            "screenshots":
+            [
+                "Apache_NetBeans/screenshot.png"
+            ]
+        },
+        {
+            "name": "Aphelion_Wallet",
+            "description": "Aphelion Desktop Wallet",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "aphtoken",
+                    "url": "https://github.com/aphtoken"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "aphtoken/aph-wallet-gui"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/aphtoken/aph-wallet-gui/releases"
+                }
+            ],
+            "icons":
+            [
+                "Aphelion_Wallet/icons/256x256/aphelion-desktop-wallet.png"
+            ],
+            "screenshots":
+            [
+                "Aphelion_Wallet/screenshot.png"
+            ]
+        },
+        {
+            "name": "Apla",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "AplaProject",
+                    "url": "https://github.com/AplaProject"
+                }
+            ],
+            "license": "MIT",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "AplaProject/apla-front"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/AplaProject/apla-front/releases"
+                }
+            ],
+            "icons":
+            [
+                "Apla/icons/256x256/apla-front.png"
+            ],
+            "screenshots":
+            [
+                "Apla/screenshot.png"
+            ]
+        },
+        {
+            "name": "AppImagePool",
+            "description": "<p>Simple AppImageHub Client</p>\n<p>Top Features:</p>\n<ul>\n  <li>FLOSS and non profit app</li>\n  <li>Simple categories</li>\n  <li>Download from github directly, no extra-server involved</li>\n  <li>Upgrade and Downgrade appimages easily</li>\n  <li>Version History and multi download support</li>\n  <li>Fast downloader</li>\n</ul>\n<p>Note : Some features are not implemented yet.</p>",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "prateekmedia",
+                    "url": "https://github.com/prateekmedia"
+                }
+            ],
+            "license": "GPL-3.0-only",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "prateekmedia/appimagepool"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/prateekmedia/appimagepool/releases"
+                }
+            ],
+            "icons":
+            [
+                "AppImagePool/icons/scalable/appimagepool.svg"
+            ],
+            "screenshots":
+            [
+                "https://github.com/prateekmedia/appimagepool/blob/main/assets/screenshot/home.jpg?raw=truehttps://github.com/prateekmedia/appimagepool/blob/main/assets/screenshot/category.jpg?raw=truehttps://github.com/prateekmedia/appimagepool/blob/main/assets/screenshot/app.jpg?raw=truehttps://github.com/prateekmedia/appimagepool/blob/main/assets/screenshot/search.jpg?raw=true"
+            ]
+        },
+        {
+            "name": "AppImageUpdate",
+            "description": "<p>AppImageUpdate updates AppImages based on the update information embedded in AppImages.</p>",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "AppImage",
+                    "url": "https://github.com/AppImage"
+                }
+            ],
+            "license": "MIT",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "AppImage/AppImageUpdate"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/AppImage/AppImageUpdate/releases"
+                }
+            ],
+            "icons":
+            [
+                "AppImageUpdate/icons/scalable/AppImage.svg"
+            ],
+            "screenshots":
+            [
+                "https://camo.githubusercontent.com/2c9da2c2c2b43de47075b5e8f77f17bcf930f2b5/68747470733a2f2f6c68332e676f6f676c6575736572636f6e74656e742e636f6d2f2d56724139513657774c4f342f566e5863506c62505078492f41414141414141414145672f4370707368345148724b492f773339362d683237362d702f757064617465722e706e67"
+            ]
+        },
+        {
+            "name": "App_Outlet",
+            "description": "An Universal linux app store",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "app-outlet",
+                    "url": "https://github.com/app-outlet"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "app-outlet/app-outlet"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/app-outlet/app-outlet/releases"
+                }
+            ],
+            "icons":
+            [
+                "App_Outlet/icons/256x256/app-outlet.png"
+            ],
+            "screenshots":
+            [
+                "App_Outlet/screenshot.png"
+            ]
+        },
+        {
+            "name": "ArcadeManager",
+            "description": "Arcade games manager to be used with Retropie and Recalbox",
+            "categories":
+            [
+                "Game"
+            ],
+            "authors":
+            [
+                {
+                    "name": "cosmo0",
+                    "url": "https://github.com/cosmo0"
+                }
+            ],
+            "license": "MIT",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "cosmo0/arcade-manager"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/cosmo0/arcade-manager/releases"
+                }
+            ],
+            "icons":
+            [
+                "ArcadeManager/icons/128x128/arcade-manager.png"
+            ],
+            "screenshots":
+            [
+                "ArcadeManager/screenshot.png"
+            ]
+        },
+        {
+            "name": "Archipel",
+            "description": "Archipel Desktop App",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "arso-project",
+                    "url": "https://github.com/arso-project"
+                }
+            ],
+            "license": "GPL-3.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "arso-project/archipel"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/arso-project/archipel/releases"
+                }
+            ],
+            "icons":
+            [
+                "Archipel/icons/128x128/@archipelelectron.png"
+            ],
+            "screenshots":
+            [
+                "Archipel/screenshot.png"
+            ]
+        },
+        {
+            "name": "Archipelago",
+            "description": "Archipelago is a terminal emulator built on open web technologies.",
+            "categories":
+            [
+                "TerminalEmulator"
+            ],
+            "authors":
+            [
+                {
+                    "name": "npezza93",
+                    "url": "https://github.com/npezza93"
+                }
+            ],
+            "license": "MIT",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "npezza93/archipelago"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/npezza93/archipelago/releases"
+                }
+            ],
+            "icons":
+            [
+                "Archipelago/icons/1024x1024/archipelago.png"
+            ],
+            "screenshots":
+            [
+                "Archipelago/screenshot.png"
+            ]
+        },
+        {
+            "name": "Arduino_IDE",
+            "description": "Arduino IDE",
+            "categories":
+            [
+                "Development"
+            ],
+            "authors":
+            [
+                {
+                    "name": "arduino",
+                    "url": "https://github.com/arduino"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "arduino/arduino-ide"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/arduino/arduino-ide/releases"
+                }
+            ],
+            "icons":
+            [
+                "Arduino_IDE/icons/512x512/arduino-ide.png"
+            ],
+            "screenshots":
+            [
+                "Arduino_IDE/screenshot.png"
+            ]
+        },
+        {
+            "name": "Ark.Desktop.Wallet",
+            "description": "Ark Ecosystem Desktop Wallet",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "ArkEcosystem",
+                    "url": "https://github.com/ArkEcosystem"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "ArkEcosystem/desktop-wallet"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/ArkEcosystem/desktop-wallet/releases"
+                }
+            ],
+            "icons":
+            [
+                "Ark.Desktop.Wallet/icons/128x128/ark-desktop-wallet.png"
+            ],
+            "screenshots":
+            [
+                "Ark.Desktop.Wallet/screenshot.png"
+            ]
+        },
+        {
+            "name": "Arma_3_Unix_Launcher",
+            "categories":
+            [
+                "Game"
+            ],
+            "authors":
+            [
+                {
+                    "name": "muttleyxd",
+                    "url": "https://github.com/muttleyxd"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "muttleyxd/arma3-unix-launcher"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/muttleyxd/arma3-unix-launcher/releases"
+                }
+            ],
+            "icons":
+            [
+                "Arma_3_Unix_Launcher/icons/256x256/arma3-unix-launcher.png"
+            ],
+            "screenshots":
+            [
+                "Arma_3_Unix_Launcher/screenshot.png"
+            ]
+        },
+        {
+            "name": "Armagetron_Advanced",
+            "description": "<p>In Armagetron Advanced, you ride a bizarre vehicle that can never stop and leaves a deadly trail behind. In the most basic game mode, you can only make sudden right angle turns and are trapped with others in an inescapable arena. The last survivor wins.</p>\n<p>Focus is firmly on online play. Pick a server that sounds fun from the server browser, hop in, stay and play there for as long as you like with the same people. Online, you will find many variations of the core gameplay principle. There are other objectives than mere survival. In Fortress Mode, two teams face each other. Each team owns a Fortress Zone and needs to defend it while trying to conquer the enemy teams&apos; Fortress. In Sumo Mode, everyone needs to stay inside a shrinking circle to stay alive.</p>\n<p>The game supports custom maps (sadly without an editor) and just about every gameplay variable can be tweaked to your, or more likely, the server owner&apos;s heart content. Speed, map size, trail length and timeouts are just the start. Even the rigid right angle turn rule can be bent!</p>",
+            "categories":
+            [
+                "Game"
+            ],
+            "authors":
+            [
+                {
+                    "name": "ArmagetronAd",
+                    "url": "https://github.com/ArmagetronAd"
+                }
+            ],
+            "license": "GPL-2.0-or-later",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "ArmagetronAd/armagetronad"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/ArmagetronAd/armagetronad/releases"
+                }
+            ],
+            "icons":
+            [
+                "Armagetron_Advanced/icons/48x48/armagetronad.png"
+            ],
+            "screenshots":
+            [
+                "http://www.armagetronad.org/screenshots/ss_fort_1.png"
+            ]
+        },
+        {
+            "name": "Around",
+            "description": "Video calls designed for energy, ideas and action",
+            "categories":
+            [
+                "AudioVideo"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "Around/icons/128x128/around.png"
+            ],
+            "screenshots":
+            [
+                "Around/screenshot.png"
+            ]
+        },
+        {
+            "name": "Artifact",
+            "description": "<p>As chief artificer Larry Lodestone, your goal is to make your way through the intricate designs of The Artifact. Your goal is to shut down the core, which has gone haywire. However, the way in is filled with obstacles, as weird orbs spawned by the malfunctioning core are disrupting and reconstructing the matrix of The Artifact. Before you can reach the core, these orbs must be isolated to prevent further damage.</p>\n<p>In Artifact, your goal is to make your way through 40 levels of mayhem without getting destroyed, racking up as many points as possible on the way.\n            Each level consists of a screen filled with a variety of different orbs. These orbs must be isolated by the\nplayer. Once 75% of the playing field has been isolated, the level ends, and the player moves on to the score and powerup allocation screen.\n            The player controls the dual-direction Welding Blaster that can be rotated to fire vertically or horizontally.\nWhen fired, a welding beam will slowly traverse the screen in 2 directions. Once both ends reach a wall, the playing field will be cut, isolating balls on each side of the beam. However, care must be taken not to hit the orbs, as they will create a feedback surge, damaging the Welding Blaster. Once the Welding Blaster reaches critical damage, it will explode, and the game will be over.\n            For every level a number of new orbs will be added to the game. These can be of any type depending on the\nlevel. Early levels will not include any of the most challenging orbs and vice versa.\n            Orbs carry over from every level. This means that as the game progresses, there will be more and more orbs\npresent. To counter this, the player may use the Annihilator Shield to get rid of some of the orbs.</p>",
+            "categories":
+            [
+                "Game"
+            ],
+            "authors": null,
+            "license": "MIT",
+            "links": null,
+            "icons":
+            [
+                "Artifact/icons/512x512/artifact-x86_64.png"
+            ],
+            "screenshots":
+            [
+                "https://www.bitbreeds.com/artifact/images/screen1.jpg"
+            ]
+        },
+        {
+            "name": "Artisan",
+            "description": "Visualizes the coffee roasting process",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "artisan-roaster-scope",
+                    "url": "https://github.com/artisan-roaster-scope"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "artisan-roaster-scope/artisan"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/artisan-roaster-scope/artisan/releases"
+                }
+            ],
+            "icons":
+            [
+                "Artisan/icons/1024x1024/artisan.png"
+            ],
+            "screenshots":
+            [
+                "Artisan/screenshot.png"
+            ]
+        },
+        {
+            "name": "AsarUI",
+            "description": "UI for Asar",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "myazarc",
+                    "url": "https://github.com/myazarc"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "myazarc/AsarUI"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/myazarc/AsarUI/releases"
+                }
+            ],
+            "icons":
+            [
+                "AsarUI/icons/256x256/asarui.png"
+            ],
+            "screenshots":
+            [
+                "AsarUI/screenshot.png"
+            ]
+        },
+        {
+            "name": "Blink1Control2",
+            "description": "Blink1Control2 GUI app for blink(1) devices",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "todbot",
+                    "url": "https://github.com/todbot"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "todbot/Blink1Control2"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/todbot/Blink1Control2/releases"
+                }
+            ],
+            "icons": null,
+            "screenshots":
+            [
+                "Blink1Control2/screenshot.png"
+            ]
+        },
+        {
+            "name": "Blizzard_4",
+            "description": "Emulator & toolchain for the Blizzard 4 16-bit computer.",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "danielfspencer",
+                    "url": "https://github.com/danielfspencer"
+                }
+            ],
+            "license": "GPL-3.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "danielfspencer/blizzard-4"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/danielfspencer/blizzard-4/releases"
+                }
+            ],
+            "icons":
+            [
+                "Blizzard_4/icons/128x128/blizzard-4.png"
+            ],
+            "screenshots":
+            [
+                "Blizzard_4/screenshot.png"
+            ]
+        },
+        {
+            "name": "Downline",
+            "description": "A cross-platform video and audio downloader for YouTube, Vimeo, Dailymotion, SoundCloud and many other sites",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "jarbun",
+                    "url": "https://github.com/jarbun"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "jarbun/downline"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/jarbun/downline/releases"
+                }
+            ],
+            "icons":
+            [
+                "Downline/icons/256x256/downline.png"
+            ],
+            "screenshots":
+            [
+                "Downline/screenshot.png"
+            ]
+        },
+        {
+            "name": "Dragoman",
+            "description": "GUI for polyglot",
+            "categories":
+            [
+                "Development"
+            ],
+            "authors":
+            [
+                {
+                    "name": "improbable-eng",
+                    "url": "https://github.com/improbable-eng"
+                }
+            ],
+            "license": "Apache-2.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "improbable-eng/Dragoman"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/improbable-eng/Dragoman/releases"
+                }
+            ],
+            "icons": null,
+            "screenshots":
+            [
+                "Dragoman/screenshot.png"
+            ]
+        },
+        {
+            "name": "Drawpile-Server",
+            "categories":
+            [
+                "Network"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "Drawpile-Server/icons/48x48/drawpile.png"
+            ],
+            "screenshots":
+            [
+                "Drawpile-Server/screenshot.png"
+            ]
+        },
+        {
+            "name": "Drawpile",
+            "categories":
+            [
+                "Graphics"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "Drawpile/icons/scalable/drawpile.svg"
+            ],
+            "screenshots":
+            [
+                "Drawpile/screenshot.png"
+            ]
+        },
+        {
+            "name": "Drill",
+            "description": "Search files without using indexing, but clever crawling",
+            "categories":
+            [
+                "Application"
+            ],
+            "authors":
+            [
+                {
+                    "name": "yatima1460",
+                    "url": "https://github.com/yatima1460"
+                }
+            ],
+            "license": "GPL-2.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "yatima1460/Drill"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/yatima1460/Drill/releases"
+                }
+            ],
+            "icons":
+            [
+                "Drill/icons/scalable/icon.svg"
+            ],
+            "screenshots":
+            [
+                "Drill/screenshot.png"
+            ]
+        },
+        {
+            "name": "Dust3D",
+            "description": "<p>​      Dust3D is a brand new 3D modeling software. It helps you create a 3D watertight base model in seconds. Use it to speed up your character modeling in game making, 3D printing, and so on.\n​</p>",
+            "categories":
+            [
+                "Graphics"
+            ],
+            "authors":
+            [
+                {
+                    "name": "huxingyi",
+                    "url": "https://github.com/huxingyi"
+                }
+            ],
+            "license": "MIT",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "huxingyi/dust3d"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/huxingyi/dust3d/releases"
+                }
+            ],
+            "icons":
+            [
+                "Dust3D/icons/250x250/icon.png"
+            ],
+            "screenshots":
+            [
+                "https://raw.githubusercontent.com/huxingyi/dust3d/master/ci/screenshot.png"
+            ]
+        },
+        {
+            "name": "Dwyco_Phoo",
+            "description": "Dwyco Phoo Chat and Video Calling",
+            "categories":
+            [
+                "Network"
+            ],
+            "authors":
+            [
+                {
+                    "name": "blindchimp",
+                    "url": "https://github.com/blindchimp"
+                }
+            ],
+            "license": "MPL-2.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "blindchimp/dwyco"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/blindchimp/dwyco/releases"
+                }
+            ],
+            "icons":
+            [
+                "Dwyco_Phoo/icons/32x32/phoo.png"
+            ],
+            "screenshots":
+            [
+                "Dwyco_Phoo/screenshot.png"
+            ]
+        },
+        {
+            "name": "ERScaffold",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "fxdave",
+                    "url": "https://github.com/fxdave"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "fxdave/ERScaffold"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/fxdave/ERScaffold/releases"
+                }
+            ],
+            "icons":
+            [
+                "ERScaffold/icons/128x128/electrontest.png"
+            ],
+            "screenshots":
+            [
+                "ERScaffold/screenshot.png"
+            ]
+        },
+        {
+            "name": "Eagle_Mode",
+            "description": "Zoomable user interface with plugin applications",
+            "categories":
+            [
+                "System"
+            ],
+            "authors":
+            [
+                {
+                    "name": "probonopd",
+                    "url": "https://github.com/probonopd"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "probonopd/eaglemode"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/probonopd/eaglemode/releases"
+                }
+            ],
+            "icons":
+            [
+                "Eagle_Mode/icons/48x48/eaglemode.png"
+            ],
+            "screenshots":
+            [
+                "Eagle_Mode/screenshot.png"
+            ]
+        },
+        {
+            "name": "EasyMercurial",
+            "description": "A simple user interface for the Mercurial version-control system",
+            "categories":
+            [
+                "Development"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "EasyMercurial/icons/scalable/easyhg-icon.svg"
+            ],
+            "screenshots":
+            [
+                "EasyMercurial/screenshot.png"
+            ]
+        },
+        {
+            "name": "Eddie",
+            "categories":
+            [
+                "GNOME"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "Eddie/icons/256x256/eddie-ui.png"
+            ],
+            "screenshots":
+            [
+                "Eddie/screenshot.png"
+            ]
+        },
+        {
+            "name": "EiskaltDC++",
+            "description": "<p>EiskaltDC++ is a cross-platform program that uses the Direct Connect and Advanced Direct Connect protocols. It is compatible with DC++, AirDC++, FlylinkDC++ and other DC clients. EiskaltDC++ also interoperates with all common DC hub software.</p>\n<p>Currently supported systems (in order of decreasing importance): GNU/Linux, macOS, MS Windows, FreeBSD, Haiku and GNU/Hurd.</p>\n<p>Features:</p>\n<ul>\n  <li>Highly customizable user interface</li>\n  <li>User interface is translated to many languages</li>\n  <li>Encryption of traffic</li>\n  <li>Multi-threaded download of files</li>\n  <li>Support of binding to specific network interface or address</li>\n  <li>Support of UPnP (Universal Plug and Play)</li>\n  <li>Support of PFSR (partial file sharing)</li>\n  <li>Support of DHT (Distributed Hash Table)</li>\n  <li>Support of case-sensitive file lists</li>\n  <li>Lists of downloaded and uploaded files</li>\n  <li>Lists of public and favorite hubs</li>\n  <li>Lists of favorite users</li>\n  <li>List of active transfers</li>\n  <li>Flexible search with the ability to group results</li>\n  <li>Flexible settings for downloading files</li>\n  <li>Indicator of free space on disk</li>\n  <li>Support of IP filter and basic antispam</li>\n  <li>Search spy</li>\n  <li>ADL search</li>\n  <li>Full-featured chat</li>\n  <li>User commands on hub</li>\n  <li>Flexible keyboard shortcuts settings</li>\n  <li>Text and sound notifications for different events</li>\n  <li>Flexible settings for files hashing</li>\n  <li>Special tool for calculating of TTH for any file</li>\n  <li>Support of limitations of download/upload speed</li>\n  <li>Support of limitations by size of shared files</li>\n  <li>Support of handling of magnet links, web magnet links and hub links</li>\n  <li>Support of automatic replies to private messages when user is inactive</li>\n  <li>Support of IDNA (recognition of national domain names)</li>\n  <li>Support of URL encoded strings for hub addresses</li>\n</ul>",
+            "categories":
+            [
+                "Network"
+            ],
+            "authors": null,
+            "license": "GPL-3.0+",
+            "links": null,
+            "icons":
+            [
+                "EiskaltDC++/icons/128x128/eiskaltdcpp.png"
+            ],
+            "screenshots":
+            [
+                "https://tehnick.github.io/eiskaltdcpp/eiskaltdcpp-qt-2.2.10-588_search_widget.png"
+            ]
+        },
+        {
+            "name": "Eksplode.re",
+            "categories":
+            [
+                "Game"
+            ],
+            "authors":
+            [
+                {
+                    "name": "AmarOk1412",
+                    "url": "https://github.com/AmarOk1412"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "AmarOk1412/Eksplode.re"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/AmarOk1412/Eksplode.re/releases"
+                }
+            ],
+            "icons":
+            [
+                "Eksplode.re/icons/1200x1200/icon.png"
+            ],
+            "screenshots":
+            [
+                "Eksplode.re/screenshot.png"
+            ]
+        },
+        {
+            "name": "ElDumper",
+            "description": "A GB Cartridge Dumper",
+            "categories":
+            [
+                "Game"
+            ],
+            "authors":
+            [
+                {
+                    "name": "rodri042",
+                    "url": "https://github.com/rodri042"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "rodri042/el-dumper"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/rodri042/el-dumper/releases"
+                }
+            ],
+            "icons":
+            [
+                "ElDumper/icons/512x512/eldumper.png"
+            ],
+            "screenshots":
+            [
+                "ElDumper/screenshot.png"
+            ]
+        },
+        {
+            "name": "Electorrent",
+            "description": "A thin client for your torrenting needs",
+            "categories":
+            [
+                "Network"
+            ],
+            "authors":
+            [
+                {
+                    "name": "Tympanix",
+                    "url": "https://github.com/Tympanix"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "Tympanix/Electorrent"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/Tympanix/Electorrent/releases"
+                }
+            ],
+            "icons": null,
+            "screenshots":
+            [
+                "Electorrent/screenshot.png"
+            ]
+        },
+        {
+            "name": "ElectroCRUD",
+            "description": "No coding is required",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "garrylachman",
+                    "url": "https://github.com/garrylachman"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "garrylachman/ElectroCRUD"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/garrylachman/ElectroCRUD/releases"
+                }
+            ],
+            "icons":
+            [
+                "ElectroCRUD/icons/256x256/electrocrud.png"
+            ],
+            "screenshots":
+            [
+                "ElectroCRUD/screenshot.png"
+            ]
+        },
+        {
+            "name": "Electron_App_Store",
+            "description": "A Simple App Store for Apps Built with Electron",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "Electron-Store",
+                    "url": "https://github.com/Electron-Store"
+                }
+            ],
+            "license": null,
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "Electron-Store/electron-app-store"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/Electron-Store/electron-app-store/releases"
+                }
+            ],
+            "icons":
+            [
+                "Electron_App_Store/icons/128x128/electron-store.png"
+            ],
+            "screenshots":
+            [
+                "Electron_App_Store/screenshot.png"
+            ]
+        },
+        {
+            "name": "Electron_Cash",
+            "description": "Lightweight Bitcoin Cash Client",
+            "categories":
+            [
+                "Finance"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "Electron_Cash/icons/128x116/electron-cash.png"
+            ],
+            "screenshots":
+            [
+                "Electron_Cash/screenshot.png"
+            ]
+        },
+        {
+            "name": "Electrum-NMC",
+            "description": "Lightweight Namecoin Client",
+            "categories":
+            [
+                "Finance"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "Electrum-NMC/icons/128x116/electrum_nmc.png"
+            ],
+            "screenshots":
+            [
+                "Electrum-NMC/screenshot.png"
+            ]
+        },
+        {
+            "name": "Electrum",
+            "description": "Lightweight Bitcoin Client",
+            "categories":
+            [
+                "Finance"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "Electrum/icons/128x116/electrum.png"
+            ],
+            "screenshots":
+            [
+                "Electrum/screenshot.png"
+            ]
+        },
+        {
+            "name": "ElectrumFair",
+            "description": "Lightweight FairCoin Client",
+            "categories":
+            [
+                "Network"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "ElectrumFair/icons/128x116/electrumfair.png"
+            ],
+            "screenshots":
+            [
+                "ElectrumFair/screenshot.png"
+            ]
+        },
+        {
+            "name": "ElectrumRhodium",
+            "description": "Lightweight Bitcoin Rhodium Client",
+            "categories":
+            [
+                "Finance"
+            ],
+            "authors": null,
+            "license": null,
+            "links": null,
+            "icons":
+            [
+                "ElectrumRhodium/icons/96x96/electrum-xrc.png"
+            ],
+            "screenshots":
+            [
+                "ElectrumRhodium/screenshot.png"
+            ]
+        },
+        {
+            "name": "Elements",
+            "description": "An application which displays the periodic table",
+            "categories":
+            [
+                "Utility"
+            ],
+            "authors":
+            [
+                {
+                    "name": "FlorianFe",
+                    "url": "https://github.com/FlorianFe"
+                }
+            ],
+            "license": "CC0-1.0",
+            "links":
+            [
+                {
+                    "type": "GitHub",
+                    "url": "FlorianFe/Elements"
+                },
+                {
+                    "type": "Download",
+                    "url": "https://github.com/FlorianFe/Elements/releases"
+                }
+            ],
+            "icons":
+            [
+                "Elements/icons/128x128/elements.png"
+            ],
+            "screenshots":
+            [
+                "Elements/screenshot.png"
+            ]
+        }
+    ]
+}

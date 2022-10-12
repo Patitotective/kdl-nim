@@ -1,10 +1,10 @@
-KEmpty	kdl/nodes.html#KEmpty	KdlValKind.KEmpty	
-KString	kdl/nodes.html#KString	KdlValKind.KString	
-KFloat	kdl/nodes.html#KFloat	KdlValKind.KFloat	
-KBool	kdl/nodes.html#KBool	KdlValKind.KBool	
-KNull	kdl/nodes.html#KNull	KdlValKind.KNull	
-KInt	kdl/nodes.html#KInt	KdlValKind.KInt	
-KdlValKind	kdl/nodes.html#KdlValKind	nodes: KdlValKind	
+KEmpty	kdl/nodes.html#KEmpty	KValKind.KEmpty	
+KString	kdl/nodes.html#KString	KValKind.KString	
+KFloat	kdl/nodes.html#KFloat	KValKind.KFloat	
+KBool	kdl/nodes.html#KBool	KValKind.KBool	
+KNull	kdl/nodes.html#KNull	KValKind.KNull	
+KInt	kdl/nodes.html#KInt	KValKind.KInt	
+KValKind	kdl/nodes.html#KValKind	nodes: KValKind	
 KdlVal	kdl/nodes.html#KdlVal	nodes: KdlVal	
 KdlProp	kdl/nodes.html#KdlProp	nodes: KdlProp	
 KdlNode	kdl/nodes.html#KdlNode	nodes: KdlNode	
@@ -36,6 +36,9 @@ setFloat	kdl/nodes.html#setFloat,KdlVal,SomeFloat	nodes: setFloat(val: var KdlVa
 setBool	kdl/nodes.html#setBool,KdlVal,bool	nodes: setBool(val: var KdlVal; x: bool)	
 setInt	kdl/nodes.html#setInt,KdlVal,SomeInteger	nodes: setInt(val: var KdlVal; x: SomeInteger)	
 setTo	kdl/nodes.html#setTo,KdlVal,T	nodes: setTo[T: SomeNumber or string or bool](val: var KdlVal; x: T)	
+`$`	kdl/nodes.html#$,KdlVal	nodes: `$`(val: KdlVal): string	
+`$`	kdl/nodes.html#$,KdlNode	nodes: `$`(node: KdlNode): string	
+`$`	kdl/nodes.html#$,KdlDoc	nodes: `$`(doc: KdlDoc): string	
 `==`	kdl/nodes.html#==,KdlVal,KdlVal	nodes: `==`(val1, val2: KdlVal): bool	
 `==`	kdl/nodes.html#==,KdlVal,T	nodes: `==`[T: SomeNumber or string or bool](val: KdlVal; x: T): bool	
 `[]`	kdl/nodes.html#[],KdlNode,	nodes: `[]`(node: KdlNode; idx: int | BackwardsIndex): KdlVal	

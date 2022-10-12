@@ -1,0 +1,3 @@
+toKdl	kdl/jik.html#toKdl,JsonNode	jik: toKdl(node: JsonNode): KdlNode	
+toJson	kdl/jik.html#toJson,KdlNode	jik: toJson(node: KdlNode): JsonNode	
+JiK	kdl/jik.html#jik	 JiK	

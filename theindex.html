@@ -70,16 +70,16 @@ window.addEventListener('DOMContentLoaded', main);
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="kdl.html">kdl</a>, <a href="kdl/lexer.html">kdl/lexer</a>, <a href="kdl/nodes.html">kdl/nodes</a>, <a href="kdl/parser.html">kdl/parser</a>, <a href="kdl/utils.html">kdl/utils</a>.<br/><p /><h2>API symbols</h2>
+    Modules: <a href="kdl.html">kdl</a>, <a href="kdl/jik.html">kdl/jik</a>, <a href="kdl/lexer.html">kdl/lexer</a>, <a href="kdl/nodes.html">kdl/nodes</a>, <a href="kdl/parser.html">kdl/parser</a>, <a href="kdl/utils.html">kdl/utils</a>, <a href="kdl/xik.html">kdl/xik</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="%60%24%60" href="#%60%24%60"><span>`$`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="kdl: `$`(doc: KdlDoc): string" href="kdl.html#%24%2CKdlDoc">kdl: `$`(doc: KdlDoc): string</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="kdl: `$`(node: KdlNode): string" href="kdl.html#%24%2CKdlNode">kdl: `$`(node: KdlNode): string</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="kdl: `$`(val: KdlVal): string" href="kdl.html#%24%2CKdlVal">kdl: `$`(val: KdlVal): string</a></li>
-          <li><a class="reference external"
           data-doc-search-tag="lexer: `$`(lexer: Lexer): string" href="kdl/lexer.html#%24%2CLexer">lexer: `$`(lexer: Lexer): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="nodes: `$`(doc: KdlDoc): string" href="kdl/nodes.html#%24%2CKdlDoc">nodes: `$`(doc: KdlDoc): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="nodes: `$`(node: KdlNode): string" href="kdl/nodes.html#%24%2CKdlNode">nodes: `$`(node: KdlNode): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="nodes: `$`(val: KdlVal): string" href="kdl/nodes.html#%24%2CKdlVal">nodes: `$`(val: KdlVal): string</a></li>
           </ul></dd>
 <dt><a name="%60%3D%3D%60" href="#%60%3D%3D%60"><span>`==`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -151,12 +151,6 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="nodes: hasKey(node: KdlNode; key: string): bool" href="kdl/nodes.html#hasKey%2CKdlNode%2Cstring">nodes: hasKey(node: KdlNode; key: string): bool</a></li>
           </ul></dd>
-<dt><a name="indent" href="#indent"><span>indent:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="kdl: indent(s: string; count: Natural; padding = &quot; &quot;; newLine = &quot;
-&quot;): string" href="kdl.html#indent%2Cstring%2CNatural%2Cstring%2Cstring">kdl: indent(s: string; count: Natural; padding = &quot; &quot;; newLine = &quot;
-&quot;): string</a></li>
-          </ul></dd>
 <dt><a name="initKBool" href="#initKBool"><span>initKBool:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="nodes: initKBool(val = bool.default; tag = string.none): KdlVal" href="kdl/nodes.html#initKBool">nodes: initKBool(val = bool.default; tag = string.none): KdlVal</a></li>
@@ -227,7 +221,7 @@ window.addEventListener('DOMContentLoaded', main);
           </ul></dd>
 <dt><a name="KBool" href="#KBool"><span>KBool:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KBool" href="kdl/nodes.html#KBool">KdlValKind.KBool</a></li>
+          data-doc-search-tag="KValKind.KBool" href="kdl/nodes.html#KBool">KValKind.KBool</a></li>
           </ul></dd>
 <dt><a name="KdlDoc" href="#KdlDoc"><span>KdlDoc:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -257,29 +251,29 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="nodes: KdlVal" href="kdl/nodes.html#KdlVal">nodes: KdlVal</a></li>
           </ul></dd>
-<dt><a name="KdlValKind" href="#KdlValKind"><span>KdlValKind:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="nodes: KdlValKind" href="kdl/nodes.html#KdlValKind">nodes: KdlValKind</a></li>
-          </ul></dd>
 <dt><a name="KEmpty" href="#KEmpty"><span>KEmpty:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KEmpty" href="kdl/nodes.html#KEmpty">KdlValKind.KEmpty</a></li>
+          data-doc-search-tag="KValKind.KEmpty" href="kdl/nodes.html#KEmpty">KValKind.KEmpty</a></li>
           </ul></dd>
 <dt><a name="KFloat" href="#KFloat"><span>KFloat:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KFloat" href="kdl/nodes.html#KFloat">KdlValKind.KFloat</a></li>
+          data-doc-search-tag="KValKind.KFloat" href="kdl/nodes.html#KFloat">KValKind.KFloat</a></li>
           </ul></dd>
 <dt><a name="KInt" href="#KInt"><span>KInt:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KInt" href="kdl/nodes.html#KInt">KdlValKind.KInt</a></li>
+          data-doc-search-tag="KValKind.KInt" href="kdl/nodes.html#KInt">KValKind.KInt</a></li>
           </ul></dd>
 <dt><a name="KNull" href="#KNull"><span>KNull:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KNull" href="kdl/nodes.html#KNull">KdlValKind.KNull</a></li>
+          data-doc-search-tag="KValKind.KNull" href="kdl/nodes.html#KNull">KValKind.KNull</a></li>
           </ul></dd>
 <dt><a name="KString" href="#KString"><span>KString:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="KdlValKind.KString" href="kdl/nodes.html#KString">KdlValKind.KString</a></li>
+          data-doc-search-tag="KValKind.KString" href="kdl/nodes.html#KString">KValKind.KString</a></li>
+          </ul></dd>
+<dt><a name="KValKind" href="#KValKind"><span>KValKind:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="nodes: KValKind" href="kdl/nodes.html#KValKind">nodes: KValKind</a></li>
           </ul></dd>
 <dt><a name="len" href="#len"><span>len:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -361,13 +355,33 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="TokenKind.tkBool" href="kdl/lexer.html#tkBool">TokenKind.tkBool</a></li>
           </ul></dd>
-<dt><a name="tkCloseBlock" href="#tkCloseBlock"><span>tkCloseBlock:</span></a></dt><dd><ul class="simple">
+<dt><a name="tkCaret" href="#tkCaret"><span>tkCaret:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="TokenKind.tkCloseBlock" href="kdl/lexer.html#tkCloseBlock">TokenKind.tkCloseBlock</a></li>
+          data-doc-search-tag="TokenKind.tkCaret" href="kdl/lexer.html#tkCaret">TokenKind.tkCaret</a></li>
           </ul></dd>
-<dt><a name="tkCloseType" href="#tkCloseType"><span>tkCloseType:</span></a></dt><dd><ul class="simple">
+<dt><a name="tkCloseBra" href="#tkCloseBra"><span>tkCloseBra:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="TokenKind.tkCloseType" href="kdl/lexer.html#tkCloseType">TokenKind.tkCloseType</a></li>
+          data-doc-search-tag="TokenKind.tkCloseBra" href="kdl/lexer.html#tkCloseBra">TokenKind.tkCloseBra</a></li>
+          </ul></dd>
+<dt><a name="tkClosePar" href="#tkClosePar"><span>tkClosePar:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkClosePar" href="kdl/lexer.html#tkClosePar">TokenKind.tkClosePar</a></li>
+          </ul></dd>
+<dt><a name="tkCloseSqu" href="#tkCloseSqu"><span>tkCloseSqu:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkCloseSqu" href="kdl/lexer.html#tkCloseSqu">TokenKind.tkCloseSqu</a></li>
+          </ul></dd>
+<dt><a name="tkComma" href="#tkComma"><span>tkComma:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkComma" href="kdl/lexer.html#tkComma">TokenKind.tkComma</a></li>
+          </ul></dd>
+<dt><a name="tkDollar" href="#tkDollar"><span>tkDollar:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkDollar" href="kdl/lexer.html#tkDollar">TokenKind.tkDollar</a></li>
+          </ul></dd>
+<dt><a name="tkDoublePipe" href="#tkDoublePipe"><span>tkDoublePipe:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkDoublePipe" href="kdl/lexer.html#tkDoublePipe">TokenKind.tkDoublePipe</a></li>
           </ul></dd>
 <dt><a name="tkEmpty" href="#tkEmpty"><span>tkEmpty:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -376,6 +390,10 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="tkEqual" href="#tkEqual"><span>tkEqual:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="TokenKind.tkEqual" href="kdl/lexer.html#tkEqual">TokenKind.tkEqual</a></li>
+          </ul></dd>
+<dt><a name="tkGreater" href="#tkGreater"><span>tkGreater:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkGreater" href="kdl/lexer.html#tkGreater">TokenKind.tkGreater</a></li>
           </ul></dd>
 <dt><a name="tkIdent" href="#tkIdent"><span>tkIdent:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -388,6 +406,10 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="tkNewLine" href="#tkNewLine"><span>tkNewLine:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="TokenKind.tkNewLine" href="kdl/lexer.html#tkNewLine">TokenKind.tkNewLine</a></li>
+          </ul></dd>
+<dt><a name="tkNotEqual" href="#tkNotEqual"><span>tkNotEqual:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkNotEqual" href="kdl/lexer.html#tkNotEqual">TokenKind.tkNotEqual</a></li>
           </ul></dd>
 <dt><a name="tkNull" href="#tkNull"><span>tkNull:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -413,13 +435,21 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="TokenKind.tkNumOct" href="kdl/lexer.html#tkNumOct">TokenKind.tkNumOct</a></li>
           </ul></dd>
-<dt><a name="tkOpenBlock" href="#tkOpenBlock"><span>tkOpenBlock:</span></a></dt><dd><ul class="simple">
+<dt><a name="tkOpenBra" href="#tkOpenBra"><span>tkOpenBra:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="TokenKind.tkOpenBlock" href="kdl/lexer.html#tkOpenBlock">TokenKind.tkOpenBlock</a></li>
+          data-doc-search-tag="TokenKind.tkOpenBra" href="kdl/lexer.html#tkOpenBra">TokenKind.tkOpenBra</a></li>
           </ul></dd>
-<dt><a name="tkOpenType" href="#tkOpenType"><span>tkOpenType:</span></a></dt><dd><ul class="simple">
+<dt><a name="tkOpenPar" href="#tkOpenPar"><span>tkOpenPar:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="TokenKind.tkOpenType" href="kdl/lexer.html#tkOpenType">TokenKind.tkOpenType</a></li>
+          data-doc-search-tag="TokenKind.tkOpenPar" href="kdl/lexer.html#tkOpenPar">TokenKind.tkOpenPar</a></li>
+          </ul></dd>
+<dt><a name="tkOpenSqu" href="#tkOpenSqu"><span>tkOpenSqu:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkOpenSqu" href="kdl/lexer.html#tkOpenSqu">TokenKind.tkOpenSqu</a></li>
+          </ul></dd>
+<dt><a name="tkPlus" href="#tkPlus"><span>tkPlus:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkPlus" href="kdl/lexer.html#tkPlus">TokenKind.tkPlus</a></li>
           </ul></dd>
 <dt><a name="tkRawString" href="#tkRawString"><span>tkRawString:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -433,17 +463,33 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="TokenKind.tkSlashDash" href="kdl/lexer.html#tkSlashDash">TokenKind.tkSlashDash</a></li>
           </ul></dd>
+<dt><a name="tkStar" href="#tkStar"><span>tkStar:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkStar" href="kdl/lexer.html#tkStar">TokenKind.tkStar</a></li>
+          </ul></dd>
 <dt><a name="tkString" href="#tkString"><span>tkString:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="TokenKind.tkString" href="kdl/lexer.html#tkString">TokenKind.tkString</a></li>
+          </ul></dd>
+<dt><a name="tkTilde" href="#tkTilde"><span>tkTilde:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="TokenKind.tkTilde" href="kdl/lexer.html#tkTilde">TokenKind.tkTilde</a></li>
           </ul></dd>
 <dt><a name="tkWhitespace" href="#tkWhitespace"><span>tkWhitespace:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="TokenKind.tkWhitespace" href="kdl/lexer.html#tkWhitespace">TokenKind.tkWhitespace</a></li>
           </ul></dd>
+<dt><a name="toJson" href="#toJson"><span>toJson:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="jik: toJson(node: KdlNode): JsonNode" href="kdl/jik.html#toJson%2CKdlNode">jik: toJson(node: KdlNode): JsonNode</a></li>
+          </ul></dd>
 <dt><a name="toKdl" href="#toKdl"><span>toKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="jik: toKdl(node: JsonNode): KdlNode" href="kdl/jik.html#toKdl%2CJsonNode">jik: toKdl(node: JsonNode): KdlNode</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="nodes: toKdl(body: untyped): untyped" href="kdl/nodes.html#toKdl.m%2Cuntyped">nodes: toKdl(body: untyped): untyped</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="xik: toKdl(node: XmlNode; comments = false): KdlNode" href="kdl/xik.html#toKdl%2CXmlNode">xik: toKdl(node: XmlNode; comments = false): KdlNode</a></li>
           </ul></dd>
 <dt><a name="toKdlNode" href="#toKdlNode"><span>toKdlNode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -513,6 +559,10 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="lexer: tokenWhitespace(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool" href="kdl/lexer.html#tokenWhitespace%2CLexer%2Cbool%2Cbool">lexer: tokenWhitespace(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool</a></li>
           </ul></dd>
+<dt><a name="toXml" href="#toXml"><span>toXml:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="xik: toXml(node: KdlNode; comments = false): XmlNode" href="kdl/xik.html#toXml%2CKdlNode">xik: toXml(node: KdlNode; comments = false): XmlNode</a></li>
+          </ul></dd>
 <dt><a name="validToken" href="#validToken"><span>validToken:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="lexer: validToken(input: string; token: proc (lexer: var Lexer; consume = true;
@@ -528,7 +578,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-24 16:23:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-12 23:38:54 UTC</small>
       </div>
     </div>
   </div>

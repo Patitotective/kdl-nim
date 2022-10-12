@@ -119,15 +119,19 @@ window.addEventListener('DOMContentLoaded', main);
   kind*: TokenKind">Token</a></li>
   <li><a class="reference" href="#TokenKind"
     title="TokenKind = enum
-  tkEmpty = &quot;empty&quot;, tkNull = &quot;null&quot;, tkBool = &quot;bool&quot;, tkEqual = &quot;equal&quot;,
-  tkIdent = &quot;identifier&quot;, tkSemicolon = &quot;semicolon&quot;, tkSlashDash = &quot;slash_dash&quot;,
-  tkString = &quot;string&quot;, tkRawString = &quot;raw_string&quot;, tkWhitespace = &quot;whitespace&quot;,
-  tkNewLine = &quot;new_line&quot;, tkOpenType = &quot;open_parenthesis&quot;,
-  tkCloseType = &quot;close_parenthesis&quot;, tkOpenBlock = &quot;open_bracket&quot;,
-  tkCloseBlock = &quot;close_bracket&quot;, tkNumFloat = &quot;float_number&quot;,
+  tkEmpty = &quot;empty&quot;, tkNull = &quot;null&quot;, tkStar = &quot;star&quot;, tkPlus = &quot;plus&quot;,
+  tkBool = &quot;bool&quot;, tkTilde = &quot;tilde&quot;, tkComma = &quot;comma&quot;, tkCaret = &quot;caret&quot;,
+  tkDollar = &quot;dollar&quot;, tkIdent = &quot;identifier&quot;, tkSemicolon = &quot;semicolon&quot;,
+  tkGreater = &quot;greater_than&quot;, tkSlashDash = &quot;slash_dash&quot;,
+  tkDoublePipe = &quot;double_pipe&quot;, tkLineCont = &quot;line_continuation&quot;,
+  tkEqual = &quot;equal&quot;, tkNotEqual = &quot;not_equal&quot;, tkString = &quot;string&quot;,
+  tkRawString = &quot;raw_string&quot;, tkWhitespace = &quot;whitespace&quot;,
+  tkNewLine = &quot;new_line&quot;, tkOpenPar = &quot;open_parenthesis&quot;,
+  tkClosePar = &quot;close_parenthesis&quot;, tkOpenBra = &quot;open_bracket&quot;,
+  tkCloseBra = &quot;close_bracket&quot;, tkOpenSqu = &quot;open_square_bracket&quot;,
+  tkCloseSqu = &quot;close_square_bracket&quot;, tkNumFloat = &quot;float_number&quot;,
   tkNumInt = &quot;integer_number&quot;, tkNumHex = &quot;hexadecimal_number&quot;,
-  tkNumBin = &quot;binary_number&quot;, tkNumOct = &quot;octagonal_number&quot;,
-  tkLineCont = &quot;line_continuation&quot;">TokenKind</a></li>
+  tkNumBin = &quot;binary_number&quot;, tkNumOct = &quot;octagonal_number&quot;">TokenKind</a></li>
 
   </ul>
 </li>
@@ -282,9 +286,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L26"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L34"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L26" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L34" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -298,23 +302,27 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L21"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L29"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L21" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L29" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
 <div id="TokenKind">
 <dt><pre><a href="lexer.html#TokenKind"><span class="Identifier">TokenKind</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">tkEmpty</span> <span class="Other">=</span> <span class="StringLit">&quot;empty&quot;</span><span class="Other">,</span> <span class="Identifier">tkNull</span> <span class="Other">=</span> <span class="StringLit">&quot;null&quot;</span><span class="Other">,</span> <span class="Identifier">tkBool</span> <span class="Other">=</span> <span class="StringLit">&quot;bool&quot;</span><span class="Other">,</span> <span class="Identifier">tkEqual</span> <span class="Other">=</span> <span class="StringLit">&quot;equal&quot;</span><span class="Other">,</span>
-  <span class="Identifier">tkIdent</span> <span class="Other">=</span> <span class="StringLit">&quot;identifier&quot;</span><span class="Other">,</span> <span class="Identifier">tkSemicolon</span> <span class="Other">=</span> <span class="StringLit">&quot;semicolon&quot;</span><span class="Other">,</span> <span class="Identifier">tkSlashDash</span> <span class="Other">=</span> <span class="StringLit">&quot;slash_dash&quot;</span><span class="Other">,</span>
-  <span class="Identifier">tkString</span> <span class="Other">=</span> <span class="StringLit">&quot;string&quot;</span><span class="Other">,</span> <span class="Identifier">tkRawString</span> <span class="Other">=</span> <span class="StringLit">&quot;raw_string&quot;</span><span class="Other">,</span> <span class="Identifier">tkWhitespace</span> <span class="Other">=</span> <span class="StringLit">&quot;whitespace&quot;</span><span class="Other">,</span>
-  <span class="Identifier">tkNewLine</span> <span class="Other">=</span> <span class="StringLit">&quot;new_line&quot;</span><span class="Other">,</span> <span class="Identifier">tkOpenType</span> <span class="Other">=</span> <span class="StringLit">&quot;open_parenthesis&quot;</span><span class="Other">,</span>
-  <span class="Identifier">tkCloseType</span> <span class="Other">=</span> <span class="StringLit">&quot;close_parenthesis&quot;</span><span class="Other">,</span> <span class="Identifier">tkOpenBlock</span> <span class="Other">=</span> <span class="StringLit">&quot;open_bracket&quot;</span><span class="Other">,</span>
-  <span class="Identifier">tkCloseBlock</span> <span class="Other">=</span> <span class="StringLit">&quot;close_bracket&quot;</span><span class="Other">,</span> <span class="Identifier">tkNumFloat</span> <span class="Other">=</span> <span class="StringLit">&quot;float_number&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkEmpty</span> <span class="Other">=</span> <span class="StringLit">&quot;empty&quot;</span><span class="Other">,</span> <span class="Identifier">tkNull</span> <span class="Other">=</span> <span class="StringLit">&quot;null&quot;</span><span class="Other">,</span> <span class="Identifier">tkStar</span> <span class="Other">=</span> <span class="StringLit">&quot;star&quot;</span><span class="Other">,</span> <span class="Identifier">tkPlus</span> <span class="Other">=</span> <span class="StringLit">&quot;plus&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkBool</span> <span class="Other">=</span> <span class="StringLit">&quot;bool&quot;</span><span class="Other">,</span> <span class="Identifier">tkTilde</span> <span class="Other">=</span> <span class="StringLit">&quot;tilde&quot;</span><span class="Other">,</span> <span class="Identifier">tkComma</span> <span class="Other">=</span> <span class="StringLit">&quot;comma&quot;</span><span class="Other">,</span> <span class="Identifier">tkCaret</span> <span class="Other">=</span> <span class="StringLit">&quot;caret&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkDollar</span> <span class="Other">=</span> <span class="StringLit">&quot;dollar&quot;</span><span class="Other">,</span> <span class="Identifier">tkIdent</span> <span class="Other">=</span> <span class="StringLit">&quot;identifier&quot;</span><span class="Other">,</span> <span class="Identifier">tkSemicolon</span> <span class="Other">=</span> <span class="StringLit">&quot;semicolon&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkGreater</span> <span class="Other">=</span> <span class="StringLit">&quot;greater_than&quot;</span><span class="Other">,</span> <span class="Identifier">tkSlashDash</span> <span class="Other">=</span> <span class="StringLit">&quot;slash_dash&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkDoublePipe</span> <span class="Other">=</span> <span class="StringLit">&quot;double_pipe&quot;</span><span class="Other">,</span> <span class="Identifier">tkLineCont</span> <span class="Other">=</span> <span class="StringLit">&quot;line_continuation&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkEqual</span> <span class="Other">=</span> <span class="StringLit">&quot;equal&quot;</span><span class="Other">,</span> <span class="Identifier">tkNotEqual</span> <span class="Other">=</span> <span class="StringLit">&quot;not_equal&quot;</span><span class="Other">,</span> <span class="Identifier">tkString</span> <span class="Other">=</span> <span class="StringLit">&quot;string&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkRawString</span> <span class="Other">=</span> <span class="StringLit">&quot;raw_string&quot;</span><span class="Other">,</span> <span class="Identifier">tkWhitespace</span> <span class="Other">=</span> <span class="StringLit">&quot;whitespace&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkNewLine</span> <span class="Other">=</span> <span class="StringLit">&quot;new_line&quot;</span><span class="Other">,</span> <span class="Identifier">tkOpenPar</span> <span class="Other">=</span> <span class="StringLit">&quot;open_parenthesis&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkClosePar</span> <span class="Other">=</span> <span class="StringLit">&quot;close_parenthesis&quot;</span><span class="Other">,</span> <span class="Identifier">tkOpenBra</span> <span class="Other">=</span> <span class="StringLit">&quot;open_bracket&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkCloseBra</span> <span class="Other">=</span> <span class="StringLit">&quot;close_bracket&quot;</span><span class="Other">,</span> <span class="Identifier">tkOpenSqu</span> <span class="Other">=</span> <span class="StringLit">&quot;open_square_bracket&quot;</span><span class="Other">,</span>
+  <span class="Identifier">tkCloseSqu</span> <span class="Other">=</span> <span class="StringLit">&quot;close_square_bracket&quot;</span><span class="Other">,</span> <span class="Identifier">tkNumFloat</span> <span class="Other">=</span> <span class="StringLit">&quot;float_number&quot;</span><span class="Other">,</span>
   <span class="Identifier">tkNumInt</span> <span class="Other">=</span> <span class="StringLit">&quot;integer_number&quot;</span><span class="Other">,</span> <span class="Identifier">tkNumHex</span> <span class="Other">=</span> <span class="StringLit">&quot;hexadecimal_number&quot;</span><span class="Other">,</span>
-  <span class="Identifier">tkNumBin</span> <span class="Other">=</span> <span class="StringLit">&quot;binary_number&quot;</span><span class="Other">,</span> <span class="Identifier">tkNumOct</span> <span class="Other">=</span> <span class="StringLit">&quot;octagonal_number&quot;</span><span class="Other">,</span>
-  <span class="Identifier">tkLineCont</span> <span class="Other">=</span> <span class="StringLit">&quot;line_continuation&quot;</span></pre></dt>
+  <span class="Identifier">tkNumBin</span> <span class="Other">=</span> <span class="StringLit">&quot;binary_number&quot;</span><span class="Other">,</span> <span class="Identifier">tkNumOct</span> <span class="Other">=</span> <span class="StringLit">&quot;octagonal_number&quot;</span></pre></dt>
 <dd>
 
 
@@ -349,9 +357,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L36"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L44"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L36" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L44" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -366,9 +374,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L59"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L76"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L59" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L76" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -378,9 +386,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L394"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L409"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L394" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L409" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -391,9 +399,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L422"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L437"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L422" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L437" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -404,9 +412,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L426"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L441"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L426" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L441" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -418,9 +426,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L317"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L334"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L317" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L334" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -431,9 +439,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L329"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L346"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L329" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L346" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -445,9 +453,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L367"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L382"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L367" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L382" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -459,9 +467,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L290"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L307"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L290" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L307" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -473,9 +481,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L321"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L338"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L321" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L338" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -486,9 +494,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L199"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L216"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L199" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L216" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -499,9 +507,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L207"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L224"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L207" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L224" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -512,9 +520,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L196"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L213"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L196" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L213" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -525,9 +533,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L215"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L232"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L215" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L232" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -539,9 +547,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L287"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L304"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L287" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L304" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -553,9 +561,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L356"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L371"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L356" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L371" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -566,9 +574,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L284"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L301"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L284" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L301" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -580,9 +588,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L311"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L328"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L311" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L328" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -593,9 +601,9 @@ class="link-seesrc" target="_blank">Source</a>
 
 
 &nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L386"
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/lexer.nim#L401"
 class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L386" class="link-seesrc" target="_blank" >Edit</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/lexer.nim#L401" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -609,7 +617,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-09-24 16:23:51 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-12 23:38:46 UTC</small>
       </div>
     </div>
   </div>

@@ -1,0 +1,3 @@
+toKdl	kdl/xik.html#toKdl,XmlNode	xik: toKdl(node: XmlNode; comments = false): KdlNode	
+toXml	kdl/xik.html#toXml,KdlNode	xik: toXml(node: KdlNode; comments = false): XmlNode	
+XiK	kdl/xik.html#xik	 XiK	

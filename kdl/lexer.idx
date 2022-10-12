@@ -1,24 +1,35 @@
 tkEmpty	kdl/lexer.html#tkEmpty	TokenKind.tkEmpty	
 tkNull	kdl/lexer.html#tkNull	TokenKind.tkNull	
+tkStar	kdl/lexer.html#tkStar	TokenKind.tkStar	
+tkPlus	kdl/lexer.html#tkPlus	TokenKind.tkPlus	
 tkBool	kdl/lexer.html#tkBool	TokenKind.tkBool	
-tkEqual	kdl/lexer.html#tkEqual	TokenKind.tkEqual	
+tkTilde	kdl/lexer.html#tkTilde	TokenKind.tkTilde	
+tkComma	kdl/lexer.html#tkComma	TokenKind.tkComma	
+tkCaret	kdl/lexer.html#tkCaret	TokenKind.tkCaret	
+tkDollar	kdl/lexer.html#tkDollar	TokenKind.tkDollar	
 tkIdent	kdl/lexer.html#tkIdent	TokenKind.tkIdent	
 tkSemicolon	kdl/lexer.html#tkSemicolon	TokenKind.tkSemicolon	
+tkGreater	kdl/lexer.html#tkGreater	TokenKind.tkGreater	
 tkSlashDash	kdl/lexer.html#tkSlashDash	TokenKind.tkSlashDash	
+tkDoublePipe	kdl/lexer.html#tkDoublePipe	TokenKind.tkDoublePipe	
+tkLineCont	kdl/lexer.html#tkLineCont	TokenKind.tkLineCont	
+tkEqual	kdl/lexer.html#tkEqual	TokenKind.tkEqual	
+tkNotEqual	kdl/lexer.html#tkNotEqual	TokenKind.tkNotEqual	
 tkString	kdl/lexer.html#tkString	TokenKind.tkString	
 tkRawString	kdl/lexer.html#tkRawString	TokenKind.tkRawString	
 tkWhitespace	kdl/lexer.html#tkWhitespace	TokenKind.tkWhitespace	
 tkNewLine	kdl/lexer.html#tkNewLine	TokenKind.tkNewLine	
-tkOpenType	kdl/lexer.html#tkOpenType	TokenKind.tkOpenType	
-tkCloseType	kdl/lexer.html#tkCloseType	TokenKind.tkCloseType	
-tkOpenBlock	kdl/lexer.html#tkOpenBlock	TokenKind.tkOpenBlock	
-tkCloseBlock	kdl/lexer.html#tkCloseBlock	TokenKind.tkCloseBlock	
+tkOpenPar	kdl/lexer.html#tkOpenPar	TokenKind.tkOpenPar	
+tkClosePar	kdl/lexer.html#tkClosePar	TokenKind.tkClosePar	
+tkOpenBra	kdl/lexer.html#tkOpenBra	TokenKind.tkOpenBra	
+tkCloseBra	kdl/lexer.html#tkCloseBra	TokenKind.tkCloseBra	
+tkOpenSqu	kdl/lexer.html#tkOpenSqu	TokenKind.tkOpenSqu	
+tkCloseSqu	kdl/lexer.html#tkCloseSqu	TokenKind.tkCloseSqu	
 tkNumFloat	kdl/lexer.html#tkNumFloat	TokenKind.tkNumFloat	
 tkNumInt	kdl/lexer.html#tkNumInt	TokenKind.tkNumInt	
 tkNumHex	kdl/lexer.html#tkNumHex	TokenKind.tkNumHex	
 tkNumBin	kdl/lexer.html#tkNumBin	TokenKind.tkNumBin	
 tkNumOct	kdl/lexer.html#tkNumOct	TokenKind.tkNumOct	
-tkLineCont	kdl/lexer.html#tkLineCont	TokenKind.tkLineCont	
 TokenKind	kdl/lexer.html#TokenKind	lexer: TokenKind	
 Token	kdl/lexer.html#Token	lexer: Token	
 Lexer	kdl/lexer.html#Lexer	lexer: Lexer	

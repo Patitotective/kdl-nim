@@ -1,8 +1,10 @@
-import std/[unittest, os]
+import std/[unittest, xmlparser, xmltree, json, os]
 
-import kdl
+import kdl, kdl/[schema, query, jik, xik]
 
 let testsDir = getAppDir() / "test_cases"
+
+proc quoted*(x: string): string = result.addQuoted(x)
 
 suite "spec":
   for kind, path in walkDir(testsDir / "input"):
@@ -30,3 +32,23 @@ suite "examples": # Check that kdl-nim can parse all the documents in the exampl
 
     test "Example: " & filename:
       discard parseKdlFile(path)
+
+suite "XiK": # Check that kdl-nim can convert XML into KDL forth and back
+  for kind, path in walkDir(testsDir / "xik"):
+    if kind != pcFile: continue
+
+    let filename = path.splitPath.tail
+
+    test "File: " & filename:
+      let data = loadXml(path)
+      check $data == $data.toKdl(comments = true).toXml(comments = true)
+
+suite "JiK": # Check that kdl-nim can convert JSON into KDL forth and back
+  for kind, path in walkDir(testsDir / "jik"):
+    if kind != pcFile: continue
+
+    let filename = path.splitPath.tail
+
+    test "File: " & filename:
+      let data = parseFile(path)
+      check data == data.toKdl().toJson()

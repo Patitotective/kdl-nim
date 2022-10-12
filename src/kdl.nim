@@ -87,13 +87,13 @@ runnableExamples:
   assert toKdlVal("abc") == parseKdl("node \"abc\"")[0][0]
 
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
-import kdl/[parser, lexer, nodes, utils]
+import kdl/[parser, lexer, nodes, utils, xik, jik]
 
 export parser, nodes
 export utils except quoted
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
-func indent*(s: string, count: Natural, padding = " ", newLine = "\n"): string =
+func indent(s: string, count: Natural, padding = " ", newLine = "\n"): string =
   for e, line in enumerate(s.splitLines):
     if e > 0:
       result.add newLine
@@ -102,63 +102,6 @@ func indent*(s: string, count: Natural, padding = " ", newLine = "\n"): string =
       result.add padding
 
     result.add line
-
-proc `$`*(val: KdlVal): string = 
-  if val.tag.isSome:
-    result = &"({val.tag.get.quoted})"
-
-  result.add:
-    case val.kind
-    of KFloat:
-      $val.getFloat()
-    of KString:
-      val.getString().quoted
-    of KBool:
-      $val.getBool()
-    of KNull:
-      "null"
-    of KInt:
-      $val.getInt()
-    of KEmpty:
-      "empty"
-
-proc `$`*(doc: KdlDoc): string
-
-proc `$`*(node: KdlNode): string = 
-  if node.tag.isSome:
-    result = &"({node.tag.get.quoted})"
-
-  result.add node.name.quoted()
-
-  if node.args.len > 0:
-    result.add " "
-    for e, val in node.args:
-      if e in 1..node.args.high:
-        result.add " "
-
-      result.add $val
-
-  if node.props.len > 0:
-    result.add " "
-    var count = 0
-    for key, val in node.props:
-      if count in 1..<node.props.len:
-        result.add " "
-
-      result.add &"{key.quoted}={val}"
-
-      inc count
-
-  if node.children.len > 0:
-    result.add " {\n"
-    result.add indent($node.children, 2)
-    result.add "\n}"
-
-proc `$`*(doc: KdlDoc): string = 
-  for e, node in doc:
-    result.add $node
-    if e < doc.high:
-      result.add "\n"
 
 proc prettyIdent*(ident: string): string = 
   if validToken(ident, tokenIdent):

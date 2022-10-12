@@ -69,6 +69,7 @@ const
     "||": tkDoublePipe, 
     "=": tkEqual, "!=": tkNotEqual, 
     "(": tkOpenPar, ")": tkClosePar,
+    "{": tkOpenBra, "}": tkCloseBra, 
     "[": tkOpenSqu, "]": tkCloseSqu,
   }
 

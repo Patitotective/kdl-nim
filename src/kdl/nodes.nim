@@ -1,4 +1,6 @@
-import std/[options, tables, macros]
+import std/[strformat, strutils, options, tables, macros]
+
+import utils
 
 export options, tables
 
@@ -175,6 +177,66 @@ proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) =
       val.setFloat(x.float)
   elif T is bool:
     val.setBool(x)
+
+# ----- Stringifier -----
+
+proc `$`*(val: KdlVal): string = 
+  if val.tag.isSome:
+    result = &"({val.tag.get.quoted})"
+
+  result.add:
+    case val.kind
+    of KFloat:
+      $val.getFloat()
+    of KString:
+      val.getString().quoted
+    of KBool:
+      $val.getBool()
+    of KNull:
+      "null"
+    of KInt:
+      $val.getInt()
+    of KEmpty:
+      "empty"
+
+proc `$`*(doc: KdlDoc): string
+
+proc `$`*(node: KdlNode): string = 
+  if node.tag.isSome:
+    result = &"({node.tag.get.quoted})"
+
+  result.add node.name.quoted()
+
+  if node.args.len > 0:
+    result.add " "
+    for e, val in node.args:
+      if e in 1..node.args.high:
+        result.add " "
+
+      result.add $val
+
+  if node.props.len > 0:
+    result.add " "
+    var count = 0
+    for key, val in node.props:
+      if count in 1..<node.props.len:
+        result.add " "
+
+      result.add &"{key.quoted}={val}"
+
+      inc count
+
+  if node.children.len > 0:
+    result.add " {\n"
+    result.add indent($node.children, 2)
+    result.add "\n}"
+
+proc `$`*(doc: KdlDoc): string = 
+  for e, node in doc:
+    result.add $node
+    if e < doc.high:
+      result.add "\n"
+
 
 # ----- Operators -----
 

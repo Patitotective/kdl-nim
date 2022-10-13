@@ -65,6 +65,8 @@ runnableExamples:
 
   assert data.parseJson() == data.parseJson().toKdl().toJson()
 
+{.used.}
+
 import std/json
 import nodes
 

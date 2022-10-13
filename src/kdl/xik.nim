@@ -43,6 +43,8 @@ breakfast_menu {
 
   assert $data.parseXml() == $data.parseXml().toKdl().toXml()
 
+{.used.}
+
 import std/[strtabs, xmltree]
 import nodes
 

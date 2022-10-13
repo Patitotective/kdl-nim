@@ -111,7 +111,7 @@ proc getInt*(val: KdlVal): int64 =
   assert val.isInt()
   val.num
 
-proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T = 
+proc get*[T: SomeNumber or string or bool or KdlVal](val: KdlVal, x: typedesc[T]): T = 
   ## Tries to get and convert val to T, raises an error when it cannot.
   runnableExamples:
     let val = initKFloat(3.14)
@@ -136,6 +136,8 @@ proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T =
     assert val.isBool
 
     result = val.getBool
+  elif T is KdlVal:
+    result = val
 
 # ----- Setters -----
 

@@ -87,7 +87,8 @@ runnableExamples:
   assert toKdlVal("abc") == parseKdl("node \"abc\"")[0][0]
 
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
-import kdl/[parser, lexer, nodes, utils, xik, jik]
+
+import kdl/[decoder, parser, lexer, nodes, utils, xik, jik]
 
 export parser, nodes
 export utils except quoted

@@ -374,8 +374,8 @@ proc tokenSingleLineComment*() {.lexing: tkEmpty.} =
 
   lexer.consume 2
 
-  while not lexer.eof():
-    if lexer.tokenNewLine(addToStack = false):
+  while not lexer.eof(): # Consume until a new line or EOF
+    if lexer.tokenNewLine():
       break
     lexer.consume()
 

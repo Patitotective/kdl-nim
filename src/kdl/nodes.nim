@@ -237,7 +237,6 @@ proc `$`*(doc: KdlDoc): string =
     if e < doc.high:
       result.add "\n"
 
-
 # ----- Operators -----
 
 proc `==`*(val1, val2: KdlVal): bool = 
@@ -276,7 +275,7 @@ proc `==`*[T: SomeNumber or string or bool](val: KdlVal, x: T): bool =
 
     result = val.getBool() == x
 
-proc `[]`*(node: KdlNode, idx: int | BackwardsIndex): KdlVal = 
+proc `[]`*(node: KdlNode, idx: int or BackwardsIndex): KdlVal = 
   ## Gets the argument at idx.
   node.args[idx]
 
@@ -316,18 +315,6 @@ proc add*(node: var KdlNode, val: KdlVal) =
   ## Adds val to node's arguments.
 
   node.args.add(val)
-
-# ----- Iterators -----
-
-iterator items*(node: KdlNode): KdlVal = 
-  ## Yields arguments.
-  for arg in node.args:
-    yield arg
-
-iterator pairs*(node: KdlNode): (string, KdlVal) = 
-  ## Yields properties.
-  for key, val in node.props:
-    yield (key, val)
 
 # ----- Macros -----
 

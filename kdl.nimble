@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.0"
+version       = "1.0.0"
 author        = "Patitotective"
 description   = "KDL document language Nim implementation"
 license       = "MIT"
@@ -9,7 +9,7 @@ srcDir        = "src"
 
 # Dependencies
 
-requires "nim >= 1.6.6"
+requires "nim ~= 1.6.0"
 requires "https://github.com/beef331/recyclable >= 0.1.0"
 
 task docs, "Generate documentation":

@@ -374,8 +374,8 @@ proc tokenSingleLineComment*() {.lexing: tkEmpty.} =
 
   lexer.consume 2
 
-  while not lexer.eof():
-    if lexer.tokenNewLine(addToStack = false):
+  while not lexer.eof(): # Consume until a new line or EOF
+    if lexer.tokenNewLine(addToStack = addToStack):
       break
     lexer.consume()
 
@@ -386,7 +386,7 @@ proc tokenLineCont*() {.lexing: tkLineCont.} =
   lexer.consume()
 
   lexer.skipwhitespaces()
-  if not lexer.tokenSingleLineComment() and not lexer.tokenNewLine(addToStack = false):
+  if not lexer.tokenSingleLineComment(addToStack = false) and not lexer.tokenNewLine(addToStack = false):
       lexer.error "Expected a new line"
 
 proc tokenLitMatches() {.lexing: tkEmpty.} = 

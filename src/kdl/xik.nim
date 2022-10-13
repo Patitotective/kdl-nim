@@ -65,7 +65,7 @@ proc toKdl*(node: XmlNode, comments = false): KdlNode =
     if node.len == 1 and node[0].kind in {xnText, xnEntity, xnVerbatimText}:
       result.add initKVal(node[0].text)
     else:
-      for child in node.args:
+      for child in node:
         if comments or child.kind != xnComment:
           result.children.add child.toKdl(comments)
 

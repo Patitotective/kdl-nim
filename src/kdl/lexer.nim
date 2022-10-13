@@ -1,5 +1,4 @@
-import std/[strformat, strutils, tables, macros]
-import recyclable/unicode
+import std/[strformat, strutils, unicode, tables, macros]
 import utils
 
 type

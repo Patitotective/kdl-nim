@@ -87,7 +87,7 @@ proc toKArray(node: JsonNode): KdlDoc
 proc toKObject(node: JsonNode): KdlDoc = 
   assert node.kind == JObject
 
-  for key, val in node.props:
+  for key, val in node:
     case val.kind
     of JObject:
       result.add initKNode(key, "object".some, children = val.toKObject)
@@ -99,7 +99,7 @@ proc toKObject(node: JsonNode): KdlDoc =
 proc toKArray(node: JsonNode): KdlDoc = 
   assert node.kind == JArray
 
-  for ele in node.args:
+  for ele in node:
     case ele.kind
     of JObject:
       result.add initKNode("-", "object".some, children = ele.toKObject)

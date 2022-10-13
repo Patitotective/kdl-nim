@@ -9,8 +9,7 @@ srcDir        = "src"
 
 # Dependencies
 
-requires "nim ~= 1.6.0"
-requires "https://github.com/beef331/recyclable >= 0.1.0"
+requires "nim >= 1.6.8"
 
 task docs, "Generate documentation":
   exec "nim doc --git.url:https://github.com/Patitotective/kdl-nim --git.commit:main --outdir:docs --project src/kdl.nim"

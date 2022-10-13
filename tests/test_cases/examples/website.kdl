@@ -6,7 +6,7 @@ html lang="en" {
         meta \
             name="description" \
             content="kdl is a document language, mostly based on SDLang, with xml-like semantics that looks like you're invoking a bunch of CLI commands!"
-        title "kdl - Kat's Document Language"
+        title "kdl - Kat's Document Language" // Comment
         link rel="stylesheet" href="/styles/global.css"
     }
     body {

@@ -10,6 +10,7 @@
 ## - `seq[T]` and `array[I, T]`
 ## - `object`, `ref` and `tuple`
 ## - `Table[string, T]` and `OrderedTable[string, T]`
+## - Plus any type you implement (read [custom decoders](#decoder-custom-decoders)).
 ## Consider the following example:
 runnableExamples:
   import kdl
@@ -103,7 +104,7 @@ type
   Value = (SomeNumber or string or bool or KdlVal)
   Object = ((object or ref or tuple) and not KdlVal)
 
-proc cmpIgnoreStyle(a, b: openArray[char]): int =
+proc cmpIgnoreStyle(a, b: openarray[char]): int =
   let aLen = a.len
   let bLen = b.len
   var i = 0
@@ -127,12 +128,12 @@ proc cmpIgnoreStyle(a, b: openArray[char]): int =
     inc i
     inc j
 
-proc eqIdent(a, b: openArray[char]): bool = cmpIgnoreStyle(a, b) == 0
+proc eqIdent(a, b: openarray[char]): bool = cmpIgnoreStyle(a, b) == 0
 
-template error(msg: openArray[char]) = 
+template error(msg: openarray[char]) = 
   raise newException(KdlError, msg)
 
-template error(x: bool, msg: openArray[char]) = 
+template error(x: bool, msg: openarray[char]) = 
   if x:
     error(msg)
 
@@ -181,7 +182,7 @@ proc decode*[T: not Object](obj: KdlNode, x: var T) =
   error obj.len != 1, "expected exactly one argument; got " & $obj.len
   obj[0].decode(x)
 
-proc decode*[T](obj: KdlVal, x: var seq[T]) = 
+proc decode*[T: not Object](obj: KdlVal, x: var seq[T]) = 
   runnableExamples:
     import kdl
     assert parseKdl("node 1 2 3").decode(seq[seq[int]], "node") == @[@[1], @[2], @[3]]
@@ -189,7 +190,16 @@ proc decode*[T](obj: KdlVal, x: var seq[T]) =
   x.setLen(1)
   obj.decode(x[0])
 
-proc decode*[T](obj: KdlNode, x: var seq[T]) = 
+proc decode*[T: Object](obj: KdlNode, x: var seq[T]) = 
+  runnableExamples:
+    import kdl
+    assert parseKdl("node 1 2 3").decode(seq[int], "node") == @[1, 2, 3]
+
+  x.setLen(obj.children.len)
+  for e, child in obj.children:
+    child.decode(x[e])
+
+proc decode*[T: not Object](obj: KdlNode, x: var seq[T]) = 
   runnableExamples:
     import kdl
     assert parseKdl("node 1 2 3").decode(seq[int], "node") == @[1, 2, 3]
@@ -344,11 +354,13 @@ proc decode*[T: Object](obj: KdlNode, x: var T) =
     for key, _ in obj.props:
       if key.eqIdent field:
         found = true
-        try:
-          obj[key].decode(val)
-        except KdlError as error:
-          error.msg.add " in " & field.quoted
-          raise
+
+        when compiles(obj[key].decode(val)):
+          try:
+            obj[key].decode(val)
+          except KdlError as error:
+            error.msg.add " in " & field.quoted
+            raise
 
     when defined(kdlDecoderNameNotFoundError):
       if not found:

@@ -83,7 +83,7 @@ doc.writeFile("doc.kdl")
 Documentation is live at https://patitotective.github.io/kdl-nim/.
 
 ## TODO
-- Make the lexer and parser work with `openArray[char]` or `cstring`
+- Make the lexer and parser work with `openarray[char]` or `cstring`
 - Implement [KDL schema language](https://github.com/kdl-org/kdl/blob/main/SCHEMA-SPEC.md).
 - Implement [KDL query language](https://github.com/kdl-org/kdl/blob/main/QUERY-SPEC.md).
 

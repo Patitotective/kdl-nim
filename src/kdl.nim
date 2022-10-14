@@ -86,9 +86,15 @@ runnableExamples:
 
   assert toKdlVal("abc") == parseKdl("node \"abc\"")[0][0]
 
+## ## More
+## Checkout these other useful modules as well:
+## - [kdl/decoder](#kdl/decoder.html) for KDL deserializing
+## - [kdl/xix](#kdl/xik.html) for [XML-in-KDL](https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md)
+## - [kdl/jix](#kdl/jix.html) for [JSON-in-KDL](https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md)
+
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
 
-import kdl/[decoder, parser, lexer, nodes, utils, xik, jik]
+import kdl/[encoder, decoder, parser, lexer, nodes, utils, xik, jik]
 
 export parser, nodes
 export utils except quoted

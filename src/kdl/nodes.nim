@@ -41,7 +41,7 @@ type
 
 # ----- Initializers -----
 
-proc initKNode*(name: string, tag = string.none, args: openArray[KdlVal] = newSeq[KdlVal](), props = initTable[string, KdlVal](), children: openArray[KdlNode] = newSeq[KdlNode]()): KdlNode = 
+proc initKNode*(name: string, tag = string.none, args: openarray[KdlVal] = newSeq[KdlVal](), props = initTable[string, KdlVal](), children: openarray[KdlNode] = newSeq[KdlNode]()): KdlNode = 
   KdlNode(tag: tag, name: name, args: @args, props: props, children: @children)
 
 proc initKVal*(val: string, tag = string.none): KdlVal = 

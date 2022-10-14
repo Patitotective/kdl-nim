@@ -358,7 +358,7 @@ proc tokenIdent*() {.lexing: tkIdent.} =
       return
 
   block outer:
-    for rune in lexer.source[lexer.current..^1].runes: # FIXME: slicing copies string, unnecessary, better copy unicode and replace string with openArray[char]
+    for rune in lexer.source[lexer.current..^1].runes: # FIXME: slicing copies string, unnecessary, better copy unicode and replace string with openarray[char]
       if rune.int <= 0x20 or rune.int > 0x10FFFF or lexer.eof() or lexer.tokenWhitespace(consume = false) or lexer.tokenNewLine(consume = false):
         break outer
 

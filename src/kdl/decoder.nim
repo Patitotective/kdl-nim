@@ -207,4 +207,8 @@ const node = toKdlNode:
     age(now="10", before="9")
     name(actual="Phil", other="Isofruit")
 
-echo node.decode(Table[string, Table[string, string]])# == {
+var table: Table[string, Table[string, string]]
+
+decode(table, node)
+
+echo table

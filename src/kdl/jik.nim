@@ -142,7 +142,7 @@ proc jsonKind(node: KdlNode): JsonNodeKind =
     assert node.props.len == 0, "arrays cannot have properties in " & $node
     result = JArray
   elif tag == "object" or node.props.len > 0:
-    assert node.len == 0, "objects cannot have arguments in " & $node
+    assert node.args.len == 0, "objects cannot have arguments in " & $node
     result = JObject
 
   for child in node.children:
@@ -154,7 +154,7 @@ proc jsonKind(node: KdlNode): JsonNodeKind =
       result = JObject
 
     if result == JObject and child.jsonKind notin {JObject, JArray}:
-      assert child.len in 0..1, "fields cannot have more than one argument in " & $child
+      assert child.args.len in 0..1, "fields cannot have more than one argument in " & $child
 
 proc toJson*(node: KdlNode): JsonNode
 
@@ -185,5 +185,5 @@ proc toJson*(node: KdlNode): JsonNode =
   of JObject:
     node.toJObject
   else:
-    assert node.len == 1, "unkown value in " & $node
-    node[0].toJson
+    assert node.args.len == 1, "unkown value in " & $node
+    node.args[0].toJson

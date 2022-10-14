@@ -1,20 +1,27 @@
 import std/[strformat, strutils]
 
-type
-  KdlError* = object of ValueError
-  KdlLexerError* = object of KdlError
-  KdlParserError* = object of KdlError
+import types
 
-  Coord* = tuple[line: int, col: int]
+type
+  Coord* = object
+    line*, col*: int
+
+template error*(msg: string) = 
+  raise newException(KdlError, msg)
+
+template check*(cond: untyped, msg = "") = 
+  if not cond:
+    error astToStr(cond) & " failed: " & msg
 
 proc quoted*(x: string): string = result.addQuoted(x)
   
 proc getCoord*(str: string, idx: int): Coord =
   let lines = str[0..<idx].splitLines(keepEol = true)
 
-  result = (lines.high, lines[^1].len)
+  result.line = lines.high
+  result.col = lines[^1].len
 
-proc errorAt*(source: string, coord: tuple[line, col: int]): string = 
+proc errorAt*(source: string, coord: Coord): string = 
   let line = source.splitLines[coord.line]
 
   let lineNum = &"{coord.line + 1} | "

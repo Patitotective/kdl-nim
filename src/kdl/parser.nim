@@ -1,5 +1,5 @@
 import std/[parseutils, strformat, strutils, unicode, options, tables, macros]
-import lexer, nodes, utils
+import lexer, nodes, types, utils
 
 type
   None = object

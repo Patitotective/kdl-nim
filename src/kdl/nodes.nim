@@ -96,36 +96,48 @@ proc isEmpty*(val: KdlVal): bool =
 # ----- Getters -----
 
 proc getString*(val: KdlVal): string = 
-  assert val.isString()
+  check val.isString()
   val.str
 
 proc getFloat*(val: KdlVal): float = 
-  assert val.isFloat()
+  check val.isFloat()
   val.fnum
 
 proc getBool*(val: KdlVal): bool = 
-  assert val.isBool()
+  check val.isBool()
   val.boolean
 
 proc getInt*(val: KdlVal): int64 = 
-  assert val.isInt()
+  check val.isInt()
   val.num
 
-proc get*[T: SomeNumber or string or bool or KdlVal](val: KdlVal, x: typedesc[T]): T = 
+proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T = 
   ## Tries to get and convert val to T, raises an error when it cannot.
   runnableExamples:
     let val = initKFloat(3.14)
 
-    assert val.get(int) == 3
-    assert val.get(uint) == 3u
-    assert val.get(float) == 3.14
-    assert val.get(float32) == 3.14f
+    check val.get(int) == 3
+    check val.get(uint) == 3u
+    check val.get(float) == 3.14
+    check val.get(float32) == 3.14f
 
   when T is string:
-    assert val.isString
-    result = val.getString
+    result = 
+      case val.kind
+      of KFloat:
+        $val.getFloat()
+      of KString:
+        val.getString()
+      of KBool:
+        $val.getBool()
+      of KNull:
+        "null"
+      of KInt:
+        $val.getInt()
+      of KEmpty:
+        "empty"
   elif T is SomeNumber:
-    assert val.isFloat or val.isInt
+    check val.isFloat or val.isInt
 
     result = 
       if val.isInt:
@@ -133,28 +145,26 @@ proc get*[T: SomeNumber or string or bool or KdlVal](val: KdlVal, x: typedesc[T]
       else:
         T(val.getFloat)
   elif T is bool:
-    assert val.isBool
+    check val.isBool
 
     result = val.getBool
-  elif T is KdlVal:
-    result = val
 
 # ----- Setters -----
 
 proc setString*(val: var KdlVal, x: string) = 
-  assert val.isString()
+  check val.isString()
   val.str = x
 
 proc setFloat*(val: var KdlVal, x: SomeFloat) = 
-  assert val.isFloat()
+  check val.isFloat()
   val.fnum = x
 
 proc setBool*(val: var KdlVal, x: bool) = 
-  assert val.isBool()
+  check val.isBool()
   val.boolean = x
 
 proc setInt*(val: var KdlVal, x: SomeInteger) = 
-  assert val.isInt()
+  check val.isInt()
   val.num = x
 
 proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) = 
@@ -164,11 +174,11 @@ proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) =
 
     val.setTo(100u8)
 
-    assert val.getFloat() == 100
+    check val.getFloat() == 100
 
     val.setTo(20.12e2f)
 
-    assert val.get(float32) == 20.12e2f
+    check val.get(float32) == 20.12e2f
 
   when T is string:
     val.setString(x)
@@ -244,7 +254,7 @@ proc `$`*(doc: KdlDoc): string =
 proc `==`*(val1, val2: KdlVal): bool = 
   ## Checks if val1 and val2 have the same value. They must be of the same kind.
 
-  assert val1.kind == val2.kind
+  check val1.kind == val2.kind
 
   case val1.kind
   of KString:
@@ -262,10 +272,10 @@ proc `==`*[T: SomeNumber or string or bool](val: KdlVal, x: T): bool =
   ## Checks if val is x, raises an error when they are not comparable.
 
   when T is string:
-    assert val.isString
+    check val.isString
     result = val.getString() == x
   elif T is SomeNumber:
-    assert val.isFloat or val.isInt
+    check val.isFloat or val.isInt
 
     result = 
       if val.isInt:
@@ -273,50 +283,9 @@ proc `==`*[T: SomeNumber or string or bool](val: KdlVal, x: T): bool =
       else:
         val.getFloat() == x.float
   elif T is bool:
-    assert val.isBool
+    check val.isBool
 
     result = val.getBool() == x
-
-proc `[]`*(node: KdlNode, idx: int or BackwardsIndex): KdlVal = 
-  ## Gets the argument at idx.
-  node.args[idx]
-
-proc `[]`*(node: KdlNode, key: string): KdlVal = 
-  ## Gets the value of the key property.
-  node.props[key]
-
-proc `[]`*(node: var KdlNode, idx: int | BackwardsIndex): var KdlVal = 
-  ## Gets the argument at idx.
-  node.args[idx]
-
-proc `[]`*(node: var KdlNode, key: string): var KdlVal = 
-  ## Gets the value of the key property.
-  node.props[key]
-
-proc `[]=`*(node: var KdlNode, key: string, val: KdlVal) = 
-  ## Sets the key property to val in node.
-  node.props[key] = val
-
-proc hasKey*(node: KdlNode, key: string): bool = 
-  ## Checks if node has the key property.
-  node.props.hasKey(key)
-
-proc contains*(node: KdlNode, key: string): bool = 
-  ## Checks if node has the key property.
-  node.props.contains(key)
-
-proc contains*(node: KdlNode, val: KdlVal): bool = 
-  ## Checks if node has the val argument.
-  node.args.contains(val)
-
-proc len*(node: KdlNode): int = 
-  ## Node's arguments length.
-  node.args.len
-
-proc add*(node: var KdlNode, val: KdlVal) = 
-  ## Adds val to node's arguments.
-
-  node.args.add(val)
 
 # ----- Macros -----
 

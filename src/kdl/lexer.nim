@@ -1,5 +1,5 @@
 import std/[strformat, strutils, unicode, tables, macros]
-import utils
+import utils, types
 
 type
   TokenKind* = enum

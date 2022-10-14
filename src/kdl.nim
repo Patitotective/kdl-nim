@@ -94,10 +94,10 @@ runnableExamples:
 
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
 
-import kdl/[encoder, decoder, parser, lexer, nodes, utils, xik, jik]
+import kdl/[encoder, decoder, parser, lexer, nodes, types, utils, xik, jik]
 
 export parser, nodes
-export utils except quoted
+export types
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
 func indent(s: string, count: Natural, padding = " ", newLine = "\n"): string =

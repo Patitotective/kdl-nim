@@ -62,10 +62,10 @@ proc toKdl*(node: XmlNode, comments = false): KdlNode =
     result = initKNode(node.tag)
     if node.attrsLen > 0:
       for key, val in node.attrs:
-        result[key] = initKVal(val)
+        result.props[key] = initKVal(val)
 
     if node.len == 1 and node[0].kind in {xnText, xnEntity, xnVerbatimText}:
-      result.add initKVal(node[0].text)
+      result.args.add initKVal(node[0].text)
     else:
       for child in node:
         if comments or child.kind != xnComment:
@@ -79,7 +79,7 @@ proc toXml*(node: KdlNode, comments = false): XmlNode =
 
   result = newElement(node.name)
 
-  assert (node.len > 0 and node.children.len == 0) or (node.len == 0 and node.children.len > 0) or (node.len == 0 and node.children.len == 0), "nodes have to have either one argument and zero children, zero arguments and zero or more children"
+  assert (node.args.len > 0 and node.children.len == 0) or (node.args.len == 0 and node.children.len > 0) or (node.args.len == 0 and node.children.len == 0), "nodes have to have either one argument and zero children, zero arguments and zero or more children"
 
   if node.props.len > 0:
     result.attrs = newStringTable()
@@ -87,18 +87,18 @@ proc toXml*(node: KdlNode, comments = false): XmlNode =
       assert val.isString, "properties' values have to be of type string"
       result.attrs[key] = val.getString
 
-  if node.len > 0:
-    assert node.len == 1 and node[0].isString, "first argument has to be a string and there must be only one argument"
-    result.add newText(node[0].getString)
+  if node.args.len > 0:
+    assert node.args.len == 1 and node.args[0].isString, "first argument has to be a string and there must be only one argument"
+    result.add newText(node.args[0].getString)
   else:
     for child in node.children:
       case child.name
       of "-":
-        assert child.len == 1 and child[0].isString, "first argument has to be a string and there must be only one argument"
-        result.add newText(child[0].getString)
+        assert child.args.len == 1 and child.args[0].isString, "first argument has to be a string and there must be only one argument"
+        result.add newText(child.args[0].getString)
       of "!":
-        assert child.len == 1 and child[0].isString, "first argument has to be a string and there must be only one argument"
+        assert child.args.len == 1 and child.args[0].isString, "first argument has to be a string and there must be only one argument"
         if comments:
-          result.add newComment(child[0].getString)
+          result.add newComment(child.args[0].getString)
       else:
         result.add child.toXml(comments)

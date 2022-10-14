@@ -143,20 +143,20 @@ suite "Decoder":
       "key": "value".initKVal, 
       "alive": true.initKVal
     }.toTable
-    check parseKdl("person age=10 name=\"Ringabout\" {other-name \"flywind\"}").decode(Table[string, KdlVal], "person") == {
+    check parseKdl("person age=10 name=\"Phil\" {other-name \"Isofruit\"}").decode(Table[string, KdlVal], "person") == {
       "age": 10.initKVal, 
-      "name": "Ringabout".initKVal, 
-      "other-name": "flywind".initKVal
+      "name": "Phil".initKVal, 
+      "other-name": "Isofruit".initKVal
     }.toTable
 
     check parseKdl("key \"value\"; alive true").decode(OrderedTable[string, KdlVal]) == {
       "key": "value".initKVal, 
       "alive": true.initKVal
     }.toOrderedTable
-    check parseKdl("person age=10 name=\"Ringabout\" {other-name \"flywind\"}").decode(OrderedTable[string, KdlVal], "person") == {
+    check parseKdl("person age=10 name=\"Phil\" {other-name \"Isofruit\"}").decode(OrderedTable[string, KdlVal], "person") == {
         "age": 10.initKVal, 
-        "name": "Ringabout".initKVal, 
-        "other-name": "flywind".initKVal
+        "name": "Phil".initKVal, 
+        "other-name": "Isofruit".initKVal
       }.toOrderedTable
 
   test "Objects":

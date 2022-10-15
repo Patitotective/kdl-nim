@@ -1,7 +1,7 @@
 # TODO: implement the KDL schema language specification https://github.com/kdl-org/kdl/blob/main/SCHEMA-SPEC.md
 
 import std/options
-import kdl/nodes
+import nodes, types
 
 type
   Document* = object

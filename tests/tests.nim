@@ -1,25 +1,25 @@
 import std/[unittest, xmlparser, xmltree, times, json, os]
 
-import kdl, kdl/[decoder, schema, query, jik, xik]
+import kdl, kdl/[schema, query, jik, xik]
 
 let testsDir = getAppDir() / "test_cases"
 
 proc quoted*(x: string): string = result.addQuoted(x)
 
-proc decode*(node: KdlNode, x: var DateTime) = 
-  assert node.len == 1
-  x = node[0].getString.parse("yyyy-MM-dd")
+proc decodeHook*(a: KdlNode, v: var DateTime) = 
+  assert a.args.len == 1
+  v = a.args[0].getString.parse("yyyy-MM-dd")
 
-  if "hour" in node:
-    x.hour = node["hour"].getInt
-  if "minute" in node:
-    x.minute = node["minute"].getInt
-  if "second" in node:
-    x.second = node["second"].getInt
-  if "nanosecond" in node:
-    x.nanosecond = node["nanosecond"].getInt
-  if "offset" in node:
-    x.utcOffset = node["offset"].get(int)
+  if "hour" in a.props:
+    v.hour = a.props["hour"].getInt
+  if "minute" in a.props:
+    v.minute = a.props["minute"].getInt
+  if "second" in a.props:
+    v.second = a.props["second"].getInt
+  if "nanosecond" in a.props:
+    v.nanosecond = a.props["nanosecond"].getInt
+  if "offset" in a.props:
+    v.utcOffset = a.props["offset"].get(int)
 
 suite "spec":
   for kind, path in walkDir(testsDir / "input"):
@@ -120,7 +120,7 @@ suite "Decoder":
 
     check package == Package(version: "0.0.0", author: "Kat Marchán <kzm@zkat.tech>", description: "kat's document language", license: "CC BY-SA 4.0", requires: @["nim >= 0.10.0", "foobar >= 0.1.0", "fizzbuzz >= 1.0"], obj: (num: 3.14f.some))
 
-  test "Seqs":
+  test "List":
     type Foo = object
       a*, b*: int
 
@@ -130,6 +130,11 @@ suite "Decoder":
     check parseKdl("node {a 1; b 2}; node {a 3; b 3}").decode(seq[Foo]) == @[Foo(a: 1, b: 2), Foo(a: 3, b: 3)]
     check parseKdl("node 1; node 2").decode(seq[int]) == @[1, 2]
 
+    check parseKdl("node 1 2 3").decode(array[4, int], "node") == [1, 2, 3, 0]
+    check parseKdl("node 1 2 3").decode(array[3, int], "node") == [1, 2, 3]
+    check parseKdl("node 1 2 3").decode(array[2, int], "node") == [1, 2]
+    check parseKdl("node 1 2 3").decode(array[0, int], "node") == []
+
   test "Options":
     type Person = object
       name*: string
@@ -138,7 +143,7 @@ suite "Decoder":
     check parseKdl("node \"Nah\"; node \"Pat\"; node").decode(seq[Option[string]]) == @["Nah".some, "Pat".some, string.none]
     check parseKdl("node name=\"Beef\"; node name=\"Pat\" surname=\"ito\"").decode(seq[Person]) == @[Person(name: "Beef", surname: none(string)), Person(name: "Pat", surname: some("ito"))]
 
-  test "Tables and OrderedTables":
+  test "SomeTable":
     check parseKdl("key \"value\"; alive true").decode(Table[string, KdlVal]) == {
       "key": "value".initKVal, 
       "alive": true.initKVal
@@ -159,7 +164,7 @@ suite "Decoder":
         "other-name": "Isofruit".initKVal
       }.toOrderedTable
 
-  test "Objects":
+  test "Object":
     type
       Person = object
         name*: string
@@ -180,6 +185,8 @@ suite "Decoder":
     check result == 1
 
     check parseKdl("node true").decode(bool, "node") == true
+
+    check parseKdl("node null \"not null\"").decode(seq[cstring], "node") == @[cstring nil, cstring "not null"]
 
   test "Custom":
     let date = parseKdl("date \"2000-12-31\" hour=3").decode(DateTime, "date")
@@ -202,6 +209,6 @@ suite "Decoder":
       expect KdlError:
         discard parseKdl("dir 2 3").decode(seq[HoleyDir], "dir")
 
-  test "Chars":
+  test "Char":
     check parseKdl("rows \"a\" \"b\" \"c\"").decode(seq[char], "rows") == @['a', 'b', 'c']
     check parseKdl("char \"#\"").decode(char, "char") == '#'

@@ -1,67 +1,29 @@
-{.used.}
-
-import std/[strformat, typetraits, strutils, strtabs, tables, sets]
+import std/[strformat, typetraits, strutils]
 import nodes, utils, types
-
-type
-  Object = (object or tuple)
-  List = (array or seq)
-  Value = (SomeNumber or string or bool)
-  KdlSome = (KdlDoc or KdlNode or KdlVal)
-  SomeTable[K, V] = (Table[K, V] or OrderedTable[K, V])
-
-proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
-  let aLen = a.len
-  let bLen = b.len
-  var i = 0
-  var j = 0
-
-  while true:
-    while i < aLen and a[i] in ignoreChars: inc i
-    while j < bLen and b[j] in ignoreChars: inc j
-    let aa = if i < aLen: toLowerAscii(a[i]) else: '\0'
-    let bb = if j < bLen: toLowerAscii(b[j]) else: '\0'
-    result = ord(aa) - ord(bb)
-    if result != 0: return result
-    # the characters are identical:
-    if i >= aLen:
-      # both cursors at the end:
-      if j >= bLen: return 0
-      # not yet at the end of 'b':
-      return -1
-    elif j >= bLen:
-      return 1
-    inc i
-    inc j
-
-proc eqIdent(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnoreStyle(v, a, ignoreChars) == 0
 
 # ----- Index -----
 
 proc decode*(a: KdlSome, v: var auto)
 proc decode*[T](a: KdlSome, _: typedesc[T]): T
+
 proc decode*(a: KdlDoc, v: var auto, name: string)
 proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T
-proc decodeHook*[T: KdlNode or KdlVal](a: T, v: var T)
+
+proc decodeHook*[T: KdlSome](a: T, v: var T)
+
 proc decodeHook*(a: KdlDoc, v: var Object)
 proc decodeHook*(a: KdlDoc, v: var List)
-proc decodeHook*[T](a: KdlDoc, v: var SomeTable[string, T])
-proc decodeHook*[T](a: KdlDoc, v: var SomeSet[T])
+
 proc decodeHook*(a: KdlNode, v: var Object)
 proc decodeHook*(a: KdlNode, v: var List)
 proc decodeHook*(a: KdlNode, v: var auto)
-proc decodeHook*[T](a: KdlNode, v: var SomeTable[string, T])
-proc decodeHook*[T](a: KdlNode, v: var SomeSet[T])
-proc decodeHook*(a: KdlNode, v: var StringTableRef)
-proc decodeHook*[T: SomeNumber or string or bool](a: KdlVal, v: var T)
+
+proc decodeHook*[T: Value](a: KdlVal, v: var T)
 proc decodeHook*[T: enum](a: KdlVal, v: var T)
 proc decodeHook*(a: KdlVal, v: var char)
 proc decodeHook*(a: KdlVal, v: var cstring)
 proc decodeHook*[T: array](a: KdlVal, v: var T)
 proc decodeHook*(a: KdlVal, v: var seq)
-proc decodeHook*[T](a: KdlVal, v: var SomeSet[T])
-proc decodeHook*[T](a: KdlVal, v: var Option[T])
-proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef or Object))
 
 # ----- KdlSome -----
 
@@ -87,13 +49,7 @@ proc decode*(a: KdlDoc, v: var auto, name: string) =
 proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T = 
   decode(a, result, name)
 
-# proc decodeKNode*(v: var auto): KdlNode = 
-#   decode(result, v)
-
-# proc decodeKVal*(v: var auto): KdlVal = 
-#   decode(result, v)
-
-proc decodeHook*[T: KdlNode or KdlVal](a: T, v: var T) = 
+proc decodeHook*[T: KdlSome](a: T, v: var T) = 
   v = a
 
 # ----- KdlDoc -----
@@ -110,18 +66,6 @@ proc decodeHook*(a: KdlDoc, v: var List) =
   
   for e, node in a:
     decode(node, v[e])
-
-proc decodeHook*[T](a: KdlDoc, v: var SomeTable[string, T]) = 
-  v.clear()
-
-  for node in a:
-    v[node.name] = decode(node, T)
-
-proc decodeHook*[T](a: KdlDoc, v: var SomeSet[T]) = 
-  v.clear()
-
-  for node in a:
-    v.incl decode(KdlDoc, T)
 
 # ----- KdlNode -----
 
@@ -156,33 +100,9 @@ proc decodeHook*(a: KdlNode, v: var auto) =
   check a.args.len == 1, &"expect exactly one argument in {a}"
   decode(a.args[0], v)
 
-proc decodeHook*[T](a: KdlNode, v: var SomeTable[string, T]) = 
-  v.clear()
-
-  for key, val in a.props:
-    v[key] = decode(val, T)
-    
-  for node in a.children:
-    v[node.name] = decode(node, T)
-
-proc decodeHook*[T](a: KdlNode, v: var SomeSet[T]) = 
-  v.clear()
-
-  for arg in a.args:
-    v.incl decode(arg, T)
-
-proc decodeHook*(a: KdlNode, v: var StringTableRef) = 
-  v = newStringTable()
-
-  for key, val in a.props:
-    v[key] = decode(val, string)
-    
-  for node in a.children:
-    v[node.name] = decode(node, string)
-
 # ----- KdlVal -----
 
-proc decodeHook*[T: SomeNumber or string or bool](a: KdlVal, v: var T) = 
+proc decodeHook*[T: Value](a: KdlVal, v: var T) = 
   v = a.get(T)
 
 proc decodeHook*[T: enum](a: KdlVal, v: var T) = 
@@ -218,16 +138,5 @@ proc decodeHook*(a: KdlVal, v: var seq) =
   v.setLen 1
   decode(a, v[0])
 
-proc decodeHook*[T](a: KdlVal, v: var SomeSet[T]) = 
-  v.clear()
-
-  v.incl decode(a, T)
-
-proc decodeHook*[T](a: KdlVal, v: var Option[T]) = 
-  if a.isNull:  
-    v = none[T]()
-  else:
-    v = decode(a, T).some
-
-proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef or Object)) = 
+proc decodeHook*(a: KdlVal, v: var Object) = 
   error &"{$typeof(v)} not implemented for {$typeof(a)}"

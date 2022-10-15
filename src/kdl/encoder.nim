@@ -3,11 +3,7 @@
 
 {.used.}
 
-import nodes
-
-type
-  Value = (SomeNumber or string or bool or KdlVal)
-  Object = ((object or ref or tuple) and not KdlVal)
+import nodes, utils, types
 
 proc encode*[T: Value](obj: T, x: var KdlVal) = 
   x = obj.initKVal

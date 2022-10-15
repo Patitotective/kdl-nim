@@ -68,7 +68,7 @@ runnableExamples:
 {.used.}
 
 import std/json
-import nodes
+import nodes, types
 
 proc toKVal(node: JsonNode): KdlVal = 
   case node.kind

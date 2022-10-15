@@ -46,7 +46,7 @@ breakfast_menu {
 {.used.}
 
 import std/[strtabs, xmltree]
-import nodes
+import nodes, types
 
 proc toKdl*(node: XmlNode, comments = false): KdlNode = 
   ## Converts node into its KDL representation.

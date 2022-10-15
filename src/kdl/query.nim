@@ -1,4 +1,4 @@
-import nodes
+import nodes, types
 
 type
   Query* = seq[Selector]

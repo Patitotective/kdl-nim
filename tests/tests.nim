@@ -1,14 +1,36 @@
 import std/[unittest, xmlparser, xmltree, times, json, os]
 
-import kdl, kdl/[schema, query, jik, xik]
+import kdl
+import kdl/[schema, query, jik, xik]
+import kdl/utils except check
 
 let testsDir = getAppDir() / "test_cases"
 
-proc quoted*(x: string): string = result.addQuoted(x)
+proc decodeHook*(a: KdlVal, v: var DateTime) = 
+  assert a.isString
+  v = a.getString.parse("yyyy-MM-dd")
 
 proc decodeHook*(a: KdlNode, v: var DateTime) = 
-  assert a.args.len == 1
-  v = a.args[0].getString.parse("yyyy-MM-dd")
+  case a.args.len
+  of 6: # year month day hour minute second
+    v = dateTime(
+      a.args[0].decode(int), 
+      a.args[1].decode(Month), 
+      a.args[2].decode(MonthdayRange), 
+      a.args[3].decode(HourRange), 
+      a.args[4].decode(MinuteRange), 
+      a.args[5].decode(SecondRange)
+    )
+  of 3: # year month day
+    v = dateTime(
+      a.args[0].decode(int), 
+      a.args[1].decode(Month), 
+      a.args[2].decode(MonthdayRange), 
+    )
+  of 1: # yyyy-MM-dd 
+    a.args[0].decode(v)
+  else:
+    doAssert a.args.len in {1, 3, 6}
 
   if "hour" in a.props:
     v.hour = a.props["hour"].getInt
@@ -20,6 +42,34 @@ proc decodeHook*(a: KdlNode, v: var DateTime) =
     v.nanosecond = a.props["nanosecond"].getInt
   if "offset" in a.props:
     v.utcOffset = a.props["offset"].get(int)
+
+proc decodeHook*(a: KdlDoc, v: var DateTime) = 
+  var
+    year: int
+    month: Month
+    day: MonthdayRange
+    hour: HourRange
+    minute: MinuteRange
+    second: SecondRange
+    nanosecond: NanosecondRange
+
+  for node in a:
+    if node.name.eqIdent "year":
+      node.decode(year)
+    elif node.name.eqIdent "month":
+      node.decode(month)
+    elif node.name.eqIdent "day":
+      node.decode(day)
+    elif node.name.eqIdent "hour":
+      node.decode(hour)
+    elif node.name.eqIdent "minute":
+      node.decode(minute)
+    elif node.name.eqIdent "second":
+      node.decode(second)
+    elif node.name.eqIdent "nanosecond":
+      node.decode(nanosecond)
+
+  v = dateTime(year, month, day, hour, minute, second, nanosecond)
 
 suite "spec":
   for kind, path in walkDir(testsDir / "input"):
@@ -120,7 +170,7 @@ suite "Decoder":
 
     check package == Package(version: "0.0.0", author: "Kat Marchán <kzm@zkat.tech>", description: "kat's document language", license: "CC BY-SA 4.0", requires: @["nim >= 0.10.0", "foobar >= 0.1.0", "fizzbuzz >= 1.0"], obj: (num: 3.14f.some))
 
-  test "List":
+  test "Seqs and arrays":
     type Foo = object
       a*, b*: int
 
@@ -143,7 +193,7 @@ suite "Decoder":
     check parseKdl("node \"Nah\"; node \"Pat\"; node").decode(seq[Option[string]]) == @["Nah".some, "Pat".some, string.none]
     check parseKdl("node name=\"Beef\"; node name=\"Pat\" surname=\"ito\"").decode(seq[Person]) == @[Person(name: "Beef", surname: none(string)), Person(name: "Pat", surname: some("ito"))]
 
-  test "SomeTable":
+  test "Tables":
     check parseKdl("key \"value\"; alive true").decode(Table[string, KdlVal]) == {
       "key": "value".initKVal, 
       "alive": true.initKVal
@@ -164,7 +214,7 @@ suite "Decoder":
         "other-name": "Isofruit".initKVal
       }.toOrderedTable
 
-  test "Object":
+  test "Objects":
     type
       Person = object
         name*: string
@@ -177,22 +227,27 @@ suite "Decoder":
     check parseKdl("person age=20 {name \"Rika\"}").decode(tuple[age: int, name: string], "person") == (age: 20, name: "Rika")
     check parseKdl("name \"Mindustry\"; version \"126.2\"; author \"Anuken\"; license \"GNU General Public License v3.0\"").decode(Game) == Game(name: "Mindustry", version: "126.2", author: "Anuken", license: "GNU General Public License v3.0")
 
-  test "Extra":
-    check parseKdl("node 1").decode(int, "node") == 1
+  test "Object variants":
+    type
+      MyObjKind = enum
+        moInt, moString
+      
+      MyObj = object
+        case kind*: MyObjKind
+        of moInt:
+          intV*: int
+        of moString:
+          stringV*: string
 
-    var result: int
-    parseKdl("node 1").decode(result, "node")
-    check result == 1
+    check parseKdl("""
+    node kind="moString" stringV="Hello"
+    node kind="moInt" intV=12
+    """).decode(seq[MyObj]) == @[MyObj(kind: moString, stringV: "Hello"), MyObj(kind: moInt, intV: 12)]
 
-    check parseKdl("node true").decode(bool, "node") == true
-
-    check parseKdl("node null \"not null\"").decode(seq[cstring], "node") == @[cstring nil, cstring "not null"]
-
-  test "Custom":
-    let date = parseKdl("date \"2000-12-31\" hour=3").decode(DateTime, "date")
-    check date.year == 2000
-    check date.month == mDec
-    check date.hour == 3
+    check parseKdl("""
+    kind "moString"
+    stringV "World"
+    """).decode(MyObj) == MyObj(kind: moString, stringV: "World")
 
   test "Enums":
     type
@@ -209,6 +264,30 @@ suite "Decoder":
       expect KdlError:
         discard parseKdl("dir 2 3").decode(seq[HoleyDir], "dir")
 
-  test "Char":
+  test "Chars":
     check parseKdl("rows \"a\" \"b\" \"c\"").decode(seq[char], "rows") == @['a', 'b', 'c']
     check parseKdl("char \"#\"").decode(char, "char") == '#'
+
+  test "Extra":
+    check parseKdl("node 1").decode(int, "node") == 1
+
+    var result: int
+    parseKdl("node 1").decode(result, "node")
+    check result == 1
+
+    check parseKdl("node true").decode(bool, "node") == true
+
+    check parseKdl("node null \"not null\"").decode(seq[cstring], "node") == @[cstring nil, cstring "not null"]
+
+  test "Custom":
+    check parseKdl("""
+    year 2022
+    month 10 // or "October"
+    day 15
+    hour 12
+    minute 10
+    """).decode(DateTime) == dateTime(2022, mOct, 15, 12, 10)
+
+    check parseKdl("date 2022 \"October\" 15 12 04 00").decode(DateTime, "date") == dateTime(2022, mOct, 15, 12, 04)
+
+    check parseKdl("author birthday=\"2000-10-15\" name=\"Nobody\"")[0]["birthday"].decode(DateTime) == dateTime(2000, mOct, 15)

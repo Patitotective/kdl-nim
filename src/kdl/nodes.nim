@@ -155,7 +155,7 @@ proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) =
   elif T is bool:
     val.setBool(x)
 
-# ----- Stringifier -----
+# ----- Operators -----
 
 proc `$`*(val: KdlVal): string = 
   if val.tag.isSome:
@@ -214,8 +214,6 @@ proc `$`*(doc: KdlDoc): string =
     if e < doc.high:
       result.add "\n"
 
-# ----- Operators -----
-
 proc `==`*(val1, val2: KdlVal): bool = 
   ## Checks if val1 and val2 have the same value. They must be of the same kind.
 
@@ -251,6 +249,44 @@ proc `==`*[T: SomeNumber or string or bool](val: KdlVal, x: T): bool =
     check val.isBool
 
     result = val.getBool() == x
+
+proc `[]`*(node: KdlNode, key: string): KdlVal = 
+  ## Gets the value of the key property.
+  node.props[key]
+
+proc `[]`*(node: var KdlNode, key: string): var KdlVal = # TODO test
+  ## Gets the value of the key property.
+  node.props[key]
+
+proc `[]=`*(node: var KdlNode, key: string, val: KdlVal) = 
+  ## Sets the key property to val in node.
+  node.props[key] = val
+
+proc hasKey*(node: KdlNode, key: string): bool = 
+  ## Checks if node has the key property.
+  node.props.hasKey(key)
+
+proc contains*(node: KdlNode, key: string): bool = 
+  ## Checks if node has the key property.
+  node.props.contains(key)
+
+proc contains*(node: KdlNode, val: KdlVal): bool = 
+  ## Checks if node has the val argument.
+  node.args.contains(val)
+
+proc contains*(node: KdlNode, child: KdlNode): bool = 
+  ## Checks if node has the child children.
+  node.children.contains(child)
+
+proc add*(node: var KdlNode, val: KdlVal) = 
+  ## Adds val to node's arguments.
+
+  node.args.add(val)
+
+proc add*(node: var KdlNode, child: KdlNode) = 
+  ## Adds child to node's children.
+
+  node.children.add(child)
 
 # ----- Macros -----
 

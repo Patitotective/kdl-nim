@@ -1,4 +1,4 @@
-import std/[strformat, strutils, tables]
+import std/[strformat, strutils, tables, macros]
 
 import types
 
@@ -18,7 +18,7 @@ template error*(msg: string) =
 template check*(cond: untyped, msg = "") = 
   if not cond:
     let txt = msg
-    error astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
+    utils.error astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
 
 proc quoted*(x: string): string = result.addQuoted(x)
   
@@ -60,3 +60,54 @@ proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
     inc j
 
 proc eqIdent*(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnoreStyle(v, a, ignoreChars) == 0
+
+# ----- Object variants -----
+
+proc `[]`(node: NimNode, kind: NimNodeKind): NimNode =
+  for c in node.children:
+    if c.kind == kind:
+      return c
+  return nil
+
+proc hasKind(node: NimNode, kind: NimNodeKind): bool =
+  for c in node.children:
+    if c.kind == kind:
+      return true
+  return false
+
+macro isObjVariant*(v: typed): bool =
+  ## Is this an object variant?
+  var typ = v.getTypeImpl()
+  if typ.kind == nnkSym:
+    return ident("false")
+  while typ.kind != nnkObjectTy:
+    typ = typ[0].getTypeImpl()
+  if typ[2].hasKind(nnkRecCase):
+    ident("true")
+  else:
+    ident("false")
+
+proc discriminator*(v: NimNode): NimNode =
+  var typ = v.getTypeImpl()
+  while typ.kind != nnkObjectTy:
+    typ = typ[0].getTypeImpl()
+  return typ[nnkRecList][nnkRecCase][nnkIdentDefs][nnkSym]
+
+macro discriminatorFieldName*(v: typed): untyped =
+  ## Turns into the discriminator field.
+  return newLit($discriminator(v))
+
+macro discriminatorField*(v: typed): untyped =
+  ## Turns into the discriminator field.
+  let
+    fieldName = discriminator(v)
+  return quote do:
+    `v`.`fieldName`
+
+macro new*(v: typed, d: typed): untyped =
+  ## Creates a new object variant with the discriminator field.
+  let
+    typ = v.getTypeInst()
+    fieldName = discriminator(v)
+  return quote do:
+    `v` = `typ`(`fieldName`: `d`)

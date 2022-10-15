@@ -11,7 +11,8 @@ template error*(msg: string) =
 
 template check*(cond: untyped, msg = "") = 
   if not cond:
-    error astToStr(cond) & " failed: " & msg
+    let txt = msg
+    error astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
 
 proc quoted*(x: string): string = result.addQuoted(x)
   

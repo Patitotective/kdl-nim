@@ -4,19 +4,21 @@ import std/[strformat, typetraits, strutils, strtabs, tables, sets]
 import nodes, utils, types
 
 type
-  SomeTable[A, B] = (Table[A, B] or OrderedTable[A, B])
+  Object = (object or tuple)
+  List = (array or seq)
+  Value = (SomeNumber or string or bool)
   KdlSome = (KdlDoc or KdlNode or KdlVal)
-  Object = ((object or tuple) and not KdlSome)
+  SomeTable[K, V] = (Table[K, V] or OrderedTable[K, V])
 
-proc cmpIgnoreStyle(a, b: openarray[char]): int =
+proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
   let aLen = a.len
   let bLen = b.len
   var i = 0
   var j = 0
 
   while true:
-    while i < aLen and a[i] in {'_', '-'}: inc i
-    while j < bLen and b[j] in {'_', '-'}: inc j
+    while i < aLen and a[i] in ignoreChars: inc i
+    while j < bLen and b[j] in ignoreChars: inc j
     let aa = if i < aLen: toLowerAscii(a[i]) else: '\0'
     let bb = if j < bLen: toLowerAscii(b[j]) else: '\0'
     result = ord(aa) - ord(bb)
@@ -32,172 +34,173 @@ proc cmpIgnoreStyle(a, b: openarray[char]): int =
     inc i
     inc j
 
-proc eqIdent(a, b: openarray[char]): bool = cmpIgnoreStyle(a, b) == 0
+proc eqIdent(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnoreStyle(v, a, ignoreChars) == 0
 
-proc decode*[T](a: var T, b: KdlVal)
-proc decode*[T](a: var T, b: KdlNode)
-proc decode*[T](a: var T, b: KdlDoc)
+# ----- KdlSome -----
 
-proc decode*[T](a: var T, b: KdlDoc) = 
-  when compiles(decodeHook(a, b)): decodeHook(a, b)
-  elif T is Object:
-    for field, value in a.fieldPairs:
-      for node in b:
-        if node.name.eqIdent field:
-          decode(value, node)   
-  elif T is (array or seq):
-    when T is seq:
-      a.setLen b.len
-  
-    for e, node in b:
-      decode(a[e], node)
-  else:
-    static: error &"{$T} not implemented yet for {$typeof(b)}"
+proc decode*(a: KdlSome, v: var auto) = 
+  mixin decodeHook
+  decodeHook(a, v)
 
-proc decode*[T](a: var T, b: KdlNode) = 
-  # static: echo T, ", ", typeof b
+proc decode*[T](a: KdlSome, _: typedesc[T]): T = 
+  decode(a, result)
 
-  when compiles(decodeHook(a, b)): decodeHook(a, b)
-  elif T is Object:
-    for field, value in a.fieldPairs:
-      for key, _ in b.props:
-        if key.eqIdent field:
-          when compiles(decode(value, b.props[key])):
-            decode(value, b.props[key])
-      
-      for node in b.children:
-        if node.name.eqIdent field:
-          decode(value, node)
-  elif T is (array or seq):
-    when T is seq:
-      a.setLen b.args.len + b.children.len
-
-    var count = 0
-
-    for arg in b.args:
-      if count >= a.len: break
-      when compiles(decode(a[count], arg)):
-        decode(a[count], arg)
-
-      inc count
-
-    for child in b.children:
-      if count >= a.len: break
-      decode(a[count], child)
-      inc count
-  else:
-    check b.args.len == 1, &"expect exactly one argument in {b}"
-    decode(a, b.args[0])
-
-proc decode*[T](a: var T, b: KdlVal) = 
-  when compiles(decodeHook(a, b)): decodeHook(a, b)
-  elif T is KdlVal:
-    a = b
-  elif T is (SomeNumber or string or bool):
-    a = b.get(T)
-  elif T is enum:
-    case b.kind
-    of KString:
-      a = parseEnum[T](b.getString)
-    of KInt:
-      when T is HoleyEnum and not defined(kdlDecoderAllowHoleyEnums):
-        error &"forbidden int-to-HoleyEnum conversion ({b.getInt} -> {$T}); compile with -d:kdlDecoderAllowHoleyEnums"
-      else:
-        a = T(b.getInt)
-    else:
-      error &"expected string or int in {b}"
-  elif T is cstring:
-    case b.kind
-    of KNull:
-      a = nil
-    of KString:
-      a = cstring b.getString
-    else: 
-      error &"expected string or null in {b}"
-  elif T is array:
-    when a.len == 1:
-      decode(a[0], b)
-  elif T is seq:
-    a.setLen 1
-    decode(a[0], b)
-  elif T is char:
-    check b.isString, &"expected one-character-long string in b"
-    a = b.getString[0]
-  else:
-    static: error &"{$T} not implemented yet for {$typeof(b)}"
-
-proc decode*[T](a: var T, b: KdlDoc, name: string) = 
+proc decode*(a: KdlDoc, v: var auto, name: string) = 
   var found = -1
-  for e in countdown(b.high, 0):
-    if b[e].name.eqIdent name:
+  for e in countdown(a.high, 0):
+    if a[e].name.eqIdent name:
       found = e
       break
 
   if found < 0:
-    error &"Could not find a any node for {name}"
+    error "Could not find a any node for " & name.quoted
 
-  decode(a, b[found])
+  decode(a[found], v)
 
-proc decode*[T: KdlSome](a: var T, b: T) = 
-  a = T
+proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T = 
+  decode(a, result, name)
 
-proc decode*[T](a: KdlSome, b: typedesc[T]): T = 
-  ## Outplace version of `decode`.
-  decode(result, a)
+# proc decodeKNode*(v: var auto): KdlNode = 
+#   decode(result, v)
 
-proc decode*[T](a: KdlSome, b: typedesc[T], name: string): T = 
-  ## Outplace version of `decode`.
-  decode(result, a, name)
+# proc decodeKVal*(v: var auto): KdlVal = 
+#   decode(result, v)
 
-proc decodeHook*[T](a: var SomeTable[string, T], b: KdlDoc) = 
-  a.clear()
+proc decodeHook*[T: KdlNode or KdlVal](a: T, v: var T) = 
+  v = a
 
-  for node in b:
-    a[node.name] = decode(node, T)
+# ----- KdlDoc -----
 
-proc decodeHook*[T](a: var SomeTable[string, T], b: KdlNode) = 
-  a.clear()
+proc decodeHook*(a: KdlDoc, v: var Object) = 
+  for field, value in v.fieldPairs:
+    for node in a:
+      if node.name.eqIdent field:
+        decode(node, value)
 
-  for key, val in b.props:
-    a[key] = decode(val, T)
+proc decodeHook*(a: KdlDoc, v: var List) = 
+  when v is seq:
+    v.setLen a.len
   
-  for node in b.children:
-    a[node.name] = decode(node, T)
+  for e, node in a:
+    decode(node, v[e])
 
-# proc decodeHook*[T](a: var SomeTable[string, SomeTable[string, T]], b: KdlNode) = 
-  # discard
+proc decodeHook*[T](a: KdlDoc, v: var SomeTable[string, T]) = 
+  v.clear()
 
-proc decodeHook*[T](a: var SomeSet[T], b: KdlNode) = 
-  a.clear()
+  for node in a:
+    v[node.name] = decode(node, T)
 
-  for arg in b.args:
-    a.incl decode(arg, T)
+proc decodeHook*[T](a: KdlDoc, v: var SomeSet[T]) = 
+  v.clear()
 
-  for child in b.children:
-    a.incl decode(child, T)
+  for node in a:
+    v.incl decode(KdlDoc, T)
 
-proc decodeHook*[T](a: var Option[T], b: KdlVal) = 
-  if b.isNull:
-    a = none[T]()
+# ----- KdlNode -----
+
+proc decodeHook*(a: KdlNode, v: var Object) = 
+  for field, value in v.fieldPairs:
+    for key, _ in a.props:
+      if key.eqIdent field:
+        decode(a.props[key], value)
+    
+    for node in a.children:
+      if node.name.eqIdent field:
+        decode(node, value)
+
+proc decodeHook*(a: KdlNode, v: var List) = 
+  when v is seq:
+    v.setLen a.args.len + a.children.len
+
+  var count = 0
+
+  for arg in a.args:
+    if count >= v.len: break
+    decode(arg, v[count])
+
+    inc count
+
+  for child in a.children:
+    if count >= v.len: break
+    decode(child, v[count])
+    inc count
+
+proc decodeHook*(a: KdlNode, v: var auto) = 
+  check a.args.len == 1, &"expect exactly one argument in {a}"
+  decode(a.args[0], v)
+
+proc decodeHook*[T](a: KdlNode, v: var SomeTable[string, T]) = 
+  v.clear()
+
+  for key, val in a.props:
+    v[key] = decode(val, T)
+    
+  for node in a.children:
+    v[node.name] = decode(node, T)
+
+proc decodeHook*[T](a: KdlNode, v: var SomeSet[T]) = 
+  v.clear()
+
+  for arg in a.args:
+    v.incl decode(arg, T)
+
+proc decodeHook*(a: KdlNode, v: var StringTableRef) = 
+  v = newStringTable()
+
+  for key, val in a.props:
+    v[key] = decode(val, string)
+    
+  for node in a.children:
+    v[node.name] = decode(node, string)
+
+# ----- KdlVal -----
+
+proc decodeHook*[T: Value](a: KdlVal, v: var T) = 
+  v = a.get(T)
+
+proc decodeHook*[T: enum](a: KdlVal, v: var T) = 
+  case a.kind
+  of KString:
+    v = parseEnum[T](a.getString)
+  of KInt:
+    when T is HoleyEnum and not defined(kdlDecoderAllowHoleyEnums):
+      error &"forbidden int-to-HoleyEnum conversion ({a.getInt} -> {$T}); compile with -d:kdlDecoderAllowHoleyEnums"
+    else:
+      v = T(a.getInt)
   else:
-    a = 
-      try:
-        decode(b, T).some
-      except KdlError:
-        none[T]()
+    error &"expected string or int in {a}"
 
-proc decodeHook*[T](a: var Option[T], b: KdlNode) = 
-  a = 
-    try:
-      decode(b, T).some
-    except KdlError:
-      none[T]()
+proc decodeHook*(a: KdlVal, v: var char) = 
+  check a.isString and a.getString.len == 1, &"expected one-character-long string in a"
+  v = a.getString[0]
 
-proc decodeHook*(a: var StringTableRef, b: KdlNode) = 
-  a = newStringTable()
+proc decodeHook*(a: KdlVal, v: var cstring) = 
+  case a.kind
+  of KNull:
+    v = nil
+  of KString:
+    v = cstring a.getString
+  else: 
+    error &"expected string or null in {a}"
 
-  for key, val in b.props:
-    a[key] = decode(val, string)
-  
-  for node in b.children:
-    a[node.name] = decode(node, string)
+proc decodeHook*[T: array](a: KdlVal, v: var T) = 
+  when v.len == 1:
+    decode(a, v[0])
+
+proc decodeHook*(a: KdlVal, v: var seq) = 
+  v.setLen 1
+  decode(a, v[0])
+
+proc decodeHook*[T](a: KdlVal, v: var SomeSet[T]) = 
+  v.clear()
+
+  v.incl decode(a, T)
+
+proc decodeHook*[T](a: KdlVal, v: var Option[T]) = 
+  if a.isNull:  
+    v = none[T]()
+  else:
+    v = decode(a, T).some
+
+proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef)) = 
+  error &"{$typeof(v)} not implemented for {$typeof(a)}"

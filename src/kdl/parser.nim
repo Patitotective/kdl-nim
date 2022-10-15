@@ -305,7 +305,10 @@ proc matchNode(slashdash = true) {.parsing: KdlNode.} =
       elif not valMatch.ignore and not propMatch.ignore:
         break
 
-    if not parser.matchNodeSpace(required = false).ok:
+    if parser.match(tkOpenBra, required = false).ok: # Children trailing: node 1 2{}
+      dec parser.current # Unconsume the open bracket
+      break
+    elif not parser.matchNodeSpace(required = false).ok:
       invalid parser.matchNodeEnd(required = true)
 
   setValue result.val.children, parser.matchChildren(required = false)

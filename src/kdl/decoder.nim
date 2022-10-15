@@ -201,14 +201,3 @@ proc decodeHook*(a: var StringTableRef, b: KdlNode) =
   
   for node in b.children:
     a[node.name] = decode(node, string)
-
-const node = toKdlNode:
-  person:
-    age(now="10", before="9")
-    name(actual="Phil", other="Isofruit")
-
-var table: Table[string, Table[string, string]]
-
-decode(table, node)
-
-echo table

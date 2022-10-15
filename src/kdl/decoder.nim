@@ -36,6 +36,33 @@ proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
 
 proc eqIdent(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnoreStyle(v, a, ignoreChars) == 0
 
+# ----- Index -----
+
+proc decode*(a: KdlSome, v: var auto)
+proc decode*[T](a: KdlSome, _: typedesc[T]): T
+proc decode*(a: KdlDoc, v: var auto, name: string)
+proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T
+proc decodeHook*[T: KdlNode or KdlVal](a: T, v: var T)
+proc decodeHook*(a: KdlDoc, v: var Object)
+proc decodeHook*(a: KdlDoc, v: var List)
+proc decodeHook*[T](a: KdlDoc, v: var SomeTable[string, T])
+proc decodeHook*[T](a: KdlDoc, v: var SomeSet[T])
+proc decodeHook*(a: KdlNode, v: var Object)
+proc decodeHook*(a: KdlNode, v: var List)
+proc decodeHook*(a: KdlNode, v: var auto)
+proc decodeHook*[T](a: KdlNode, v: var SomeTable[string, T])
+proc decodeHook*[T](a: KdlNode, v: var SomeSet[T])
+proc decodeHook*(a: KdlNode, v: var StringTableRef)
+proc decodeHook*[T: SomeNumber or string or bool](a: KdlVal, v: var T)
+proc decodeHook*[T: enum](a: KdlVal, v: var T)
+proc decodeHook*(a: KdlVal, v: var char)
+proc decodeHook*(a: KdlVal, v: var cstring)
+proc decodeHook*[T: array](a: KdlVal, v: var T)
+proc decodeHook*(a: KdlVal, v: var seq)
+proc decodeHook*[T](a: KdlVal, v: var SomeSet[T])
+proc decodeHook*[T](a: KdlVal, v: var Option[T])
+proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef or Object))
+
 # ----- KdlSome -----
 
 proc decode*(a: KdlSome, v: var auto) = 
@@ -155,7 +182,7 @@ proc decodeHook*(a: KdlNode, v: var StringTableRef) =
 
 # ----- KdlVal -----
 
-proc decodeHook*[T: Value](a: KdlVal, v: var T) = 
+proc decodeHook*[T: SomeNumber or string or bool](a: KdlVal, v: var T) = 
   v = a.get(T)
 
 proc decodeHook*[T: enum](a: KdlVal, v: var T) = 
@@ -202,5 +229,5 @@ proc decodeHook*[T](a: KdlVal, v: var Option[T]) =
   else:
     v = decode(a, T).some
 
-proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef)) = 
+proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef or Object)) = 
   error &"{$typeof(v)} not implemented for {$typeof(a)}"

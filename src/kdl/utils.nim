@@ -12,13 +12,13 @@ type
   KdlSome* = (KdlDoc or KdlNode or KdlVal)
   SomeTable*[K, V] = (Table[K, V] or OrderedTable[K, V])
 
-template error*(msg: string) = 
+template fail*(msg: string) = 
   raise newException(KdlError, msg)
 
 template check*(cond: untyped, msg = "") = 
   if not cond:
     let txt = msg
-    utils.error astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
+    fail astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
 
 proc quoted*(x: string): string = result.addQuoted(x)
   
@@ -63,51 +63,52 @@ proc eqIdent*(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnore
 
 # ----- Object variants -----
 
-proc `[]`(node: NimNode, kind: NimNodeKind): NimNode =
-  for c in node.children:
-    if c.kind == kind:
-      return c
-  return nil
-
-proc hasKind(node: NimNode, kind: NimNodeKind): bool =
-  for c in node.children:
-    if c.kind == kind:
-      return true
-  return false
-
-macro isObjVariant*(v: typed): bool =
-  ## Is this an object variant?
-  var typ = v.getTypeImpl()
-  if typ.kind == nnkSym:
-    return ident("false")
-  while typ.kind != nnkObjectTy:
-    typ = typ[0].getTypeImpl()
-  if typ[2].hasKind(nnkRecCase):
-    ident("true")
+macro getDiscriminants*(a: typedesc): seq[string] =
+  ## return the discriminant keys
+  # candidate for std/typetraits
+  var a = a.getTypeImpl
+  doAssert a.kind == nnkBracketExpr
+  let sym = a[1]
+  let t = sym.getTypeImpl
+  let t2 = t[2]
+  doAssert t2.kind == nnkRecList
+  result = newTree(nnkBracket)
+  for ti in t2:
+    if ti.kind == nnkRecCase:
+      let key = ti[0][0]
+      let typ = ti[0][1]
+      result.add newLit key.strVal
+  if result.len > 0:
+    result = quote do:
+      @`result`
   else:
-    ident("false")
+    result = quote do:
+      seq[string].default
 
-proc discriminator*(v: NimNode): NimNode =
-  var typ = v.getTypeImpl()
-  while typ.kind != nnkObjectTy:
-    typ = typ[0].getTypeImpl()
-  return typ[nnkRecList][nnkRecCase][nnkIdentDefs][nnkSym]
+macro initCaseObject*(T: typedesc, discriminatorSetter: untyped): untyped =
+  ## does the minimum to construct a valid case object, only initializing
+  ## calls `discriminatorSetter(key, typ)` expecting it to return that field's value (`key` being the field name and `typ` the field type)
+  ## the discriminant fields; see also `getDiscriminants`
+  # maybe candidate for std/typetraits
+  var a = T.getTypeImpl
+  doAssert a.kind == nnkBracketExpr
+  let sym = a[1]
+  let t = sym.getTypeImpl
+  var t2: NimNode
+  case t.kind
+  of nnkObjectTy: t2 = t[2]
+  of nnkRefTy: t2 = t[0].getTypeImpl[2]
+  else: doAssert false, $t.kind # xxx `nnkPtrTy` could be handled too
+  doAssert t2.kind == nnkRecList
+  result = newTree(nnkObjConstr)
+  result.add sym
+  for ti in t2:
+    if ti.kind == nnkRecCase:
+      let key = ti[0][0]
+      let typ = ti[0][1]
+      let key2 = key.strVal
+      let val = quote do:
+        `discriminatorSetter`(`key2`, typedesc[`typ`])
+      result.add newTree(nnkExprColonExpr, key, val)
 
-macro discriminatorFieldName*(v: typed): untyped =
-  ## Turns into the discriminator field.
-  return newLit($discriminator(v))
-
-macro discriminatorField*(v: typed): untyped =
-  ## Turns into the discriminator field.
-  let
-    fieldName = discriminator(v)
-  return quote do:
-    `v`.`fieldName`
-
-macro new*(v: typed, d: typed): untyped =
-  ## Creates a new object variant with the discriminator field.
-  let
-    typ = v.getTypeInst()
-    fieldName = discriminator(v)
-  return quote do:
-    `v` = `typ`(`fieldName`: `d`)
+template typeofdesc*[T](b: typedesc[T]): untyped = T

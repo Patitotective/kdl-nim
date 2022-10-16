@@ -6,6 +6,108 @@ import kdl/utils except check
 
 let testsDir = getAppDir() / "test_cases"
 
+# proc decodeHook*(a: KdlVal, v: var DateTime) = 
+#   assert a.isString
+#   v = a.getString.parse("yyyy-MM-dd")
+
+# proc decodeHook*(a: KdlNode, v: var DateTime) = 
+#   case a.args.len
+#   of 6: # year month day hour minute second
+#     v = dateTime(
+#       a.args[0].decode(int), 
+#       a.args[1].decode(Month), 
+#       a.args[2].decode(MonthdayRange), 
+#       a.args[3].decode(HourRange), 
+#       a.args[4].decode(MinuteRange), 
+#       a.args[5].decode(SecondRange)
+#     )
+#   of 3: # year month day
+#     v = dateTime(
+#       a.args[0].decode(int), 
+#       a.args[1].decode(Month), 
+#       a.args[2].decode(MonthdayRange), 
+#     )
+#   of 1: # yyyy-MM-dd 
+#     a.args[0].decode(v)
+#   else:
+#     doAssert a.args.len in {1, 3, 6}
+
+#   if "hour" in a.props:
+#     v.hour = a.props["hour"].getInt
+#   if "minute" in a.props:
+#     v.minute = a.props["minute"].getInt
+#   if "second" in a.props:
+#     v.second = a.props["second"].getInt
+#   if "nanosecond" in a.props:
+#     v.nanosecond = a.props["nanosecond"].getInt
+#   if "offset" in a.props:
+#     v.utcOffset = a.props["offset"].get(int)
+
+# proc decodeHook*(a: KdlDoc, v: var DateTime) = 
+#   var
+#     year: int
+#     month: Month
+#     day: MonthdayRange
+#     hour: HourRange
+#     minute: MinuteRange
+#     second: SecondRange
+#     nanosecond: NanosecondRange
+
+#   for node in a:
+#     if node.name.eqIdent "year":
+#       node.decode(year)
+#     elif node.name.eqIdent "month":
+#       node.decode(month)
+#     elif node.name.eqIdent "day":
+#       node.decode(day)
+#     elif node.name.eqIdent "hour":
+#       node.decode(hour)
+#     elif node.name.eqIdent "minute":
+#       node.decode(minute)
+#     elif node.name.eqIdent "second":
+#       node.decode(second)
+#     elif node.name.eqIdent "nanosecond":
+#       node.decode(nanosecond)
+
+#   v = dateTime(year, month, day, hour, minute, second, nanosecond)
+type
+  MyObjKind = enum
+    moInt, moString
+  
+  MyObj = object
+    case kind*: MyObjKind
+    of moInt:
+      intV*: int
+    of moString:
+      stringV*: string
+
+    case kind2*: MyObjKind
+    of moInt:
+      intV2*: int
+    of moString:
+      stringV2*: string
+
+proc `==`(a, b: MyObj): bool = 
+  assert a.kind == b.kind
+  assert a.kind2 == b.kind2
+
+  result = 
+    case a.kind
+    of moInt:
+      a.intV == b.intV
+    of moString:
+      a.stringV == b.stringV
+
+  result = 
+    case a.kind2
+    of moInt:
+      result and a.intV2 == b.intV2
+    of moString:
+      result and a.stringV2 == b.stringV2
+
+proc newHook*(v: var DateTime) = 
+  v = now()
+
 proc decodeHook*(a: KdlVal, v: var DateTime) = 
   assert a.isString
   v = a.getString.parse("yyyy-MM-dd")
@@ -47,7 +149,7 @@ proc decodeHook*(a: KdlDoc, v: var DateTime) =
   var
     year: int
     month: Month
-    day: MonthdayRange
+    day: MonthdayRange = 1
     hour: HourRange
     minute: MinuteRange
     second: SecondRange
@@ -228,21 +330,11 @@ suite "Decoder":
     check parseKdl("name \"Mindustry\"; version \"126.2\"; author \"Anuken\"; license \"GNU General Public License v3.0\"").decode(Game) == Game(name: "Mindustry", version: "126.2", author: "Anuken", license: "GNU General Public License v3.0")
 
   test "Object variants":
-    type
-      MyObjKind = enum
-        moInt, moString
-      
-      MyObj = object
-        case kind*: MyObjKind
-        of moInt:
-          intV*: int
-        of moString:
-          stringV*: string
-
     check parseKdl("""
     node kind="moString" stringV="Hello"
     node kind="moInt" intV=12
-    """).decode(seq[MyObj]) == @[MyObj(kind: moString, stringV: "Hello"), MyObj(kind: moInt, intV: 12)]
+    node kind="moString" stringV="Beef" kind2="moInt" intV2=0xbeef
+    """).decode(seq[MyObj]) == @[MyObj(kind: moString, stringV: "Hello"), MyObj(kind: moInt, intV: 12), MyObj(kind: moString, stringV: "Beef", kind2: moInt, intV2: 0xbeef)]
 
     check parseKdl("""
     kind "moString"
@@ -291,3 +383,6 @@ suite "Decoder":
     check parseKdl("date 2022 \"October\" 15 12 04 00").decode(DateTime, "date") == dateTime(2022, mOct, 15, 12, 04)
 
     check parseKdl("author birthday=\"2000-10-15\" name=\"Nobody\"")[0]["birthday"].decode(DateTime) == dateTime(2000, mOct, 15)
+
+  test "newHook":
+    echo parseKdl("").decode(DateTime)

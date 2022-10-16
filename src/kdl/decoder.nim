@@ -1,5 +1,72 @@
+## ## Decoder
+## This modules implements a deserializer for KDL documents, nodes and values into different types and objects:
+## - `char`
+## - `bool`
+## - `Option[T]`
+## - `SomeNumber`
+## - `StringTableRef`
+## - `enum` and `HoleyEnum`
+## - `string` and `cstring`
+## - `KdlVal` (object variant)
+## - `seq[T]` and `array[I, T]`
+## - `HashSet[A]` and `OrderedSet[A]`
+## - `Table[string, T]` and `OrderedTable[string, T]`
+## - `object`, `ref` and `tuple` (including object variants)
+## - Plus any type you implement.
+runnableExamples:
+  import kdl
+
+  type
+    Package = object
+      name*, version*: string
+      authors*: Option[seq[string]]
+      description*, licenseFile*, edition*: Option[string]
+
+    Deps = Table[string, string]
+
+  const doc = parseKdl("""
+package {
+  name "kdl"
+  version "0.0.0"
+  description "kat's document language"
+  authors "Kat Marchán <kzm@zkat.tech>"
+  license-file "LICENSE.md"
+  edition "2018"
+}
+dependencies {
+  nom "6.0.1"
+  thiserror "1.0.22"
+}""")
+
+  const package = doc.decode(Package, "package")
+  const dependencies = doc.decode(Deps, "dependencies")
+
+  assert package == Package(
+    name: "kdl", 
+    version: "0.0.0", 
+    authors: @["Kat Marchán <kzm@zkat.tech>"].some, 
+    description: "kat's document language".some, 
+    licenseFile: "LICENSE.md".some, 
+    edition: "2018".some
+  )
+  assert dependencies == {"nom": "6.0.1", "thiserror": "1.0.22"}.toTable
+
+## ### Custom Decode Hooks
+## See the tests
+## 
+
 import std/[strformat, typetraits, strutils, strtabs, tables, sets]
 import nodes, utils, types
+
+proc rfind(a: KdlDoc, s: string): Option[KdlNode] = 
+  for i in countdown(a.high, 0):
+    if a[i].name.eqIdent s:
+      return a[i].some
+
+proc find(a: KdlNode, s: string): Option[KdlVal] = 
+  for key, val in a.props:
+    if key.eqIdent s:
+      return val.some
 
 # ----- Index -----
 
@@ -30,11 +97,30 @@ proc decodeHook*(a: KdlVal, v: var seq)
 proc decodeHook*(a: KdlVal, v: var ref)
 proc decodeHook*(a: KdlVal, v: var Object)
 
+# ----- Hooks -----
+
+proc newHook*(v: var auto) = 
+  discard
+
+proc postHook*(v: var auto) = 
+  discard
+
+proc newHookable(v: var auto) = 
+  mixin newHook
+  newHook(v)
+
+proc postHookable(v: var auto) = 
+  mixin postHook
+  postHook(v)
+
 # ----- KdlSome -----
 
 proc decode*(a: KdlSome, v: var auto) = 
   mixin decodeHook
+
+  newHookable(v)
   decodeHook(a, v)
+  postHookable(v)
 
 proc decode*[T](a: KdlSome, _: typedesc[T]): T = 
   decode(a, result)
@@ -47,7 +133,7 @@ proc decode*(a: KdlDoc, v: var auto, name: string) =
       break
 
   if found < 0:
-    error "Could not find a any node for " & name.quoted
+    fail "Could not find a any node for " & name.quoted
 
   decode(a[found], v)
 
@@ -58,32 +144,41 @@ proc decodeHook*[T: KdlSome](a: T, v: var T) =
   v = a
 
 proc decodeHook*(a: KdlSome, v: var proc) = 
-  error &"{$typeof(v)} not implemented for {$typeof(a)}"
+  fail &"{$typeof(v)} not implemented for {$typeof(a)}"
 
 # ----- KdlDoc -----
 
 proc decodeHook*(a: KdlDoc, v: var Object) = 
-  when v.isObjVariant:
-    # Object variant discriminator
-    const discFieldName = discriminatorFieldName(v)
-    var
-      discField = discriminatorField(v)
-      discFieldNode: Option[KdlNode]
-
-    for node in a:
-      if node.name.eqIdent discFieldName:
-        discFieldNode = node.some
-
-    if discFieldNode.isSome:
-      new(v, decode(discFieldNode.get, typeof discField))
+  const discKeys = # Object variant discriminator keys
+    when v is object:
+      getDiscriminants(typeof v)
     else:
-      error &"Could not find discriminant field for {$typeof(v)} in {a}"
+      newSeq[string]()
+
+  when discKeys.len > 0:
+    template discriminatorSetter(key, typ): untyped = 
+      let discFieldNode = a.rfind(key)
+
+      if discFieldNode.isSome:
+        decode(discFieldNode.get, typ)
+      else:
+        var x: typeofdesc typ
+        newHookable(x)
+        x
+
+    v = initCaseObject(typeof v, discriminatorSetter)
 
   for fieldName, field in v.fieldPairs:
-    when not v.isObjVariant or fieldName != discFieldName: # Ignore discriminant field name
+    when fieldName notin discKeys: # Ignore discriminant field name
+      var found = false
+
       for node in a:
         if node.name.eqIdent fieldName:
           decode(node, field)
+          found = true
+
+      if not found:
+        newHookable(field)
 
 proc decodeHook*(a: KdlDoc, v: var ref) = 
   decode(a, v[])
@@ -98,38 +193,42 @@ proc decodeHook*(a: KdlDoc, v: var List) =
 # ----- KdlNode -----
 
 proc decodeHook*(a: KdlNode, v: var Object) = 
-  when v.isObjVariant:
-    # Object variant discriminator
-    const discFieldName = discriminatorFieldName(v)
-    var
-      discField = discriminatorField(v)
-      discFieldNode: Option[KdlNode]
-      discFieldVal: Option[KdlVal]
-
-    for key, val in a.props:
-      if key.eqIdent discFieldName:
-        discFieldVal = val.some
- 
-    for node in a.children:
-      if node.name.eqIdent discFieldName:
-        discFieldNode = node.some
-
-    if discFieldNode.isSome:
-      new(v, decode(discFieldNode.get, typeof discField))
-    elif discFieldVal.isSome:
-      new(v, decode(discFieldVal.get, typeof discField))
+  const discKeys = 
+    when v is object:
+      getDiscriminants(typeof v)
     else:
-      error &"Could not find discriminant field for {$typeof(v)} in {a}"
+      newSeq[string]()
+  when discKeys.len > 0:
+    template discriminatorSetter(key, typ): untyped = 
+      let discFieldNode = a.children.rfind(key) # Find a children
+      let discFieldProp = a.find(key) # Find a property
+
+      if discFieldNode.isSome:
+        decode(discFieldNode.get, typ)
+      elif discFieldProp.isSome:
+        decode(discFieldProp.get, typ)
+      else:
+        var x: typeofdesc typ
+        newHookable(x)
+        x
+
+    v = initCaseObject(typeof v, discriminatorSetter)
 
   for fieldName, field in v.fieldPairs:
-    when not v.isObjVariant or fieldName != discFieldName: # Ignore discriminant field name
+    when fieldName notin discKeys: # Ignore discriminant field name
+      var found = false
       for key, _ in a.props:
         if key.eqIdent fieldName:
           decode(a.props[key], field)
-    
+          found = true
+
       for node in a.children:
         if node.name.eqIdent fieldName:
           decode(node, field)
+          found = true
+
+      if not found:
+        newHookable(field)
 
 proc decodeHook*(a: KdlNode, v: var ref) = 
   decode(a, v[])
@@ -166,11 +265,11 @@ proc decodeHook*[T: enum](a: KdlVal, v: var T) =
     v = parseEnum[T](a.getString)
   of KInt:
     when T is HoleyEnum and not defined(kdlDecoderAllowHoleyEnums):
-      error &"forbidden int-to-HoleyEnum conversion ({a.getInt} -> {$T}); compile with -d:kdlDecoderAllowHoleyEnums"
+      fail &"forbidden int-to-HoleyEnum conversion ({a.getInt} -> {$T}); compile with -d:kdlDecoderAllowHoleyEnums"
     else:
       v = T(a.getInt)
   else:
-    error &"expected string or int in {a}"
+    fail &"expected string or int in {a}"
 
 proc decodeHook*(a: KdlVal, v: var char) = 
   check a.isString and a.getString.len == 1, &"expected one-character-long string in a"
@@ -183,7 +282,7 @@ proc decodeHook*(a: KdlVal, v: var cstring) =
   of KString:
     v = cstring a.getString
   else: 
-    error &"expected string or null in {a}"
+    fail &"expected string or null in {a}"
 
 proc decodeHook*[T: array](a: KdlVal, v: var T) = 
   when v.len == 1:
@@ -197,7 +296,7 @@ proc decodeHook*(a: KdlVal, v: var ref) =
   decode(a, v[])
 
 proc decodeHook*(a: KdlVal, v: var Object) = 
-  error &"{$typeof(v)} not implemented for {$typeof(a)}"
+  fail &"{$typeof(v)} not implemented for {$typeof(a)}"
 
 
 # ----- Non-primitive stdlib hooks -----
@@ -277,4 +376,4 @@ proc decodeHook*[T](a: KdlVal, v: var Option[T]) =
     v = decode(a, T).some
 
 proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef)) = 
-  error &"{$typeof(v)} not implemented for {$typeof(a)}"
+  fail &"{$typeof(v)} not implemented for {$typeof(a)}"

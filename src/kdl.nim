@@ -96,7 +96,7 @@ import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables
 
 import kdl/[decoder, encoder, parser, lexer, nodes, types, utils, xik, jik]
 
-export decoder, parser, nodes, types
+export decoder, encoder, parser, nodes, types
 export scanKdl, scanKdlFile, lexer.`$` # lexer
 
 func indent(s: string, count: Natural, padding = " ", newLine = "\n"): string =

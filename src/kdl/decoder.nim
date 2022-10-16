@@ -100,27 +100,55 @@ proc decodeHook*(a: KdlVal, v: var Object)
 # ----- Hooks -----
 
 proc newHook*(v: var auto) = 
-  discard
+  type T = typeof(v)
+  when v is range:
+    if v notin T.low..T.high:
+      v = T.low
 
 proc postHook*(v: var auto) = 
   discard
 
-proc newHookable(v: var auto) = 
+proc enumHook*[T: enum](a: int, v: var T) = 
+  when T is HoleyEnum and not defined(kdlDecoderAllowHoleyEnums):
+    fail &"forbidden int-to-HoleyEnum conversion ({a} -> {$T}); compile with -d:kdlDecoderAllowHoleyEnums"
+  else:
+    v = T(a)
+
+proc enumHook*[T: enum](a: string, v: var T) = 
+  v = parseEnum[T](a)
+
+proc renameHook*(_: typedesc, fieldName: var string) = 
+  discard
+
+proc newHookable*(v: var auto) = 
+  when not defined(kdlDecoderNoCaseTransitionError):
+    {.push warningAsError[CaseTransition]: on.}
   mixin newHook
   newHook(v)
 
-proc postHookable(v: var auto) = 
+proc postHookable*(v: var auto) = 
   mixin postHook
   postHook(v)
+
+proc enumHookable*[T: enum](a: string or int, v: var T) = 
+  mixin enumHook
+  enumHook(a, v)
+
+proc renameHookable*(fieldName: string, a: typedesc): string = 
+  mixin renameHook
+  result = fieldName
+  renameHook(a, result)
 
 # ----- KdlSome -----
 
 proc decode*(a: KdlSome, v: var auto) = 
   mixin decodeHook
 
-  newHookable(v)
+  # Don't initialize object variants yet
+  when not isObjVariant(typeof v):
+    newHookable(v)
+
   decodeHook(a, v)
-  postHookable(v)
 
 proc decode*[T](a: KdlSome, _: typedesc[T]): T = 
   decode(a, result)
@@ -149,15 +177,12 @@ proc decodeHook*(a: KdlSome, v: var proc) =
 # ----- KdlDoc -----
 
 proc decodeHook*(a: KdlDoc, v: var Object) = 
-  const discKeys = # Object variant discriminator keys
-    when v is object:
-      getDiscriminants(typeof v)
-    else:
-      newSeq[string]()
+  type T = typeof(v)
+  const discKeys = getDiscriminants(T) # Object variant discriminator keys
 
   when discKeys.len > 0:
     template discriminatorSetter(key, typ): untyped = 
-      let discFieldNode = a.rfind(key)
+      let discFieldNode = a.rfind(key.renameHookable(T))
 
       if discFieldNode.isSome:
         decode(discFieldNode.get, typ)
@@ -166,19 +191,22 @@ proc decodeHook*(a: KdlDoc, v: var Object) =
         newHookable(x)
         x
 
-    v = initCaseObject(typeof v, discriminatorSetter)
+    v = initCaseObject(T, discriminatorSetter)
+    newHookable(v)
 
   for fieldName, field in v.fieldPairs:
     when fieldName notin discKeys: # Ignore discriminant field name
       var found = false
 
       for node in a:
-        if node.name.eqIdent fieldName:
+        if node.name.renameHookable(T).eqIdent fieldName:
           decode(node, field)
           found = true
 
       if not found:
         newHookable(field)
+
+  postHookable(v)
 
 proc decodeHook*(a: KdlDoc, v: var ref) = 
   decode(a, v[])
@@ -190,18 +218,19 @@ proc decodeHook*(a: KdlDoc, v: var List) =
   for e, node in a:
     decode(node, v[e])
 
+  postHookable(v)
+
 # ----- KdlNode -----
 
 proc decodeHook*(a: KdlNode, v: var Object) = 
-  const discKeys = 
-    when v is object:
-      getDiscriminants(typeof v)
-    else:
-      newSeq[string]()
+  type T = typeof(v)
+  const discKeys = getDiscriminants(T) # Object variant discriminator keys
+
   when discKeys.len > 0:
     template discriminatorSetter(key, typ): untyped = 
-      let discFieldNode = a.children.rfind(key) # Find a children
-      let discFieldProp = a.find(key) # Find a property
+      let key1 = key.renameHookable(T)
+      let discFieldNode = a.children.rfind(key1) # Find a children
+      let discFieldProp = a.find(key1) # Find a property
 
       if discFieldNode.isSome:
         decode(discFieldNode.get, typ)
@@ -212,23 +241,26 @@ proc decodeHook*(a: KdlNode, v: var Object) =
         newHookable(x)
         x
 
-    v = initCaseObject(typeof v, discriminatorSetter)
+    v = initCaseObject(T, discriminatorSetter)
+    newHookable(v)
 
   for fieldName, field in v.fieldPairs:
     when fieldName notin discKeys: # Ignore discriminant field name
       var found = false
       for key, _ in a.props:
-        if key.eqIdent fieldName:
+        if key.renameHookable(T).eqIdent fieldName:
           decode(a.props[key], field)
           found = true
 
       for node in a.children:
-        if node.name.eqIdent fieldName:
+        if node.name.renameHookable(T).eqIdent fieldName:
           decode(node, field)
           found = true
 
       if not found:
         newHookable(field)
+
+  postHookable(v)
 
 proc decodeHook*(a: KdlNode, v: var ref) = 
   decode(a, v[])
@@ -250,6 +282,8 @@ proc decodeHook*(a: KdlNode, v: var List) =
     decode(child, v[count])
     inc count
 
+  postHookable(v)
+
 proc decodeHook*(a: KdlNode, v: var auto) = 
   check a.args.len == 1, &"expect exactly one argument in {a}"
   decode(a.args[0], v)
@@ -258,22 +292,24 @@ proc decodeHook*(a: KdlNode, v: var auto) =
 
 proc decodeHook*[T: Value](a: KdlVal, v: var T) = 
   v = a.get(T)
+  postHookable(v)
 
 proc decodeHook*[T: enum](a: KdlVal, v: var T) = 
   case a.kind
   of KString:
-    v = parseEnum[T](a.getString)
+    enumHookable(a.getString, v)
   of KInt:
-    when T is HoleyEnum and not defined(kdlDecoderAllowHoleyEnums):
-      fail &"forbidden int-to-HoleyEnum conversion ({a.getInt} -> {$T}); compile with -d:kdlDecoderAllowHoleyEnums"
-    else:
-      v = T(a.getInt)
+    enumHookable(a.get(int), v)
+
   else:
     fail &"expected string or int in {a}"
+
+  postHookable(v)
 
 proc decodeHook*(a: KdlVal, v: var char) = 
   check a.isString and a.getString.len == 1, &"expected one-character-long string in a"
   v = a.getString[0]
+  postHookable(v)
 
 proc decodeHook*(a: KdlVal, v: var cstring) = 
   case a.kind
@@ -283,6 +319,7 @@ proc decodeHook*(a: KdlVal, v: var cstring) =
     v = cstring a.getString
   else: 
     fail &"expected string or null in {a}"
+  postHookable(v)
 
 proc decodeHook*[T: array](a: KdlVal, v: var T) = 
   when v.len == 1:
@@ -297,7 +334,6 @@ proc decodeHook*(a: KdlVal, v: var ref) =
 
 proc decodeHook*(a: KdlVal, v: var Object) = 
   fail &"{$typeof(v)} not implemented for {$typeof(a)}"
-
 
 # ----- Non-primitive stdlib hooks -----
 
@@ -323,11 +359,15 @@ proc decodeHook*[T](a: KdlDoc, v: var SomeTable[string, T]) =
   for node in a:
     v[node.name] = decode(node, T)
 
+  postHookable(v)
+
 proc decodeHook*[T](a: KdlDoc, v: var SomeSet[T]) = 
   v.clear()
 
   for node in a:
     v.incl decode(KdlDoc, T)
+
+  postHookable(v)
 
 # ----- KdlNode -----
 
@@ -340,11 +380,15 @@ proc decodeHook*[T](a: KdlNode, v: var SomeTable[string, T]) =
   for node in a.children:
     v[node.name] = decode(node, T)
 
+  postHookable(v)
+
 proc decodeHook*[T](a: KdlNode, v: var SomeSet[T]) = 
   v.clear()
 
   for arg in a.args:
     v.incl decode(arg, T)
+
+  postHookable(v)
 
 proc decodeHook*(a: KdlNode, v: var StringTableRef) = 
   v = newStringTable()
@@ -355,12 +399,16 @@ proc decodeHook*(a: KdlNode, v: var StringTableRef) =
   for node in a.children:
     v[node.name] = decode(node, string)
 
+  postHookable(v)
+
 proc decodeHook*[T](a: KdlNode, v: var Option[T]) = 
   v = 
     try:  
       decode(a, T).some
     except KdlError:
       none[T]()
+
+  postHookable(v)
 
 # ----- KdlVal -----
 
@@ -369,11 +417,15 @@ proc decodeHook*[T](a: KdlVal, v: var SomeSet[T]) =
 
   v.incl decode(a, T)
 
+  postHookable(v)
+
 proc decodeHook*[T](a: KdlVal, v: var Option[T]) = 
   if a.isNull:  
     v = none[T]()
   else:
     v = decode(a, T).some
+
+  postHookable(v)
 
 proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef)) = 
   fail &"{$typeof(v)} not implemented for {$typeof(a)}"

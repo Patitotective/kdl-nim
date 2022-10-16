@@ -63,6 +63,26 @@ proc eqIdent*(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnore
 
 # ----- Object variants -----
 
+macro isObjVariant*(a: typedesc): bool = 
+  var a = a.getTypeImpl
+  doAssert a.kind == nnkBracketExpr
+  let sym = a[1]
+  let t = sym.getTypeImpl
+  if t.kind != nnkObjectTy:
+    return ident("false")
+
+  let t2 = t[2]
+  doAssert t2.kind == nnkRecList
+
+  result = ident("false")
+
+  for ti in t2:
+    if ti.kind == nnkRecCase:
+      let key = ti[0][0]
+      let typ = ti[0][1]
+
+      return ident("true")
+
 macro getDiscriminants*(a: typedesc): seq[string] =
   ## return the discriminant keys
   # candidate for std/typetraits
@@ -70,38 +90,51 @@ macro getDiscriminants*(a: typedesc): seq[string] =
   doAssert a.kind == nnkBracketExpr
   let sym = a[1]
   let t = sym.getTypeImpl
+  if t.kind != nnkObjectTy:
+    return quote do:
+      newSeq[string]()
+
   let t2 = t[2]
   doAssert t2.kind == nnkRecList
   result = newTree(nnkBracket)
+
   for ti in t2:
     if ti.kind == nnkRecCase:
       let key = ti[0][0]
       let typ = ti[0][1]
       result.add newLit key.strVal
-  if result.len > 0:
-    result = quote do:
-      @`result`
-  else:
-    result = quote do:
-      seq[string].default
+  
+  result = 
+    if result.len > 0:
+      quote do:
+        @`result`
+    else:
+      quote do:
+        newSeq[string]()
 
-macro initCaseObject*(T: typedesc, discriminatorSetter: untyped): untyped =
-  ## does the minimum to construct a valid case object, only initializing
-  ## calls `discriminatorSetter(key, typ)` expecting it to return that field's value (`key` being the field name and `typ` the field type)
+macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
+  ## Does the minimum to construct a valid case object `T`.
+  ## - `discriminatorSetter`: called passing two arguments `(key, typ)` (`key` being the field name and `typ` the field type), last expression should be the value for the field
   ## the discriminant fields; see also `getDiscriminants`
   # maybe candidate for std/typetraits
   var a = T.getTypeImpl
+
   doAssert a.kind == nnkBracketExpr
+
   let sym = a[1]
   let t = sym.getTypeImpl
   var t2: NimNode
+
   case t.kind
   of nnkObjectTy: t2 = t[2]
   of nnkRefTy: t2 = t[0].getTypeImpl[2]
   else: doAssert false, $t.kind # xxx `nnkPtrTy` could be handled too
+
   doAssert t2.kind == nnkRecList
+
   result = newTree(nnkObjConstr)
   result.add sym
+
   for ti in t2:
     if ti.kind == nnkRecCase:
       let key = ti[0][0]
@@ -109,6 +142,7 @@ macro initCaseObject*(T: typedesc, discriminatorSetter: untyped): untyped =
       let key2 = key.strVal
       let val = quote do:
         `discriminatorSetter`(`key2`, typedesc[`typ`])
+
       result.add newTree(nnkExprColonExpr, key, val)
 
 template typeofdesc*[T](b: typedesc[T]): untyped = T

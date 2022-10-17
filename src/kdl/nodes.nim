@@ -81,10 +81,10 @@ proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T =
   runnableExamples:
     let val = initKFloat(3.14)
 
-    check val.get(int) == 3
-    check val.get(uint) == 3u
-    check val.get(float) == 3.14
-    check val.get(float32) == 3.14f
+    assert val.get(int) == 3
+    assert val.get(uint) == 3u
+    assert val.get(float) == 3.14
+    assert val.get(float32) == 3.14f
 
   when T is string:
     result = 
@@ -139,11 +139,11 @@ proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) =
 
     val.setTo(100u8)
 
-    check val.getFloat() == 100
+    assert val.getFloat() == 100
 
     val.setTo(20.12e2f)
 
-    check val.get(float32) == 20.12e2f
+    assert val.get(float32) == 20.12e2f
 
   when T is string:
     val.setString(x)
@@ -392,3 +392,28 @@ macro toKdl*(body: untyped): untyped =
     result = prefix(doc, "@")
   else:
     result = toKdlValImpl(body)
+
+macro toKdlArgs*(args: varargs[typed]): seq[KdlVal] = 
+  ## Simple utility macro calls `initKVal` through its arguments
+  runnableExamples:
+    assert toKdlArgs(1, 2, "a") == @[1.initKVal, 2.initKVal, "a".initKVal]
+    assert initKNode("name", args = toKdlArgs(nil, true, "b")) == initKNode("name", args = @[initKNull(), true.initKVal, "b".initKVal])
+
+  args.expectKind nnkBracket
+  result = newNimNode(nnkBracket)
+  for arg in args:
+    if arg.kind == nnkNilLit:
+      result.add newCall("initKNull")
+    else:
+      result.add newCall("initKVal", arg)
+
+  result = prefix(result, "@")
+
+macro toKdlProps*(props: openarray[(string, typed)]): Table[string, KdlVal] = 
+  result = quote do: initTable[string, KdlVal]()
+  props.expectKind nnkBracket
+  for i in props:
+    echo treeRepr i
+  # echo repr props
+
+echo toKdlProps({"a": 1})

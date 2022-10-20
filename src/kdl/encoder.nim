@@ -57,18 +57,11 @@ proc encode*[T: KdlSome](a: auto, _: typedesc[T]): T =
 # ----- KdlDoc -----
 
 proc encodeHook*(a: List, v: var KdlDoc) = 
-  runnableExamples:
-    discard
-
   v.setLen(a.len)
   for e, i in a:
     encode(i, v[e], "-")
 
 proc encodeHook*(a: Object, v: var KdlDoc) = 
-  runnableExamples:
-    import kdl
-    assert (name: "Pureya", version: "1.2.2").encode() == parseKdl("name \"Pureya\"; version \"1.2.2\"")
-
   for fieldName, field in a.fieldPairs:
     v.add encode(field, fieldName)
 
@@ -81,21 +74,12 @@ proc encodeHook*(a: KdlVal, v: var KdlNode, name: string) =
   v = initKNode(name, args = @[a])
 
 proc encodeHook*(a: List, v: var KdlNode, name: string) = 
-  runnableExamples:
-    import kdl
-    assert ["a", "b", "c"].encode("node") == parseKdl("node {- \"a\"; - \"b\"; - \"c\"}")[0] 
-    assert @[(a: "Santiago", b: "Posteguillo"), (a: "Alva", b: "Majo")].encode("node") == parseKdl("node {- {a \"Santiago\"; b \"Posteguillo\"}; - {a \"Alva\"; b \"Majo\"}}")[0] 
-
   v = initKNode(name)
   v.children.setLen(a.len)
   for e, i in a:
     encode(i, v.children[e], "-")
 
 proc encodeHook*(a: Object, v: var KdlNode, name: string) = 
-  runnableExamples:
-    import kdl
-    assert (name: "Pureya", version: "1.2.2").encode("game") == parseKdl("game {name \"Pureya\"; version \"1.2.2\"}")
-
   v = initKNode(name)
   encode(a, v.children)
 
@@ -103,10 +87,6 @@ proc encodeHook*(a: ref, v: var KdlNode, name: string) =
   encode(a[], v, name)
 
 proc encodeHook*(a: auto, v: var KdlNode, name: string) = 
-  runnableExamples:
-    import kdl
-    assert 10.encode("node") == parseKdl("node 10")[0]
-
   v = initKNode(name)
   v.args.setLen(1)
   encode(a, v.args[0])

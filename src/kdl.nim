@@ -16,10 +16,10 @@
 runnableExamples:
   let doc = parseKdl("node 1 null {child \"abc\" true}") # You can also read files using parseKdlFile("file.kdl")
 
-  assert doc[0][0].isInt() # 1
-  assert doc[0][1].isNull() # null
-  assert doc[0].children[0][0].isString() # "abc"
-  assert doc[0].children[0][1].isBool() # true
+  assert doc[0].args[0].isInt() # 1
+  assert doc[0].args[1].isNull() # null
+  assert doc[0].children[0].args[0].isString() # "abc"
+  assert doc[0].children[0].args[1].isBool() # true
 
 ## ### Reading nodes
 runnableExamples:
@@ -28,7 +28,7 @@ runnableExamples:
   assert doc[0].name == "node"
   assert doc[0].tag.isSome and doc[0].tag.get == "tag" # Tags are Option[string]
   assert doc[0]["key"] == "val" # Same as doc[0].props["key"]
-  assert doc[0].children[0][0] == "abc" # Same as doc[0].children[0].args[0]
+  assert doc[0].children[0].args[0] == "abc" # Same as doc[0].children[0].args[0]
 
 ## ### Reading values
 ## Accessing to the inner value of any `KdlVal` can be achieved by using any of the following procedures:
@@ -39,36 +39,36 @@ runnableExamples:
 runnableExamples:
   let doc = parseKdl("node 1 3.14 {child \"abc\" true}")
 
-  assert doc[0][0].getInt() == 1
-  assert doc[0][1].getFloat() == 3.14
-  assert doc[0].children[0][0].getString() == "abc"
-  assert doc[0].children[0][1].getBool() == true
+  assert doc[0].args[0].getInt() == 1
+  assert doc[0].args[1].getFloat() == 3.14
+  assert doc[0].children[0].args[0].getString() == "abc"
+  assert doc[0].children[0].args[1].getBool() == true
 
 ## There's also a generic procedure that converts `KdlValue` to the given type, consider this example:
 runnableExamples:
   let doc = parseKdl("node 1 3.14 255")
 
-  assert doc[0][0].get(float32) == 1f
-  assert doc[0][1].get(int) == 3
-  assert doc[0][2].get(uint8) == 255u8
+  assert doc[0].args[0].get(float32) == 1f
+  assert doc[0].args[1].get(int) == 3
+  assert doc[0].args[2].get(uint8) == 255u8
 
 ## It only converts between numbers, you can't `val.get(string)` if `val.isBool()`.
 ## ### Setting values
 runnableExamples:
   var doc = parseKdl("node 1 3.14 {child \"abc\" true}")
 
-  doc[0][0].setInt(10)
-  assert doc[0][0] == 10
+  doc[0].args[0].setInt(10)
+  assert doc[0].args[0] == 10
 
-  doc[0].children[0][1].setBool(false)
-  assert doc[0].children[0][1] == false
+  doc[0].children[0].args[1].setBool(false)
+  assert doc[0].children[0].args[1] == false
 
   # You can also use the generic procedure `setTo`
-  doc[0][0].setTo(3.14)
-  assert doc[0][0] == 3
+  doc[0].args[0].setTo(3.14)
+  assert doc[0].args[0] == 3
 
-  doc[0].children[0][0].setTo("def")
-  assert doc[0].children[0][0] == "def"
+  doc[0].children[0].args[0].setTo("def")
+  assert doc[0].children[0].args[0] == "def"
 
 ## ### Creating KDL
 ## To create KDL documents, nodes or values without parsing you can also use the `toKdl`, `toKdlNode` and `toKdlVal` macros which have a similar syntax to KDL:
@@ -84,7 +84,7 @@ runnableExamples:
   let node = toKdlNode: numbers(1, 2.13, 3.1e-10)
   assert node == parseKdl("numbers 1 2.13 3.1e-10")[0]
 
-  assert toKdlVal("abc") == parseKdl("node \"abc\"")[0][0]
+  assert toKdlVal("abc") == parseKdl("node \"abc\"")[0].args[0]
 
 ## ## More
 ## Checkout these other useful modules as well:

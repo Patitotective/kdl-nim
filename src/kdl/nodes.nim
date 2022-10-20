@@ -13,13 +13,16 @@ proc initKVal*(val: string, tag = string.none): KdlVal =
   KdlVal(tag: tag, kind: KString, str: val)
 
 proc initKVal*(val: SomeFloat, tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KFloat, fnum: val)
+  KdlVal(tag: tag, kind: KFloat, fnum: val.float)
 
 proc initKVal*(val: bool, tag = string.none): KdlVal = 
   KdlVal(tag: tag, kind: KBool, boolean: val)
 
 proc initKVal*(val: SomeInteger, tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KInt, num: val)
+  KdlVal(tag: tag, kind: KInt, num: val.int64)
+
+proc initKVal*(val: typeof(nil), tag = string.none): KdlVal = 
+  KdlVal(tag: tag, kind: KNull)
 
 proc initKVal*(val: KdlVal): KdlVal = val
 
@@ -27,16 +30,16 @@ proc initKString*(val = string.default, tag = string.none): KdlVal =
   initKVal(val, tag)
 
 proc initKFloat*(val: SomeFloat = float.default, tag = string.none): KdlVal = 
-  initKVal(val, tag)
+  initKVal(val.float, tag)
 
 proc initKBool*(val = bool.default, tag = string.none): KdlVal = 
   initKVal(val, tag)
 
 proc initKNull*(tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KNUll)
+  KdlVal(tag: tag, kind: KNull)
 
 proc initKInt*(val: SomeInteger = int64.default, tag = string.none): KdlVal = 
-  initKVal(val, tag)
+  initKVal(val.int64, tag)
 
 # ----- Comparisions -----
 
@@ -310,9 +313,6 @@ proc withTag(body: NimNode): tuple[body, tag: NimNode] =
 proc toKdlValImpl(body: NimNode): NimNode = 
   let (value, tag) = body.withTag()
 
-  if value.kind == nnkNilLit:
-    return newCall("initKNull", tag)
-
   newCall("initKVal", value, tag)
 
 proc toKdlNodeImpl(body: NimNode): NimNode = 
@@ -393,27 +393,28 @@ macro toKdl*(body: untyped): untyped =
   else:
     result = toKdlValImpl(body)
 
-macro toKdlArgs*(args: varargs[typed]): seq[KdlVal] = 
-  ## Simple utility macro calls `initKVal` through its arguments
+macro toKdlArgs*(args: varargs[typed]): untyped = 
+  ## Creates an array of `KdlVal`s by calling `initKVal` through `args`.
   runnableExamples:
-    assert toKdlArgs(1, 2, "a") == @[1.initKVal, 2.initKVal, "a".initKVal]
-    assert initKNode("name", args = toKdlArgs(nil, true, "b")) == initKNode("name", args = @[initKNull(), true.initKVal, "b".initKVal])
+    assert toKdlArgs(1, 2, "a") == [1.initKVal, 2.initKVal, "a".initKVal]
+    assert initKNode("name", args = toKdlArgs(nil, true, "b")) == initKNode("name", args = [initKNull(), true.initKVal, "b".initKVal])
 
   args.expectKind nnkBracket
   result = newNimNode(nnkBracket)
   for arg in args:
-    if arg.kind == nnkNilLit:
-      result.add newCall("initKNull")
-    else:
-      result.add newCall("initKVal", arg)
+    result.add newCall("initKVal", arg)
 
-  result = prefix(result, "@")
+macro toKdlProps*(props: untyped): Table[string, KdlVal] = 
+  ## Creates a `Table[string, KdlVal]` from a array-of-tuples/table-constructor by calling `initKVal` through the values.
+  runnableExamples:
+    assert toKdlProps({"a": 1, "b": 2}) == {"a": 1.initKVal, "b": 2.initKVal}.toTable
+    assert initKNode("name", props = toKdlProps({"c": nil, "d": true})) == initKNode("name", props = {"c": initKNull(), "d": true.initKVal}.toTable)
 
-macro toKdlProps*(props: openarray[(string, typed)]): Table[string, KdlVal] = 
-  result = quote do: initTable[string, KdlVal]()
-  props.expectKind nnkBracket
+  props.expectKind nnkTableConstr
+  
+  result = newNimNode(nnkTableConstr)
   for i in props:
-    echo treeRepr i
-  # echo repr props
+    i.expectKind nnkExprColonExpr
+    result.add newTree(nnkExprColonExpr, i[0], newCall("initKVal", i[1]))
 
-echo toKdlProps({"a": 1})
+  result = newCall("toTable", result)

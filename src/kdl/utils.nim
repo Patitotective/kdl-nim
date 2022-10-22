@@ -1,10 +1,10 @@
-import std/[strformat, strutils, tables, macros]
+import std/[strformat, strutils, unicode, streams, tables, macros]
 
 import types
 
 type
   Coord* = object
-    line*, col*: int
+    line*, col*, idx*: int
 
   Object* = ((object or tuple) and not KdlSome)
   List* = (array or seq)
@@ -21,19 +21,6 @@ template check*(cond: untyped, msg = "") =
     fail astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
 
 proc quoted*(x: string): string = result.addQuoted(x)
-  
-proc getCoord*(str: string, idx: int): Coord =
-  let lines = str[0..<idx].splitLines(keepEol = true)
-
-  result.line = lines.high
-  result.col = lines[^1].len
-
-proc errorAt*(source: string, coord: Coord): string = 
-  let line = source.splitLines[coord.line]
-
-  let lineNum = &"{coord.line + 1} | "
-  result.add(&"{lineNum}{line}\n")
-  result.add(&"{repeat(' ', lineNum.len + coord.col)}^\n")
 
 proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
   let aLen = a.len
@@ -60,6 +47,62 @@ proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
     inc j
 
 proc eqIdent*(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnoreStyle(v, a, ignoreChars) == 0
+
+# ----- Streams -----
+
+proc getPos*(s: Stream): int = 
+  s.getPosition()
+
+proc setPos*(s: Stream, x: int) = 
+  s.setPosition(x)
+
+proc inc*(s: Stream, x = 1) = 
+  s.setPos(s.getPos() + x)
+
+proc dec*(s: Stream, x = 1) = 
+  s.setPos(s.getPos() - x)
+
+proc peekRune*(s: Stream): Rune = 
+  let str = s.peekStr(4)
+  if str.len > 0:
+    result = str.runeAt(0)
+
+proc peekLineFromStart*(s: Stream): string = 
+  let before = s.getPos()
+  while s.getPos() > 0:
+    dec s
+    if s.peekChar() == '\n':
+      inc s
+      if s.atEnd: dec s
+      break
+
+  result = s.peekLine()
+  s.setPos before
+
+proc getCoord*(s: Stream, i: int): Coord =
+  let before = s.getPos()
+  s.setPos 0
+  while s.getPos() < i:
+    if (let str = s.peekStr(2); str == "\c\l" or str[0] == '\n'):
+      inc result.line
+      result.col = 0
+    else:
+      inc result.col
+
+    inc s
+    inc result.idx
+
+  s.setPos before
+
+proc errorAt*(s: Stream, coord: Coord): string = 
+  let before = s.getPos()
+  s.setPos coord.idx
+  let line = s.peekLineFromStart()
+  s.setPos before
+
+  let lineNum = &"{coord.line + 1} | "
+  result.add(&"{lineNum}{line}\n")
+  result.add(&"{repeat(' ', lineNum.len + coord.col)}^")
 
 # ----- Object variants -----
 
@@ -146,3 +189,7 @@ macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
       result.add newTree(nnkExprColonExpr, key, val)
 
 template typeofdesc*[T](b: typedesc[T]): untyped = T
+
+# let s = newStringStream("\nabc\n")
+# s.setPos 4
+# echo s.peekLineFromStart()

@@ -1,5 +1,6 @@
 ## ## Encoder
 ## 
+
 import std/[strformat, enumerate, options, strtabs, tables, sets]
 import nodes, utils, types
 

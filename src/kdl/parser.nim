@@ -1,11 +1,11 @@
-import std/[parseutils, strformat, strutils, unicode, options, tables, macros]
+import std/[parseutils, strformat, strutils, unicode, options, streams, tables, macros]
 import lexer, nodes, types, utils
 
 type
   None = object
 
   Parser* = object
-    source*: string
+    stream*: Stream
     stack*: seq[Token]
     current*: int
 
@@ -55,8 +55,8 @@ proc peek(parser: Parser, next = 0): Token =
     result = Token(start: token.start + token.lexeme.len)
 
 proc error(parser: Parser, msg: string) = 
-  let coord = parser.source.getCoord(parser.peek().start)
-  raise newException(KdlParserError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{parser.source.errorAt(coord).indent(2)}")
+  let coord = parser.stream.getCoord(parser.peek().start)
+  raise newException(KdlParserError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{parser.stream.errorAt(coord).indent(2)}\n")
 
 proc consume(parser: var Parser, amount = 1) = 
   parser.current += amount
@@ -315,12 +315,15 @@ proc matchNode(slashdash = true) {.parsing: KdlNode.} =
 
   invalid parser.matchNodeEnd(required = true)
 
-proc parseKdl*(lexer: Lexer): KdlDoc = 
-  var parser = Parser(stack: lexer.stack, source: lexer.source)
+proc parseKdl*(lexer: sink Lexer): KdlDoc = 
+  var parser = Parser(stack: lexer.stack, stream: lexer.stream)
   result = parser.matchNodes().val
 
-proc parseKdl*(source: string, start = 0): KdlDoc = 
+proc parseKdl*(stream: Stream): KdlDoc = 
+  stream.scanKdl().parseKdl()
+
+proc parseKdl*(source: sink string): KdlDoc = 
   source.scanKdl().parseKdl()
 
 proc parseKdlFile*(path: string): KdlDoc = 
-  parseKdl(readFile(path))
+  path.scanKdlFile().parseKdl()

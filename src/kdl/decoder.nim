@@ -1,5 +1,5 @@
 ## ## Decoder
-## This modules implements a deserializer for KDL documents, nodes and values into different types and objects:
+## This module implements a deserializer for KDL documents, nodes and values into different types and objects:
 ## - `char`
 ## - `bool`
 ## - `Option[T]`

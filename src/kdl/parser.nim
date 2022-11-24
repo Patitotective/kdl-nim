@@ -18,7 +18,7 @@ type
   Match[T] = tuple[ok, ignore: bool, val: T]
 
 const
-  integers = {tkNumFloat, tkNumInt, tkNumHex, tkNumBin, tkNumOct}
+  integers = {tkNumInt, tkNumHex, tkNumBin, tkNumOct}
   numbers = integers + {tkNumFloat}
   strings = {tkString, tkRawString}
 
@@ -154,7 +154,8 @@ proc parseNumber(token: Token): KdlVal =
         token.lexeme.parseHexInt()
       of tkNumOct:
         token.lexeme.parseOctInt()
-      else: 0
+      else:
+        0
 
   else:
     result = initKFloat()

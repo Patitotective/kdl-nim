@@ -5,7 +5,7 @@ author        = "Patitotective"
 description   = "KDL document language Nim implementation"
 license       = "MIT"
 srcDir        = "src"
-
+skipFiles     = @["src/kdl/query.nim", "src/kdl/schema.nim"]
 
 # Dependencies
 

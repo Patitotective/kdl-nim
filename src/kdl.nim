@@ -53,6 +53,7 @@ runnableExamples:
   assert doc[0].args[2].get(uint8) == 255u8
 
 ## It only converts between numbers, you can't `val.get(string)` if `val.isBool()`.
+## 
 ## ### Setting values
 runnableExamples:
   var doc = parseKdl("node 1 3.14 {child \"abc\" true}")
@@ -88,9 +89,10 @@ runnableExamples:
 
 ## ## More
 ## Checkout these other useful modules as well:
-## - [kdl/decoder](#kdl/decoder.html) for KDL deserializing
-## - [kdl/xix](#kdl/xik.html) for [XML-in-KDL](https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md)
-## - [kdl/jix](#kdl/jix.html) for [JSON-in-KDL](https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md)
+## - [kdl/decoder](kdl/decoder.html) for KDL deserializing
+## - [kdl/encoder](kdl/encoder.html) for KDL serializing
+## - [kdl/xix](kdl/xik.html) for [XML-in-KDL](https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md)
+## - [kdl/jix](kdl/jix.html) for [JSON-in-KDL](https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md)
 
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
 

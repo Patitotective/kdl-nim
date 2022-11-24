@@ -354,13 +354,13 @@ proc toKdlNodeImpl(body: NimNode): NimNode =
     body[i].expectKind(nnkStmtList)
     result.add newTree(nnkExprEqExpr, ident"children", newCall("toKdl", body[i]))
 
-macro toKdlVal*(body: untyped): untyped = 
+macro toKdlVal*(body: untyped): KdlVal = 
   ## Generate a KdlVal from Nim's AST that is somehat similar to KDL's syntax.
   ## - For type annotations use a bracket expresion: `node[tag]` instead of `(tag)node`.
 
   toKdlValImpl(body)
 
-macro toKdlNode*(body: untyped): untyped = 
+macro toKdlNode*(body: untyped): KdlNode = 
   ## Generate a KdlNode from Nim's AST that is somewhat similar to KDL's syntax.
   ## - For nodes use call syntax: `node(args, props)`.
   ## - For properties use an equal expression: `key=val`.
@@ -378,7 +378,7 @@ macro toKdlNode*(body: untyped): untyped =
 
   toKdlNodeImpl(body)
 
-macro toKdl*(body: untyped): untyped = 
+macro toKdl*(body: untyped): KdlDoc = 
   ## Generate a KdlDoc from Nim's AST that is somewhat similar to KDL's syntax.
   ## 
   ## See also [toKdlNode](#toKdlNode.m,untyped).

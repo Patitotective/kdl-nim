@@ -1,5 +1,75 @@
 ## ## Encoder
+## This module implements a serializer for different types and objects into KDL documents, nodes and values:
+## - `char`
+## - `bool`
+## - `Option[T]`
+## - `SomeNumber`
+## - `StringTableRef`
+## - `enum` and `HoleyEnum`
+## - `string` and `cstring`
+## - `KdlVal` (object variant)
+## - `seq[T]` and `array[I, T]`
+## - `HashSet[A]` and `OrderedSet[A]`
+## - `Table[string, T]` and `OrderedTable[string, T]`
+## - `object`, `ref` and `tuple` (including object variants)
+## - Plus any type you implement.
+runnableExamples:
+  import std/options
+  import kdl
+
+  type
+    Package = object
+      name*, version*: string
+      authors*: Option[seq[string]]
+      description*, licenseFile*, edition*: Option[string]
+
+  const doc = parseKdl("""
+"name" "kdl"
+"version" "0.0.0"
+"authors" {
+  "-" "Kat Marchán <kzm@zkat.tech>"
+}
+"description" "kat's document language"
+"licenseFile" "LICENSE.md"
+"edition" "2018"
+    """)
+
+  assert Package(name: "kdl", version: "0.0.0", authors: @["Kat Marchán <kzm@zkat.tech>"].some, description: "kat's document language".some, licenseFile: "LICENSE.md".some, edition: "2018".some).encode() == doc
+
+## ### Custom Encode Hooks
+## If you need to encode a specific type in a specific way you may use custom encode hooks.
 ## 
+## To do so, you'll have to overload the `encodeHook` procedure with the following signatura:
+## ```nim
+## proc encodeHook*(a: MyType, v: var KdlSome)
+## ```
+## Where `KdlSome` is one of `KdlDoc`, `KdlNode` or `KdlVal`.
+runnableExamples:
+  import std/times
+  import kdl
+  
+  proc encodeHook*(a: DateTime, v: var KdlDoc) = 
+    v = @[
+      initKNode("year", args = @[encode(a.year, KdlVal)]), 
+      initKNode("month", args = @[encode(a.month, KdlVal)]), 
+      initKNode("day", args = @[encode(a.monthday, KdlVal)]), 
+      initKNode("hour", args = @[encode(a.hour, KdlVal)]), 
+      initKNode("minute", args = @[encode(a.minute, KdlVal)]), 
+      initKNode("second", args = @[encode(a.second, KdlVal)]), 
+      initKNode("nanosecond", args = @[encode(a.nanosecond, KdlVal)]), 
+    ]
+
+  const doc = parseKdl("""
+"year" 2022
+"month" "October"
+"day" 15
+"hour" 12
+"minute" 4
+"second" 0
+"nanosecond" 0
+  """)
+
+  assert dateTime(2022, mOct, 15, 12, 04).encode() == doc
 
 import std/[strformat, enumerate, options, strtabs, tables, sets]
 import nodes, utils, types
@@ -11,11 +81,13 @@ proc encode*(a: auto, v: var KdlVal)
 proc encode*(a: auto, v: var KdlNode, name: string)
 proc encode*(a: auto): KdlDoc
 proc encode*(a: auto, name: string): KdlNode
+proc encode*[T: KdlSome](a: auto, _: typedesc[T]): T
 
 proc encodeHook*(a: List, v: var KdlDoc)
 proc encodeHook*(a: Object, v: var KdlDoc)
 proc encodeHook*(a: ref, v: var KdlDoc)
 
+proc encodeHook*(a: KdlVal, v: var KdlNode, name: string)
 proc encodeHook*(a: List, v: var KdlNode, name: string)
 proc encodeHook*(a: Object, v: var KdlNode, name: string)
 proc encodeHook*(a: ref, v: var KdlNode, name: string)
@@ -26,6 +98,7 @@ proc encodeHook*(a: cstring, v: var KdlVal)
 proc encodeHook*(a: char, v: var KdlVal)
 proc encodeHook*(a: KdlVal, v: var KdlVal)
 proc encodeHook*(a: enum, v: var KdlVal)
+proc encodeHook*(a: List, v: var KdlVal)
 
 # ----- KdlSome -----
 
@@ -161,3 +234,4 @@ proc encodeHook*(a: Option[auto], v: var KdlVal) =
     v = initKNull()
   else:
     encode(a.get, v)
+

@@ -14,6 +14,10 @@ nimble install https://github.com/Patitotective/kdl-nim
 ```
 
 ## Features
+- Streams support
+- Compile-time parsing support
+- [Decoder/Desializer](https://patitotective.github.io/kdl-nim/kdl/decoder.html)
+- [Encoder/Serializer](https://patitotective.github.io/kdl-nim/kdl/encoder.html)
 - [JSON-in-KDL](https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md) ([JiK](https://patitotective.github.io/kdl-nim/kdl/jik.html))
 - [XML-in-KDL](https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md) ([Xik](https://patitotective.github.io/kdl-nim/kdl/xik.html))
 
@@ -83,7 +87,6 @@ doc.writeFile("doc.kdl")
 Documentation is live at https://patitotective.github.io/kdl-nim/.
 
 ## TODO
-- Make the lexer and parser work with `openarray[char]` or `cstring`
 - Implement [KDL schema language](https://github.com/kdl-org/kdl/blob/main/SCHEMA-SPEC.md).
 - Implement [KDL query language](https://github.com/kdl-org/kdl/blob/main/QUERY-SPEC.md).
 

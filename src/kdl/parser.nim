@@ -5,7 +5,11 @@ type
   None = object
 
   Parser* = object
-    stream*: Stream
+    case runtime*: bool
+    of true:
+      stream*: Stream
+    else:
+      source*: string
     stack*: seq[Token]
     current*: int
 
@@ -25,7 +29,7 @@ macro parsing(x: typedesc, body: untyped): untyped =
   ## Into
   ## ```nim
   ## proc foo(parser: var Parser, required: bool = true): Match[T] {.discardable.} = 
-  ##   let before = parser.current 
+  ##   let before = getPos(parser)
   ##   echo "hi"
   ## ```
 
@@ -55,8 +59,19 @@ proc peek(parser: Parser, next = 0): Token =
     result = Token(start: token.start + token.lexeme.len)
 
 proc error(parser: Parser, msg: string) = 
-  let coord = parser.stream.getCoord(parser.peek().start)
-  raise newException(KdlParserError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{parser.stream.errorAt(coord).indent(2)}\n")
+  let coord = 
+    if parser.runtime:
+      parser.stream.getCoord(parser.peek().start)
+    else:
+      parser.source.getCoord(parser.peek().start)
+
+  let errorMsg = 
+    if parser.runtime:
+      parser.stream.errorAt(coord)
+    else:
+      parser.source.errorAt(coord)
+
+  raise newException(KdlParserError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{errorMsg.indent(2)}\n")
 
 proc consume(parser: var Parser, amount = 1) = 
   parser.current += amount
@@ -316,14 +331,29 @@ proc matchNode(slashdash = true) {.parsing: KdlNode.} =
   invalid parser.matchNodeEnd(required = true)
 
 proc parseKdl*(lexer: sink Lexer): KdlDoc = 
-  var parser = Parser(stack: lexer.stack, stream: lexer.stream)
-  result = parser.matchNodes().val
+  if lexer.runtime:
+    var parser = Parser(runtime: true, stack: lexer.stack, stream: lexer.stream)
+    defer: parser.stream.close()
+    result = parser.matchNodes().val
+  else:
+    var parser = Parser(runtime: false, stack: lexer.stack, source: lexer.source)
+    result = parser.matchNodes().val    
 
-proc parseKdl*(stream: Stream): KdlDoc = 
-  stream.scanKdl().parseKdl()
-
-proc parseKdl*(source: sink string): KdlDoc = 
-  source.scanKdl().parseKdl()
+proc parseKdl*(source: string, start = 0): KdlDoc = 
+  var lexer = Lexer(runtime: false, source: source, current: start)
+  lexer.scanKdl()
+  result = lexer.parseKdl()
 
 proc parseKdlFile*(path: string): KdlDoc = 
-  path.scanKdlFile().parseKdl()
+  parseKdl(readFile(path))
+
+proc parseKdl*(stream: sink Stream): KdlDoc = 
+  var lexer = Lexer(runtime: true, stream: stream)
+  lexer.scanKdl()
+  result = lexer.parseKdl()
+
+proc parseKdlStream*(source: sink string): KdlDoc = 
+  parseKdl(newStringStream(source))
+
+proc parseKdlFileStream*(path: string): KdlDoc = 
+  parseKdl(newFileStream(path))

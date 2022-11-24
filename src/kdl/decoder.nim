@@ -59,7 +59,7 @@ dependencies {
 ## ```nim
 ## proc decodeHook*(a: KdlSome, v: var MyType)
 ## ```
-## Where `KdlSome` is one of `KdlDoc`, `KdlNode` or `KdlVal`.
+## Where `KdlSome` is one of `KdlDoc`, `KdlNode` or `KdlVal`:
 ## - `KdlDoc` is called when `doc.decode()`.
 ## - `KdlNode` is called when `doc.decode("node-name")`, or when parsing a field like `MyObj(a: MyType)` in `myobj-node {a "some representation of MyType"}`.
 ## - `KdlVal` is called when decoding arguments (`seq[MyType]`) or properties like `MyObj(a: MyType)` in `myobj-node a="another representation of MyType"`.
@@ -295,16 +295,14 @@ proc find(a: KdlNode, s: string): Option[KdlVal] =
 
 proc decode*(a: KdlSome, v: var auto)
 proc decode*[T](a: KdlSome, _: typedesc[T]): T
+proc decodeHook*[T: KdlSome](a: T, v: var T)
+proc decodeHook*(a: KdlSome, v: var proc)
 
 proc decode*(a: KdlDoc, v: var auto, name: string)
 proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T
-
-proc decodeHook*[T: KdlSome](a: T, v: var T)
-proc decodeHook*(a: KdlSome, v: var proc)
-proc decodeHook*(a: KdlDoc, v: var ref)
-
 proc decodeHook*(a: KdlDoc, v: var Object)
 proc decodeHook*(a: KdlDoc, v: var List)
+proc decodeHook*(a: KdlDoc, v: var ref)
 
 proc decodeHook*(a: KdlNode, v: var Object)
 proc decodeHook*(a: KdlNode, v: var List)
@@ -376,6 +374,14 @@ proc decode*(a: KdlSome, v: var auto) =
 proc decode*[T](a: KdlSome, _: typedesc[T]): T = 
   decode(a, result)
 
+proc decodeHook*[T: KdlSome](a: T, v: var T) = 
+  v = a
+
+proc decodeHook*(a: KdlSome, v: var proc) = 
+  fail &"{$typeof(v)} not implemented for {$typeof(a)}"
+
+# ----- KdlDoc -----
+
 proc decode*(a: KdlDoc, v: var auto, name: string) = 
   var found = -1
   for e in countdown(a.high, 0):
@@ -390,14 +396,6 @@ proc decode*(a: KdlDoc, v: var auto, name: string) =
 
 proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T = 
   decode(a, result, name)
-
-proc decodeHook*[T: KdlSome](a: T, v: var T) = 
-  v = a
-
-proc decodeHook*(a: KdlSome, v: var proc) = 
-  fail &"{$typeof(v)} not implemented for {$typeof(a)}"
-
-# ----- KdlDoc -----
 
 proc decodeHook*(a: KdlDoc, v: var Object) = 
   type T = typeof(v)
@@ -449,7 +447,6 @@ proc decodeHook*(a: KdlDoc, v: var ref) =
 proc decodeHook*(a: KdlNode, v: var Object) = 
   type T = typeof(v)
   const discKeys = getDiscriminants(T) # Object variant discriminator keys
-
   when discKeys.len > 0:
     template discriminatorSetter(key, typ): untyped = 
       let key1 = key.renameHookable(T)

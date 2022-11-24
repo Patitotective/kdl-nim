@@ -50,55 +50,80 @@ proc eqIdent*(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnore
 
 # ----- Streams -----
 
-proc getPos*(s: Stream): int = 
-  s.getPosition()
-
-proc setPos*(s: Stream, x: int) = 
-  s.setPosition(x)
-
-proc inc*(s: Stream, x = 1) = 
-  s.setPos(s.getPos() + x)
-
-proc dec*(s: Stream, x = 1) = 
-  s.setPos(s.getPos() - x)
-
 proc peekRune*(s: Stream): Rune = 
   let str = s.peekStr(4)
   if str.len > 0:
     result = str.runeAt(0)
 
 proc peekLineFromStart*(s: Stream): string = 
-  let before = s.getPos()
-  while s.getPos() > 0:
-    dec s
-    if s.peekChar() == '\n':
-      inc s
-      if s.atEnd: dec s
+  let before = s.getPosition()
+  while s.getPosition() > 0:
+    s.setPosition(s.getPosition() - 1)
+    if s.peekChar() in Newlines:
+      s.setPosition(s.getPosition() + 1)
+      if s.atEnd:
+        s.setPosition(s.getPosition() - 1)
+
       break
 
   result = s.peekLine()
-  s.setPos before
+  s.setPosition before
+
+proc peekLineFromStart*(s: string, at: int): string = 
+  if at >= s.len:
+    return
+
+  var idx = 0
+  for i in countdown(at-1, 0):
+    if s[i] in Newlines:
+      idx = i + 1
+      if idx == s.high:
+        dec idx
+      break
+
+  for i in idx..s.high:
+    if s[i] in Newlines:
+      return s[idx..<i]
+
+  result = s[idx..^1]
 
 proc getCoord*(s: Stream, i: int): Coord =
-  let before = s.getPos()
-  s.setPos 0
-  while s.getPos() < i:
+  let before = s.getPosition()
+  s.setPosition 0
+  while s.getPosition() < i:
     if (let str = s.peekStr(2); str == "\c\l" or str[0] == '\n'):
       inc result.line
       result.col = 0
     else:
       inc result.col
 
-    inc s
+    s.setPosition(s.getPosition() + 1)
     inc result.idx
 
-  s.setPos before
+  s.setPosition before
+
+proc getCoord*(s: string, at: int): Coord =
+  for i in 0..<at:
+    if s.continuesWith("\c\l", i) or s[i] in Newlines:
+      inc result.line
+      result.col = 0
+    else:
+      inc result.col
+
+    inc result.idx
 
 proc errorAt*(s: Stream, coord: Coord): string = 
-  let before = s.getPos()
-  s.setPos coord.idx
+  let before = s.getPosition()
+  s.setPosition coord.idx
   let line = s.peekLineFromStart()
-  s.setPos before
+  s.setPosition before
+
+  let lineNum = &"{coord.line + 1} | "
+  result.add(&"{lineNum}{line}\n")
+  result.add(&"{repeat(' ', lineNum.len + coord.col)}^")
+
+proc errorAt*(s: string, coord: Coord): string = 
+  let line = s.peekLineFromStart(coord.idx)
 
   let lineNum = &"{coord.line + 1} | "
   result.add(&"{lineNum}{line}\n")
@@ -189,7 +214,3 @@ macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
       result.add newTree(nnkExprColonExpr, key, val)
 
 template typeofdesc*[T](b: typedesc[T]): untyped = T
-
-# let s = newStringStream("\nabc\n")
-# s.setPos 4
-# echo s.peekLineFromStart()

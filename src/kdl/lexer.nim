@@ -32,7 +32,12 @@ type
     kind*: TokenKind
 
   Lexer* = object
-    stream*: Stream
+    case runtime*: bool
+    of true:
+      stream*: Stream
+    else:
+      source*: string
+      current*: int
     stack*: seq[Token]
 
 const
@@ -73,16 +78,33 @@ const
   }
 
 proc `$`*(lexer: Lexer): string = 
-  result = &"{(if lexer.stream.atEnd: \"SUCCESS\" else: \"FAIL\")}\n\t"
+  result = 
+    if lexer.runtime:
+      &"{(if lexer.stream.atEnd: \"SUCCESS\" else: \"FAIL\")}\n\t"
+    else:
+      &"{(if lexer.current == lexer.source.len: \"SUCCESS\" else: \"FAIL\")} {lexer.current}/{lexer.source.len}\n\t"
+
   for token in lexer.stack:
     result.addQuoted(token.lexeme)
     result.add(&"({token.kind}) ")
 
 proc getPos*(lexer: Lexer): int = 
-  lexer.stream.getPos()
+  if lexer.runtime:
+    lexer.stream.getPosition()
+  else:
+    lexer.current
 
-proc setPos*(lexer: Lexer, x: int) = 
-  lexer.stream.setPos(x)
+proc setPos(lexer: var Lexer, x: int) = 
+  if lexer.runtime:
+    lexer.stream.setPosition(x)
+  else:
+    lexer.current = x
+
+proc inc(lexer: var Lexer, x = 1) = 
+  lexer.setPos(lexer.getPos() + x)
+
+proc dec(lexer: var Lexer, x = 1) = 
+  lexer.setPos(lexer.getPos() - x)
 
 macro lexing(token: TokenKind, body: untyped) = 
   ## Converts a procedure definition like:
@@ -132,42 +154,71 @@ macro lexing(token: TokenKind, body: untyped) =
 
   result = body
 
-proc add(lexer: var Lexer, kind: TokenKind, start: int) = 
-  let before = lexer.getPos()
-  lexer.setPos start
-  lexer.stack.add(Token(kind: kind, lexeme: lexer.stream.peekStr(before - start), start: start))
-  lexer.setPos before
-
-proc eof(lexer: Lexer, extra = 0): bool = 
+proc eof(lexer: var Lexer, extra = 0): bool = 
   let before = lexer.getPos
-  inc lexer.stream, extra 
+  inc lexer, extra 
 
-  result = lexer.stream.atEnd
+  result = 
+    if lexer.runtime:
+      lexer.stream.atEnd
+    else:
+      lexer.current >= lexer.source.len
 
   lexer.setPos before
 
-proc peek(lexer: Lexer, next = 0): char = 
+proc peek(lexer: var Lexer, next = 0): char = 
   if not lexer.eof(next):
     let before = lexer.getPos
-    inc lexer.stream, next
+    inc lexer, next
 
-    result = lexer.stream.peekChar()
+    result = 
+      if lexer.runtime:
+        lexer.stream.peekChar()
+      else:
+        lexer.source[lexer.current]
 
     lexer.setPos before
 
-proc peek(lexer: Lexer, x: string): bool = 
+proc peekStr(lexer: var Lexer, until: int): string = 
+  if lexer.eof(until-1): return
+
+  if lexer.runtime:
+    lexer.stream.peekStr(until)
+  else:
+    lexer.source[lexer.current..<lexer.current + until]
+
+proc peek(lexer: var Lexer, x: string): bool = 
   if not lexer.eof(x.high):
-    result = lexer.stream.peekStr(x.len) == x
+    result = lexer.peekStr(x.len) == x
+
+proc peekRune(lexer: var Lexer): Rune = 
+  if lexer.eof(): return
+
+  if lexer.runtime:
+    lexer.stream.peekRune()
+  else:
+    lexer.source.runeAt(lexer.current)
+
+proc add(lexer: var Lexer, kind: TokenKind, start: int) = 
+  let before = lexer.getPos()
+  lexer.setPos start
+  lexer.stack.add(Token(kind: kind, lexeme: lexer.peekStr(before - start), start: start))
+  lexer.setPos before
 
 proc error(lexer: Lexer, msg: string) = 
-  let coord = lexer.stream.getCoord(lexer.getPos)
-  raise newException(KdlLexerError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{lexer.stream.errorAt(coord).indent(2)}\n")
+  let coord = 
+    if lexer.runtime:
+      lexer.stream.getCoord(lexer.getPos)
+    else:
+      lexer.source.getCoord(lexer.getPos)
 
-proc dec(lexer: var Lexer, amount = 1) = 
-  dec lexer.stream, amount
+  let errorMsg = 
+    if lexer.runtime:
+      lexer.stream.errorAt(coord)
+    else:
+      lexer.source.errorAt(coord)
 
-proc inc(lexer: var Lexer, amount = 1) = 
-  inc lexer.stream, amount
+  raise newException(KdlLexerError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{errorMsg.indent(2)}\n")
 
 proc literal(lexer: var Lexer, lit: string, consume = true): bool {.discardable.} = 
   result = lexer.peek(lit)
@@ -340,7 +391,7 @@ proc tokenMultiLineComment*() {.lexing: tkEmpty.} =
     lexer.error "Expected end of multi-line comment"
 
 proc tokenWhitespace*() {.lexing: tkWhitespace.} = 
-  if not lexer.eof() and (let rune = lexer.stream.peekRune(); rune.int in whitespaces):
+  if not lexer.eof() and (let rune = lexer.peekRune(); rune.int in whitespaces):
     lexer.inc rune.size
   else:
     lexer.tokenMultiLineComment()
@@ -371,7 +422,7 @@ proc tokenIdent*() {.lexing: tkIdent.} =
 
   block outer:
     while not lexer.eof() or not lexer.tokenWhitespace(consume = false) or not lexer.tokenNewLine(consume = false):
-      let rune = lexer.stream.peekRune()
+      let rune = lexer.peekRune()
       if rune.int <= 0x20 or rune.int > 0x10FFFF:
         break
 
@@ -411,7 +462,7 @@ proc tokenLitMatches() {.lexing: tkEmpty.} =
       break
 
 proc validToken*(source: sink string, token: proc(lexer: var Lexer, consume = true, addToStack = true): bool): bool = 
-  var lexer = Lexer(stream: newStringStream(source))
+  var lexer = Lexer(runtime: true, stream: newStringStream(source))
 
   try:
     result = lexer.token() and lexer.eof()
@@ -446,12 +497,20 @@ proc scanKdl*(lexer: var Lexer) =
     if not anyMatch:
       lexer.error "Could not match any pattern"
 
-proc scanKdl*(stream: Stream): Lexer = 
-  result = Lexer(stream: stream)
+proc scanKdl*(source: string, start = 0): Lexer = 
+  result = Lexer(runtime: false, source: source, current: start)
   result.scanKdl()
 
-proc scanKdl*(source: sink string): Lexer = 
+proc scanKdlFile*(path: string): Lexer = 
+  scanKdl(readFile(path))
+
+proc scanKdl*(stream: sink Stream): Lexer = 
+  result = Lexer(runtime: true, stream: stream)
+  defer: result.stream.close()
+  result.scanKdl()
+
+proc scanKdlStream*(source: sink string): Lexer = 
   scanKdl(newStringStream(source))
 
-proc scanKdlFile*(path: string): Lexer = 
+proc scanKdlFileStream*(path: string): Lexer = 
   scanKdl(openFileStream(path))

@@ -32,12 +32,13 @@ type
     kind*: TokenKind
 
   Lexer* = object
-    case runtime*: bool
+    case isStream*: bool
     of true:
       stream*: Stream
     else:
       source*: string
       current*: int
+    multilineStringsNewLines*: seq[tuple[idx, length: int]] # Indexes and length of new lines in multiline strings that have to be converted to a single \n
     stack*: seq[Token]
 
 const
@@ -79,7 +80,7 @@ const
 
 proc `$`*(lexer: Lexer): string = 
   result = 
-    if lexer.runtime:
+    if lexer.isStream:
       &"{(if lexer.stream.atEnd: \"SUCCESS\" else: \"FAIL\")}\n\t"
     else:
       &"{(if lexer.current == lexer.source.len: \"SUCCESS\" else: \"FAIL\")} {lexer.current}/{lexer.source.len}\n\t"
@@ -89,13 +90,13 @@ proc `$`*(lexer: Lexer): string =
     result.add(&"({token.kind}) ")
 
 proc getPos*(lexer: Lexer): int = 
-  if lexer.runtime:
+  if lexer.isStream:
     lexer.stream.getPosition()
   else:
     lexer.current
 
 proc setPos(lexer: var Lexer, x: int) = 
-  if lexer.runtime:
+  if lexer.isStream:
     lexer.stream.setPosition(x)
   else:
     lexer.current = x
@@ -159,7 +160,7 @@ proc eof(lexer: var Lexer, extra = 0): bool =
   inc lexer, extra 
 
   result = 
-    if lexer.runtime:
+    if lexer.isStream:
       lexer.stream.atEnd
     else:
       lexer.current >= lexer.source.len
@@ -172,7 +173,7 @@ proc peek(lexer: var Lexer, next = 0): char =
     inc lexer, next
 
     result = 
-      if lexer.runtime:
+      if lexer.isStream:
         lexer.stream.peekChar()
       else:
         lexer.source[lexer.current]
@@ -182,7 +183,7 @@ proc peek(lexer: var Lexer, next = 0): char =
 proc peekStr(lexer: var Lexer, until: int): string = 
   if lexer.eof(until-1): return
 
-  if lexer.runtime:
+  if lexer.isStream:
     lexer.stream.peekStr(until)
   else:
     lexer.source[lexer.current..<lexer.current + until]
@@ -194,7 +195,7 @@ proc peek(lexer: var Lexer, x: string): bool =
 proc peekRune(lexer: var Lexer): Rune = 
   if lexer.eof(): return
 
-  if lexer.runtime:
+  if lexer.isStream:
     lexer.stream.peekRune()
   else:
     lexer.source.runeAt(lexer.current)
@@ -207,13 +208,13 @@ proc add(lexer: var Lexer, kind: TokenKind, start: int) =
 
 proc error(lexer: Lexer, msg: string) = 
   let coord = 
-    if lexer.runtime:
+    if lexer.isStream:
       lexer.stream.getCoord(lexer.getPos)
     else:
       lexer.source.getCoord(lexer.getPos)
 
   let errorMsg = 
-    if lexer.runtime:
+    if lexer.isStream:
       lexer.stream.errorAt(coord)
     else:
       lexer.source.errorAt(coord)
@@ -229,6 +230,12 @@ proc skipWhile(lexer: var Lexer, x: set[char]): int {.discardable.} =
   while not lexer.eof() and lexer.peek() in x:
     inc result
     inc lexer
+
+proc tokenNewLine*() {.lexing: tkNewLine.} = 
+  for nl in newLines:
+    if lexer.peek(nl):
+      lexer.inc nl.len
+      break
 
 proc tokenNumWhole() {.lexing: tkEmpty.} = 
   if lexer.peek() in {'-', '+'}:
@@ -324,6 +331,11 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
   var terminated = false
 
   while not lexer.eof():
+    let before = lexer.getPos()
+    if lexer.tokenNewLine(addToStack = false):
+      lexer.multilineStringsNewLines.add((before, lexer.getPos() - before))
+      continue
+
     case lexer.peek()
     of '\\':
       if raw:
@@ -400,17 +412,10 @@ proc skipWhitespaces*() {.lexing: tkEmpty.} =
   while lexer.tokenWhitespace():
     discard
 
-proc tokenNewLine*() {.lexing: tkNewLine.} = 
-  for nl in newLines:
-    if lexer.peek(nl):
-      lexer.inc nl.len
-      break
-
 proc tokenIdent*() {.lexing: tkIdent.} = 
   if lexer.eof() or lexer.peek() in nonInitialChars:
     return
 
-  # echo lexer.getPos(), " ", lexer.literal("null")
   # Check the identifier is similar to a boolean, null or number, and if it is it should follow the EOF, a whitespace, a new line or any non-ident char in order to be discarded.
   if (
       lexer.literal("true") or lexer.literal("false") or lexer.literal("null") or 
@@ -462,7 +467,7 @@ proc tokenLitMatches() {.lexing: tkEmpty.} =
       break
 
 proc validToken*(source: sink string, token: proc(lexer: var Lexer, consume = true, addToStack = true): bool): bool = 
-  var lexer = Lexer(runtime: true, stream: newStringStream(source))
+  var lexer = Lexer(isStream: true, stream: newStringStream(source))
 
   try:
     result = lexer.token() and lexer.eof()
@@ -498,14 +503,14 @@ proc scanKdl*(lexer: var Lexer) =
       lexer.error "Could not match any pattern"
 
 proc scanKdl*(source: string, start = 0): Lexer = 
-  result = Lexer(runtime: false, source: source, current: start)
+  result = Lexer(isStream: false, source: source, current: start)
   result.scanKdl()
 
 proc scanKdlFile*(path: string): Lexer = 
   scanKdl(readFile(path))
 
 proc scanKdl*(stream: sink Stream): Lexer = 
-  result = Lexer(runtime: true, stream: stream)
+  result = Lexer(isStream: true, stream: stream)
   defer: result.stream.close()
   result.scanKdl()
 

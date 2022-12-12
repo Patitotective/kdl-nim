@@ -71,7 +71,7 @@ runnableExamples:
 
   assert dateTime(2022, mOct, 15, 12, 04).encode() == doc
 
-import std/[strformat, enumerate, options, strtabs, tables, sets]
+import std/[typetraits, strformat, enumerate, options, strtabs, tables, sets]
 import nodes, utils, types
 
 # ----- Index -----
@@ -136,8 +136,14 @@ proc encodeHook*(a: List, v: var KdlDoc) =
     encode(i, v[e], "-")
 
 proc encodeHook*(a: Object, v: var KdlDoc) = 
-  for fieldName, field in a.fieldPairs:
-    v.add encode(field, fieldName)
+  type T = typeof(a)
+
+  when T is tuple and not isNamedTuple(T): # Unnamed tuple
+    for _, field in a.fieldPairs:
+      v.add encode(field, "-")
+  else:
+    for fieldName, field in a.fieldPairs:
+      v.add encode(field, fieldName)
 
 proc encodeHook*(a: ref, v: var KdlDoc) = 
   encode(a[], v)
@@ -155,7 +161,13 @@ proc encodeHook*(a: List, v: var KdlNode, name: string) =
 
 proc encodeHook*(a: Object, v: var KdlNode, name: string) = 
   v = initKNode(name)
-  encode(a, v.children)
+  type T = typeof(a)
+
+  when T is tuple and not isNamedTuple(T): # Unnamed tuple
+    for _, field in a.fieldPairs:
+      v.args.add encode(field, KdlVal)
+  else:
+    encode(a, v.children)
 
 proc encodeHook*(a: ref, v: var KdlNode, name: string) = 
   encode(a[], v, name)
@@ -234,4 +246,3 @@ proc encodeHook*(a: Option[auto], v: var KdlVal) =
     v = initKNull()
   else:
     encode(a.get, v)
-

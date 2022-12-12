@@ -38,3 +38,8 @@ type
     children*: seq[KdlNode]
 
   KdlDoc* = seq[KdlNode]
+
+  KdlPrefs*[T] = object
+    path*: string
+    default*: T
+    content*: T

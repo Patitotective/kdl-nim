@@ -183,8 +183,8 @@ macro getDiscriminants*(a: typedesc): seq[string] =
 macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
   ## Does the minimum to construct a valid case object `T`.
   ## - `discriminatorSetter`: called passing two arguments `(key, typ)` (`key` being the field name and `typ` the field type), last expression should be the value for the field
-  ## the discriminant fields; see also `getDiscriminants`
   # maybe candidate for std/typetraits
+
   var a = T.getTypeImpl
 
   doAssert a.kind == nnkBracketExpr

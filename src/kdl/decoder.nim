@@ -278,7 +278,7 @@ runnableExamples:
 ## 
 ## All of these examples were taken out from the [tests](https://github.com/Patitotective/kdl-nim/blob/main/tests/test_serializer.nim), so if you need more, check them out.
 
-import std/[strformat, typetraits, strutils, strtabs, tables, sets]
+import std/[typetraits, strformat, strutils, strtabs, tables, sets]
 import nodes, utils, types
 
 proc rfind(a: KdlDoc, s: string): Option[KdlNode] = 
@@ -289,6 +289,16 @@ proc rfind(a: KdlDoc, s: string): Option[KdlNode] =
 proc find(a: KdlNode, s: string): Option[KdlVal] = 
   for key, val in a.props:
     if key.eqIdent s:
+      return val.some
+
+proc rfindRename(a: KdlDoc, s: string, T: typedesc): Option[KdlNode] = 
+  for i in countdown(a.high, 0):
+    if a[i].name.renameHookable(T).eqIdent s:
+      return a[i].some
+
+proc findRename(a: KdlNode, s: string, T: typedesc): Option[KdlVal] = 
+  for key, val in a.props:
+    if key.renameHookable(T).eqIdent s:
       return val.some
 
 # ----- Index -----
@@ -320,8 +330,7 @@ proc decodeHook*(a: KdlVal, v: var ref)
 
 # ----- Hooks -----
 
-proc newHook*(v: var auto) = 
-  type T = typeof(v)
+proc newHook*[T](v: var T) = 
   when v is range:
     if v notin T.low..T.high:
       v = T.low
@@ -354,6 +363,10 @@ proc postHookable*(v: var auto) =
 proc enumHookable*[T: enum](a: string or int, v: var T) = 
   mixin enumHook
   enumHook(a, v)
+
+proc enumHookable*[T: enum](_: typedesc[T], a: string or int): T = 
+  mixin enumHook
+  enumHook(a, result)
 
 proc renameHookable*(fieldName: string, a: typedesc): string = 
   mixin renameHook
@@ -399,33 +412,42 @@ proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T =
 
 proc decodeHook*(a: KdlDoc, v: var Object) = 
   type T = typeof(v)
-  const discKeys = getDiscriminants(T) # Object variant discriminator keys
+  when T is tuple and not isNamedTuple(T): # Unnamed tuple
+    var count = 0
+    for fieldName, field in v.fieldPairs:
+      if count > a.high:
+        fail &"Expected an argument at index {count+1} in {a}"
 
-  when discKeys.len > 0:
-    template discriminatorSetter(key, typ): untyped = 
-      let discFieldNode = a.rfind(key.renameHookable(T))
+      decode(a[count], field)
+      inc count
+  else:
+    const discKeys = getDiscriminants(T) # Object variant discriminator keys
 
-      if discFieldNode.isSome:
-        decode(discFieldNode.get, typ)
-      else:
-        var x: typeofdesc typ
-        newHookable(x)
-        x
+    when discKeys.len > 0:
+      template discriminatorSetter(key, typ): untyped = 
+        let discFieldNode = a.rfindRename(key, T)
 
-    v = initCaseObject(T, discriminatorSetter)
-    newHookable(v)
+        if discFieldNode.isSome:
+          decode(discFieldNode.get, typ)
+        else:
+          var x: typeofdesc typ
+          newHookable(x)
+          x
 
-  for fieldName, field in v.fieldPairs:
-    when fieldName notin discKeys: # Ignore discriminant field name
-      var found = false
+      v = initCaseObject(T, discriminatorSetter)
+      newHookable(v)
 
-      for node in a:
-        if node.name.renameHookable(T).eqIdent fieldName:
-          decode(node, field)
-          found = true
+    for fieldName, field in v.fieldPairs:
+      when fieldName notin discKeys: # Ignore discriminant field name
+        var found = false
 
-      if not found:
-        newHookable(field)
+        for node in a:
+          if node.name.renameHookable(T).eqIdent fieldName:
+            decode(node, field)
+            found = true
+
+        if not found:
+          newHookable(field)
 
   postHookable(v)
 
@@ -446,40 +468,49 @@ proc decodeHook*(a: KdlDoc, v: var ref) =
 
 proc decodeHook*(a: KdlNode, v: var Object) = 
   type T = typeof(v)
-  const discKeys = getDiscriminants(T) # Object variant discriminator keys
-  when discKeys.len > 0:
-    template discriminatorSetter(key, typ): untyped = 
-      let key1 = key.renameHookable(T)
-      let discFieldNode = a.children.rfind(key1) # Find a children
-      let discFieldProp = a.find(key1) # Find a property
+  when T is tuple and not isNamedTuple(T): # Unnamed tuple
+    var count = 0
+    for fieldName, field in v.fieldPairs:
+      if count > a.args.high:
+        fail &"Expected an argument at index {count+1} in {a}"
 
-      if discFieldNode.isSome:
-        decode(discFieldNode.get, typ)
-      elif discFieldProp.isSome:
-        decode(discFieldProp.get, typ)
-      else:
-        var x: typeofdesc typ
-        newHookable(x)
-        x
+      decode(a.args[count], field)
+      inc count
+  else:
+    const discKeys = getDiscriminants(T) # Object variant discriminator keys
+    when discKeys.len > 0:
+      template discriminatorSetter(key, typ): untyped = 
+        # let key1 = key.renameHookable(T)
+        let discFieldNode = a.children.rfindRename(key, T) # Find a children
+        let discFieldProp = a.findRename(key, T) # Find a property
 
-    v = initCaseObject(T, discriminatorSetter)
-    newHookable(v)
+        if discFieldNode.isSome:
+          decode(discFieldNode.get, typ)
+        elif discFieldProp.isSome:
+          decode(discFieldProp.get, typ)
+        else:
+          var x: typeofdesc typ
+          newHookable(x)
+          x
 
-  for fieldName, field in v.fieldPairs:
-    when fieldName notin discKeys: # Ignore discriminant field name
-      var found = false
-      for key, _ in a.props:
-        if key.renameHookable(T).eqIdent fieldName:
-          decode(a.props[key], field)
-          found = true
+      v = initCaseObject(T, discriminatorSetter)
+      newHookable(v)
 
-      for node in a.children:
-        if node.name.renameHookable(T).eqIdent fieldName:
-          decode(node, field)
-          found = true
+    for fieldName, field in v.fieldPairs:
+      when fieldName notin discKeys: # Ignore discriminant field name
+        var found = false
+        for key, _ in a.props:
+          if key.renameHookable(T).eqIdent fieldName:
+            decode(a.props[key], field)
+            found = true
 
-      if not found:
-        newHookable(field)
+        for node in a.children:
+          if node.name.renameHookable(T).eqIdent fieldName:
+            decode(node, field)
+            found = true
+
+        if not found:
+          newHookable(field)
 
   postHookable(v)
 

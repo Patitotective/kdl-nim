@@ -87,11 +87,13 @@ proc enumHook*(a: int, v: var MyEnum) =
   else:
     raise newException(ValueError, &"invalid enum value {a} for {$typeof(v)}")
 
-proc renameHook*(_: typedesc[MyObj4], fieldName: var string) = 
+proc renameHook*(_: typedesc[MyObj4 or MyObj], fieldName: var string) = 
   fieldName = 
     case fieldName
     of "type":
       "kind"
+    of "type2":
+      "kind2"
     of "array":
       "list"
     else:
@@ -386,6 +388,26 @@ suite "Decoder":
     type "string"
     array 1 2 3
     """).decode(MyObj4) == MyObj4(kind: "string", list: @[1, 2, 3])
+    
+    check parseKdl("""
+    node type="string" {
+      array 1 2 3
+    }
+    """).decode(MyObj4, "node") == MyObj4(kind: "string", list: @[1, 2, 3])
+
+    check parseKdl("""
+    type "moString"
+    stringV "hello"
+    type2 "moInt"
+    intV2 0xbeef
+    """).decode(MyObj) == MyObj(kind: moString, stringV: "hello", kind2: moInt, intV2: 0xbeef)
+
+    check parseKdl("""
+    node type="moString" type2="moInt" {
+      stringV "bye"
+      intV2 0xdead
+    }
+    """).decode(MyObj, "node") == MyObj(kind: moString, stringV: "bye", kind2: moInt, intV2: 0xdead)
 
 suite "Encoder":
   test "Crate":

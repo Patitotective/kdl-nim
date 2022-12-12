@@ -176,7 +176,7 @@ proc pretty*(doc: KdlDoc, newLine = true): string =
 
   if newLine: result.add "\p"
 
-proc writeFile*(doc: KdlDoc, path: string, pretty = false) = 
+proc writeFile*(path: string, doc: KdlDoc, pretty = false) = 
   ## Writes `doc` to path. Set `pretty` to true to use `pretty` instead of `$`.
   if pretty:
     writeFile(path, doc.pretty())

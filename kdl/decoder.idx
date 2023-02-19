@@ -1,0 +1,47 @@
+newHook	kdl/decoder.html#newHook,T	decoder: newHook[T](v: var T)	
+postHook	kdl/decoder.html#postHook,auto	decoder: postHook(v: var auto)	
+enumHook	kdl/decoder.html#enumHook,int,T	decoder: enumHook[T: enum](a: int; v: var T)	
+enumHook	kdl/decoder.html#enumHook,string,T	decoder: enumHook[T: enum](a: string; v: var T)	
+renameHook	kdl/decoder.html#renameHook,typedesc,string	decoder: renameHook(_: typedesc; fieldName: var string)	
+newHookable	kdl/decoder.html#newHookable,auto	decoder: newHookable(v: var auto)	
+postHookable	kdl/decoder.html#postHookable,auto	decoder: postHookable(v: var auto)	
+enumHookable	kdl/decoder.html#enumHookable,,T	decoder: enumHookable[T: enum](a: string or int; v: var T)	
+enumHookable	kdl/decoder.html#enumHookable,typedesc[T],	decoder: enumHookable[T: enum](_: typedesc[T]; a: string or int): T	
+renameHookable	kdl/decoder.html#renameHookable,string,typedesc	decoder: renameHookable(fieldName: string; a: typedesc): string	
+decode	kdl/decoder.html#decode,KdlSome,auto	decoder: decode(a: KdlSome; v: var auto)	
+decode	kdl/decoder.html#decode,KdlSome,typedesc[T]	decoder: decode[T](a: KdlSome; _: typedesc[T]): T	
+decodeHook	kdl/decoder.html#decodeHook,T,T	decoder: decodeHook[T: KdlSome](a: T; v: var T)	
+decodeHook	kdl/decoder.html#decodeHook,KdlSome,proc	decoder: decodeHook(a: KdlSome; v: var proc)	
+decode	kdl/decoder.html#decode,KdlDoc,auto,string	decoder: decode(a: KdlDoc; v: var auto; name: string)	
+decode	kdl/decoder.html#decode,KdlDoc,typedesc[T],string	decoder: decode[T](a: KdlDoc; _: typedesc[T]; name: string): T	
+decodeHook	kdl/decoder.html#decodeHook,KdlDoc,Object	decoder: decodeHook(a: KdlDoc; v: var Object)	
+decodeHook	kdl/decoder.html#decodeHook,KdlDoc,List	decoder: decodeHook(a: KdlDoc; v: var List)	
+decodeHook	kdl/decoder.html#decodeHook,KdlDoc,ref	decoder: decodeHook(a: KdlDoc; v: var ref)	
+decodeHook	kdl/decoder.html#decodeHook,KdlNode,Object	decoder: decodeHook(a: KdlNode; v: var Object)	
+decodeHook	kdl/decoder.html#decodeHook,KdlNode,List	decoder: decodeHook(a: KdlNode; v: var List)	
+decodeHook	kdl/decoder.html#decodeHook,KdlNode,ref	decoder: decodeHook(a: KdlNode; v: var ref)	
+decodeHook	kdl/decoder.html#decodeHook,KdlNode,auto	decoder: decodeHook(a: KdlNode; v: var auto)	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,T	decoder: decodeHook[T: Value](a: KdlVal; v: var T)	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,T_2	decoder: decodeHook[T: enum](a: KdlVal; v: var T)	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,char	decoder: decodeHook(a: KdlVal; v: var char)	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,cstring	decoder: decodeHook(a: KdlVal; v: var cstring)	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,T_3	decoder: decodeHook[T: array](a: KdlVal; v: var T)	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,seq	decoder: decodeHook(a: KdlVal; v: var seq)	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,Object	decoder: decodeHook(a: KdlVal; v: var Object)	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,ref	decoder: decodeHook(a: KdlVal; v: var ref)	
+decodeHook	kdl/decoder.html#decodeHook,KdlDoc,SomeTable[string,T]	decoder: decodeHook[T](a: KdlDoc; v: var SomeTable[string, T])	
+decodeHook	kdl/decoder.html#decodeHook,KdlDoc,SomeSet[T]	decoder: decodeHook[T](a: KdlDoc; v: var SomeSet[T])	
+decodeHook	kdl/decoder.html#decodeHook,KdlNode,SomeTable[string,T]	decoder: decodeHook[T](a: KdlNode; v: var SomeTable[string, T])	
+decodeHook	kdl/decoder.html#decodeHook,KdlNode,SomeSet[T]	decoder: decodeHook[T](a: KdlNode; v: var SomeSet[T])	
+decodeHook	kdl/decoder.html#decodeHook,KdlNode,StringTableRef	decoder: decodeHook(a: KdlNode; v: var StringTableRef)	
+decodeHook	kdl/decoder.html#decodeHook,KdlNode,Option[T]	decoder: decodeHook[T](a: KdlNode; v: var Option[T])	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,SomeSet[T]	decoder: decodeHook[T](a: KdlVal; v: var SomeSet[T])	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,Option[T]	decoder: decodeHook[T](a: KdlVal; v: var Option[T])	
+decodeHook	kdl/decoder.html#decodeHook,KdlVal,	decoder: decodeHook(a: KdlVal; v: var (SomeTable[string, auto] or StringTableRef))	
+Decoder	kdl/decoder.html#decoder	  Decoder	
+Custom Hooks	kdl/decoder.html#decoder-custom-hooks	   Custom Hooks	
+Decode hook	kdl/decoder.html#custom-hooks-decode-hook	    Decode hook	
+New hook	kdl/decoder.html#custom-hooks-new-hook	    New hook	
+Post hook	kdl/decoder.html#custom-hooks-post-hook	    Post hook	
+Enum hook	kdl/decoder.html#custom-hooks-enum-hook	    Enum hook	
+Rename hook	kdl/decoder.html#custom-hooks-rename-hook	    Rename hook	

@@ -1,4 +1,7 @@
 Parser	kdl/parser.html#Parser	parser: Parser	
-parseKdl	kdl/parser.html#parseKdl,Lexer	parser: parseKdl(lexer: Lexer): KdlDoc	
+parseKdl	kdl/parser.html#parseKdl,sinkLexer	parser: parseKdl(lexer: sink Lexer): KdlDoc	
 parseKdl	kdl/parser.html#parseKdl,string,int	parser: parseKdl(source: string; start = 0): KdlDoc	
 parseKdlFile	kdl/parser.html#parseKdlFile,string	parser: parseKdlFile(path: string): KdlDoc	
+parseKdl	kdl/parser.html#parseKdl,sinkStream	parser: parseKdl(stream: sink Stream): KdlDoc	
+parseKdlStream	kdl/parser.html#parseKdlStream,sinkstring	parser: parseKdlStream(source: sink string): KdlDoc	
+parseKdlFileStream	kdl/parser.html#parseKdlFileStream,string	parser: parseKdlFileStream(path: string): KdlDoc	

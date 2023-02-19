@@ -99,35 +99,109 @@ window.addEventListener('DOMContentLoaded', main);
   </div>
   <ul class="simple simple-toc" id="toc-list">
 <li>
+  <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
+  <ul class="simple simple-toc-section">
+    
+  </ul>
+</li>
+<li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#Coord"
-    title="Coord = tuple[line: int, col: int]">Coord</a></li>
-  <li><a class="reference" href="#KdlError"
-    title="KdlError = object of ValueError">KdlError</a></li>
-  <li><a class="reference" href="#KdlLexerError"
-    title="KdlLexerError = object of KdlError">KdlLexerError</a></li>
-  <li><a class="reference" href="#KdlParserError"
-    title="KdlParserError = object of KdlError">KdlParserError</a></li>
+    title="Coord = object
+  line*, col*, idx*: int">Coord</a></li>
+  <li><a class="reference" href="#KdlSome"
+    title="KdlSome = (KdlDoc or KdlNode or KdlVal)">KdlSome</a></li>
+  <li><a class="reference" href="#List"
+    title="List = (array or seq)">List</a></li>
+  <li><a class="reference" href="#Object"
+    title="Object = ((object or tuple) and not KdlSome)">Object</a></li>
+  <li><a class="reference" href="#SomeTable"
+    title="SomeTable[K; V] = (Table[K, V] or OrderedTable[K, V])">SomeTable</a></li>
+  <li><a class="reference" href="#Value"
+    title="Value = (SomeNumber or string or bool)">Value</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">errorAt
-      <li><a class="reference" href="#errorAt%2Cstring%2Ctuple%5Bint%2Cint%5D"
-    title="errorAt(source: string; coord: tuple[line, col: int]): string">errorAt(source: string; coord: tuple[line, col: int]): string</a></li>
+      <ul class="simple nested-toc-section">eqIdent
+      <li><a class="reference" href="#eqIdent%2CopenArray%5Bchar%5D%2CopenArray%5Bchar%5D"
+    title="eqIdent(v, a: openArray[char]; ignoreChars = {'_', '-'}): bool">eqIdent(v, a: openArray[char]; ignoreChars = {'_', '-'}): bool</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">errorAt
+      <li><a class="reference" href="#errorAt%2CStream%2CCoord"
+    title="errorAt(s: Stream; coord: Coord): string">errorAt(s: Stream; coord: Coord): string</a></li>
+  <li><a class="reference" href="#errorAt%2Cstring%2CCoord"
+    title="errorAt(s: string; coord: Coord): string">errorAt(s: string; coord: Coord): string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">getCoord
-      <li><a class="reference" href="#getCoord%2Cstring%2Cint"
-    title="getCoord(str: string; idx: int): Coord">getCoord(str: string; idx: int): Coord</a></li>
+      <li><a class="reference" href="#getCoord%2CStream%2Cint"
+    title="getCoord(s: Stream; i: int): Coord">getCoord(s: Stream; i: int): Coord</a></li>
+  <li><a class="reference" href="#getCoord%2Cstring%2Cint"
+    title="getCoord(s: string; at: int): Coord">getCoord(s: string; at: int): Coord</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">peekLineFromStart
+      <li><a class="reference" href="#peekLineFromStart%2CStream"
+    title="peekLineFromStart(s: Stream): string">peekLineFromStart(s: Stream): string</a></li>
+  <li><a class="reference" href="#peekLineFromStart%2Cstring%2Cint"
+    title="peekLineFromStart(s: string; at: int): string">peekLineFromStart(s: string; at: int): string</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">peekRune
+      <li><a class="reference" href="#peekRune%2CStream"
+    title="peekRune(s: Stream): Rune">peekRune(s: Stream): Rune</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">quoted
       <li><a class="reference" href="#quoted%2Cstring"
     title="quoted(x: string): string">quoted(x: string): string</a></li>
+
+  </ul>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#17" id="67">Macros</a>
+  <ul class="simple simple-toc-section">
+      <ul class="simple nested-toc-section">getDiscriminants
+      <li><a class="reference" href="#getDiscriminants.m%2Ctypedesc"
+    title="getDiscriminants(a: typedesc): seq[string]">getDiscriminants(a: typedesc): seq[string]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">initCaseObject
+      <li><a class="reference" href="#initCaseObject.m%2Ctypedesc%2C"
+    title="initCaseObject(T: typedesc; discriminatorSetter): untyped">initCaseObject(T: typedesc; discriminatorSetter): untyped</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">isObjVariant
+      <li><a class="reference" href="#isObjVariant.m%2Ctypedesc"
+    title="isObjVariant(a: typedesc): bool">isObjVariant(a: typedesc): bool</a></li>
+
+  </ul>
+
+  </ul>
+</li>
+<li>
+  <a class="reference reference-toplevel" href="#18" id="68">Templates</a>
+  <ul class="simple simple-toc-section">
+      <ul class="simple nested-toc-section">check
+      <li><a class="reference" href="#check.t%2Cuntyped%2Cstring"
+    title="check(cond: untyped; msg = &quot;&quot;)">check(cond: untyped; msg = &quot;&quot;)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">fail
+      <li><a class="reference" href="#fail.t%2Cstring"
+    title="fail(msg: string)">fail(msg: string)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">typeofdesc
+      <li><a class="reference" href="#typeofdesc.t%2Ctypedesc%5BT%5D"
+    title="typeofdesc[T](b: typedesc[T]): untyped">typeofdesc[T](b: typedesc[T]): untyped</a></li>
 
   </ul>
 
@@ -146,47 +220,18 @@ class="link-seesrc" target="_blank">Source</a>
   <div id="tocRoot"></div>
   
   <p class="module-desc"></p>
-  <div class="section" id="7">
+  <div class="section" id="6">
+<h1><a class="toc-backref" href="#6">Imports</a></h1>
+<dl class="item">
+<a class="reference external" href="types.html">types</a>
+</dl></div>
+<div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
 <div id="Coord">
-<dt><pre><a href="utils.html#Coord"><span class="Identifier">Coord</span></a> <span class="Other">=</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">line</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">,</span> <span class="Identifier">col</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">]</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L8"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L8" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="KdlError">
-<dt><pre><a href="utils.html#KdlError"><span class="Identifier">KdlError</span></a> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">ValueError</span></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L4"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L4" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="KdlLexerError">
-<dt><pre><a href="utils.html#KdlLexerError"><span class="Identifier">KdlLexerError</span></a> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <a href="utils.html#KdlError"><span class="Identifier">KdlError</span></a></pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L5"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L5" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="KdlParserError">
-<dt><pre><a href="utils.html#KdlParserError"><span class="Identifier">KdlParserError</span></a> <span class="Other">=</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <a href="utils.html#KdlError"><span class="Identifier">KdlError</span></a></pre></dt>
+<dt><pre><a href="utils.html#Coord"><span class="Identifier">Coord</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">line</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">col</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">idx</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
+</pre></dt>
 <dd>
 
 
@@ -197,26 +242,8 @@ class="link-seesrc" target="_blank">Source</a>
 
 </dd>
 </div>
-
-</dl></div>
-<div class="section" id="12">
-<h1><a class="toc-backref" href="#12">Procs</a></h1>
-<dl class="item">
-<div id="errorAt,string,tuple[int,int]">
-<dt><pre><span class="Keyword">proc</span> <a href="#errorAt%2Cstring%2Ctuple%5Bint%2Cint%5D"><span class="Identifier">errorAt</span></a><span class="Other">(</span><span class="Identifier">source</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">coord</span><span class="Other">:</span> <span class="Keyword">tuple</span><span class="Other">[</span><span class="Identifier">line</span><span class="Other">,</span> <span class="Identifier">col</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-
-&nbsp;&nbsp;<a
-href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L17"
-class="link-seesrc" target="_blank">Source</a>
-&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L17" class="link-seesrc" target="_blank" >Edit</a>
-
-</dd>
-</div>
-<div id="getCoord,string,int">
-<dt><pre><span class="Keyword">proc</span> <a href="#getCoord%2Cstring%2Cint"><span class="Identifier">getCoord</span></a><span class="Other">(</span><span class="Identifier">str</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">idx</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="utils.html#Coord"><span class="Identifier">Coord</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="KdlSome">
+<dt><pre><a href="utils.html#KdlSome"><span class="Identifier">KdlSome</span></a> <span class="Other">=</span> <span class="Other">(</span><a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a> <span class="Keyword">or</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a> <span class="Keyword">or</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
 <dd>
 
 
@@ -227,8 +254,8 @@ class="link-seesrc" target="_blank">Source</a>
 
 </dd>
 </div>
-<div id="quoted,string">
-<dt><pre><span class="Keyword">proc</span> <a href="#quoted%2Cstring"><span class="Identifier">quoted</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="List">
+<dt><pre><a href="utils.html#List"><span class="Identifier">List</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="Identifier">array</span> <span class="Keyword">or</span> <span class="Identifier">seq</span><span class="Other">)</span></pre></dt>
 <dd>
 
 
@@ -236,6 +263,244 @@ class="link-seesrc" target="_blank">Source</a>
 href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L10"
 class="link-seesrc" target="_blank">Source</a>
 &nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L10" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="Object">
+<dt><pre><a href="utils.html#Object"><span class="Identifier">Object</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="Other">(</span><span class="Keyword">object</span> <span class="Keyword">or</span> <span class="Keyword">tuple</span><span class="Other">)</span> <span class="Keyword">and</span> <span class="Keyword">not</span> <a href="utils.html#KdlSome"><span class="Identifier">KdlSome</span></a><span class="Other">)</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L9"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L9" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="SomeTable">
+<dt><pre><a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a><span class="Other">[</span><span class="Identifier">K</span><span class="Other">;</span> <span class="Identifier">V</span><span class="Other">]</span> <span class="Other">=</span> <span class="Other">(</span><span class="Identifier">Table</span><span class="Other">[</span><span class="Identifier">K</span><span class="Other">,</span> <span class="Identifier">V</span><span class="Other">]</span> <span class="Keyword">or</span> <span class="Identifier">OrderedTable</span><span class="Other">[</span><span class="Identifier">K</span><span class="Other">,</span> <span class="Identifier">V</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L13"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L13" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="Value">
+<dt><pre><a href="utils.html#Value"><span class="Identifier">Value</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="Identifier">SomeNumber</span> <span class="Keyword">or</span> <span class="Identifier">string</span> <span class="Keyword">or</span> <span class="Identifier">bool</span><span class="Other">)</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L11"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L11" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+
+</dl></div>
+<div class="section" id="12">
+<h1><a class="toc-backref" href="#12">Procs</a></h1>
+<dl class="item">
+<div id="eqIdent,openArray[char],openArray[char]">
+<dt><pre><span class="Keyword">proc</span> <a href="#eqIdent%2CopenArray%5Bchar%5D%2CopenArray%5Bchar%5D"><span class="Identifier">eqIdent</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">,</span> <span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">char</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">ignoreChars</span> <span class="Other">=</span> <span class="Other">{</span><span class="CharLit">'_'</span><span class="Other">,</span> <span class="CharLit">'-'</span><span class="Other">}</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L49"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L49" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="errorAt,Stream,Coord">
+<dt><pre><span class="Keyword">proc</span> <a href="#errorAt%2CStream%2CCoord"><span class="Identifier">errorAt</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">Stream</span><span class="Other">;</span> <span class="Identifier">coord</span><span class="Other">:</span> <a href="utils.html#Coord"><span class="Identifier">Coord</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L115"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L115" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="errorAt,string,Coord">
+<dt><pre><span class="Keyword">proc</span> <a href="#errorAt%2Cstring%2CCoord"><span class="Identifier">errorAt</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">coord</span><span class="Other">:</span> <a href="utils.html#Coord"><span class="Identifier">Coord</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L125"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L125" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="getCoord,Stream,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#getCoord%2CStream%2Cint"><span class="Identifier">getCoord</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">Stream</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="utils.html#Coord"><span class="Identifier">Coord</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L90"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L90" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="getCoord,string,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#getCoord%2Cstring%2Cint"><span class="Identifier">getCoord</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">at</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="utils.html#Coord"><span class="Identifier">Coord</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L105"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L105" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="peekLineFromStart,Stream">
+<dt><pre><span class="Keyword">proc</span> <a href="#peekLineFromStart%2CStream"><span class="Identifier">peekLineFromStart</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">Stream</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L58"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L58" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="peekLineFromStart,string,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#peekLineFromStart%2Cstring%2Cint"><span class="Identifier">peekLineFromStart</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">at</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L72"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L72" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="peekRune,Stream">
+<dt><pre><span class="Keyword">proc</span> <a href="#peekRune%2CStream"><span class="Identifier">peekRune</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">Stream</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Rune</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span>
+                                 <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L53"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L53" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="quoted,string">
+<dt><pre><span class="Keyword">proc</span> <a href="#quoted%2Cstring"><span class="Identifier">quoted</span></a><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L23"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L23" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+
+</dl></div>
+<div class="section" id="17">
+<h1><a class="toc-backref" href="#17">Macros</a></h1>
+<dl class="item">
+<div id="getDiscriminants.m,typedesc">
+<dt><pre><span class="Keyword">macro</span> <a href="#getDiscriminants.m%2Ctypedesc"><span class="Identifier">getDiscriminants</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span></pre></dt>
+<dd>
+
+return the discriminant keys
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L154"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L154" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="initCaseObject.m,typedesc,">
+<dt><pre><span class="Keyword">macro</span> <a href="#initCaseObject.m%2Ctypedesc%2C"><span class="Identifier">initCaseObject</span></a><span class="Other">(</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">;</span> <span class="Identifier">discriminatorSetter</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+Does the minimum to construct a valid case object <tt class="docutils literal"><span class="pre"><span class="Identifier">T</span></span></tt>.<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">discriminatorSetter</span></span></tt>: called passing two arguments <tt class="docutils literal"><span class="pre"><span class="Punctuation">(</span><span class="Identifier">key</span><span class="Punctuation">,</span> <span class="Identifier">typ</span><span class="Punctuation">)</span></span></tt> (<tt class="docutils literal"><span class="pre"><span class="Identifier">key</span></span></tt> being the field name and <tt class="docutils literal"><span class="pre"><span class="Identifier">typ</span></span></tt> the field type), last expression should be the value for the field</li>
+</ul>
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L183"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L183" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="isObjVariant.m,typedesc">
+<dt><pre><span class="Keyword">macro</span> <a href="#isObjVariant.m%2Ctypedesc"><span class="Identifier">isObjVariant</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L134"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L134" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+
+</dl></div>
+<div class="section" id="18">
+<h1><a class="toc-backref" href="#18">Templates</a></h1>
+<dl class="item">
+<div id="check.t,untyped,string">
+<dt><pre><span class="Keyword">template</span> <a href="#check.t%2Cuntyped%2Cstring"><span class="Identifier">check</span></a><span class="Other">(</span><span class="Identifier">cond</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">;</span> <span class="Identifier">msg</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">)</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L18"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L18" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="fail.t,string">
+<dt><pre><span class="Keyword">template</span> <a href="#fail.t%2Cstring"><span class="Identifier">fail</span></a><span class="Other">(</span><span class="Identifier">msg</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L15"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L15" class="link-seesrc" target="_blank" >Edit</a>
+
+</dd>
+</div>
+<div id="typeofdesc.t,typedesc[T]">
+<dt><pre><span class="Keyword">template</span> <a href="#typeofdesc.t%2Ctypedesc%5BT%5D"><span class="Identifier">typeofdesc</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">b</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
+<dd>
+
+
+&nbsp;&nbsp;<a
+href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L216"
+class="link-seesrc" target="_blank">Source</a>
+&nbsp;&nbsp;<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L216" class="link-seesrc" target="_blank" >Edit</a>
 
 </dd>
 </div>
@@ -249,7 +514,7 @@ class="link-seesrc" target="_blank">Source</a>
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-13 14:40:32 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-02-19 16:38:48 UTC</small>
       </div>
     </div>
   </div>

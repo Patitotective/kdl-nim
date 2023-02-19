@@ -35,6 +35,8 @@ Token	kdl/lexer.html#Token	lexer: Token
 Lexer	kdl/lexer.html#Lexer	lexer: Lexer	
 escapeTable	kdl/lexer.html#escapeTable	lexer: escapeTable	
 `$`	kdl/lexer.html#$,Lexer	lexer: `$`(lexer: Lexer): string	
+getPos	kdl/lexer.html#getPos,Lexer	lexer: getPos(lexer: Lexer): int	
+tokenNewLine	kdl/lexer.html#tokenNewLine,Lexer,bool,bool	lexer: tokenNewLine(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
 tokenNumInt	kdl/lexer.html#tokenNumInt,Lexer,bool,bool	lexer: tokenNumInt(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
 tokenNumBin	kdl/lexer.html#tokenNumBin,Lexer,bool,bool	lexer: tokenNumBin(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
 tokenNumHex	kdl/lexer.html#tokenNumHex,Lexer,bool,bool	lexer: tokenNumHex(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
@@ -44,11 +46,13 @@ tokenRawString	kdl/lexer.html#tokenRawString,Lexer,bool,bool	lexer: tokenRawStri
 tokenMultiLineComment	kdl/lexer.html#tokenMultiLineComment,Lexer,bool,bool	lexer: tokenMultiLineComment(lexer: var Lexer; consume: bool = true;\n                      addToStack: bool = true): bool	
 tokenWhitespace	kdl/lexer.html#tokenWhitespace,Lexer,bool,bool	lexer: tokenWhitespace(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
 skipWhitespaces	kdl/lexer.html#skipWhitespaces,Lexer,bool,bool	lexer: skipWhitespaces(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenNewLine	kdl/lexer.html#tokenNewLine,Lexer,bool,bool	lexer: tokenNewLine(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
 tokenIdent	kdl/lexer.html#tokenIdent,Lexer,bool,bool	lexer: tokenIdent(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
 tokenSingleLineComment	kdl/lexer.html#tokenSingleLineComment,Lexer,bool,bool	lexer: tokenSingleLineComment(lexer: var Lexer; consume: bool = true;\n                       addToStack: bool = true): bool	
 tokenLineCont	kdl/lexer.html#tokenLineCont,Lexer,bool,bool	lexer: tokenLineCont(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-validToken	kdl/lexer.html#validToken,string,proc(Lexer,,)	lexer: validToken(input: string; token: proc (lexer: var Lexer; consume = true;\n                                       addToStack = true): bool): bool	
+validToken	kdl/lexer.html#validToken,sinkstring,proc(Lexer,,)	lexer: validToken(source: sink string; token: proc (lexer: var Lexer; consume = true;\n    addToStack = true): bool): bool	
 scanKdl	kdl/lexer.html#scanKdl,Lexer	lexer: scanKdl(lexer: var Lexer)	
 scanKdl	kdl/lexer.html#scanKdl,string,int	lexer: scanKdl(source: string; start = 0): Lexer	
 scanKdlFile	kdl/lexer.html#scanKdlFile,string	lexer: scanKdlFile(path: string): Lexer	
+scanKdl	kdl/lexer.html#scanKdl,sinkStream	lexer: scanKdl(stream: sink Stream): Lexer	
+scanKdlStream	kdl/lexer.html#scanKdlStream,sinkstring	lexer: scanKdlStream(source: sink string): Lexer	
+scanKdlFileStream	kdl/lexer.html#scanKdlFileStream,string	lexer: scanKdlFileStream(path: string): Lexer	

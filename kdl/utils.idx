@@ -1,7 +1,21 @@
-KdlError	kdl/utils.html#KdlError	utils: KdlError	
-KdlLexerError	kdl/utils.html#KdlLexerError	utils: KdlLexerError	
-KdlParserError	kdl/utils.html#KdlParserError	utils: KdlParserError	
 Coord	kdl/utils.html#Coord	utils: Coord	
+Object	kdl/utils.html#Object	utils: Object	
+List	kdl/utils.html#List	utils: List	
+Value	kdl/utils.html#Value	utils: Value	
+KdlSome	kdl/utils.html#KdlSome	utils: KdlSome	
+SomeTable	kdl/utils.html#SomeTable	utils: SomeTable	
+fail	kdl/utils.html#fail.t,string	utils: fail(msg: string)	
+check	kdl/utils.html#check.t,untyped,string	utils: check(cond: untyped; msg = &quot;&quot;)	
 quoted	kdl/utils.html#quoted,string	utils: quoted(x: string): string	
-getCoord	kdl/utils.html#getCoord,string,int	utils: getCoord(str: string; idx: int): Coord	
-errorAt	kdl/utils.html#errorAt,string,tuple[int,int]	utils: errorAt(source: string; coord: tuple[line, col: int]): string	
+eqIdent	kdl/utils.html#eqIdent,openArray[char],openArray[char]	utils: eqIdent(v, a: openArray[char]; ignoreChars = {&apos;_&apos;, &apos;-&apos;}): bool	
+peekRune	kdl/utils.html#peekRune,Stream	utils: peekRune(s: Stream): Rune	
+peekLineFromStart	kdl/utils.html#peekLineFromStart,Stream	utils: peekLineFromStart(s: Stream): string	
+peekLineFromStart	kdl/utils.html#peekLineFromStart,string,int	utils: peekLineFromStart(s: string; at: int): string	
+getCoord	kdl/utils.html#getCoord,Stream,int	utils: getCoord(s: Stream; i: int): Coord	
+getCoord	kdl/utils.html#getCoord,string,int	utils: getCoord(s: string; at: int): Coord	
+errorAt	kdl/utils.html#errorAt,Stream,Coord	utils: errorAt(s: Stream; coord: Coord): string	
+errorAt	kdl/utils.html#errorAt,string,Coord	utils: errorAt(s: string; coord: Coord): string	
+isObjVariant	kdl/utils.html#isObjVariant.m,typedesc	utils: isObjVariant(a: typedesc): bool	
+getDiscriminants	kdl/utils.html#getDiscriminants.m,typedesc	utils: getDiscriminants(a: typedesc): seq[string]	
+initCaseObject	kdl/utils.html#initCaseObject.m,typedesc,	utils: initCaseObject(T: typedesc; discriminatorSetter): untyped	
+typeofdesc	kdl/utils.html#typeofdesc.t,typedesc[T]	utils: typeofdesc[T](b: typedesc[T]): untyped	

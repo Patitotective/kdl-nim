@@ -1,0 +1,27 @@
+encode	kdl/encoder.html#encode,auto,KdlDoc	encoder: encode(a: auto; v: var KdlDoc)	
+encode	kdl/encoder.html#encode,auto,KdlVal	encoder: encode(a: auto; v: var KdlVal)	
+encode	kdl/encoder.html#encode,auto,KdlNode,string	encoder: encode(a: auto; v: var KdlNode; name: string)	
+encode	kdl/encoder.html#encode,auto	encoder: encode(a: auto): KdlDoc	
+encode	kdl/encoder.html#encode,auto,string	encoder: encode(a: auto; name: string): KdlNode	
+encode	kdl/encoder.html#encode,auto,typedesc[T]	encoder: encode[T: KdlSome](a: auto; _: typedesc[T]): T	
+encodeHook	kdl/encoder.html#encodeHook,List,KdlDoc	encoder: encodeHook(a: List; v: var KdlDoc)	
+encodeHook	kdl/encoder.html#encodeHook,Object,KdlDoc	encoder: encodeHook(a: Object; v: var KdlDoc)	
+encodeHook	kdl/encoder.html#encodeHook,ref,KdlDoc	encoder: encodeHook(a: ref; v: var KdlDoc)	
+encodeHook	kdl/encoder.html#encodeHook,KdlVal,KdlNode,string	encoder: encodeHook(a: KdlVal; v: var KdlNode; name: string)	
+encodeHook	kdl/encoder.html#encodeHook,List,KdlNode,string	encoder: encodeHook(a: List; v: var KdlNode; name: string)	
+encodeHook	kdl/encoder.html#encodeHook,Object,KdlNode,string	encoder: encodeHook(a: Object; v: var KdlNode; name: string)	
+encodeHook	kdl/encoder.html#encodeHook,ref,KdlNode,string	encoder: encodeHook(a: ref; v: var KdlNode; name: string)	
+encodeHook	kdl/encoder.html#encodeHook,auto,KdlNode,string	encoder: encodeHook(a: auto; v: var KdlNode; name: string)	
+encodeHook	kdl/encoder.html#encodeHook,Value,KdlVal	encoder: encodeHook(a: Value; v: var KdlVal)	
+encodeHook	kdl/encoder.html#encodeHook,cstring,KdlVal	encoder: encodeHook(a: cstring; v: var KdlVal)	
+encodeHook	kdl/encoder.html#encodeHook,char,KdlVal	encoder: encodeHook(a: char; v: var KdlVal)	
+encodeHook	kdl/encoder.html#encodeHook,KdlVal,KdlVal	encoder: encodeHook(a: KdlVal; v: var KdlVal)	
+encodeHook	kdl/encoder.html#encodeHook,,KdlVal	encoder: encodeHook(a: enum; v: var KdlVal)	
+encodeHook	kdl/encoder.html#encodeHook,List,KdlVal	encoder: encodeHook(a: List; v: var KdlVal)	
+encodeHook	kdl/encoder.html#encodeHook,,KdlDoc	encoder: encodeHook(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)	
+encodeHook	kdl/encoder.html#encodeHook,SomeSet[auto],KdlDoc	encoder: encodeHook(a: SomeSet[auto]; v: var KdlDoc)	
+encodeHook	kdl/encoder.html#encodeHook,,KdlNode,string	encoder: encodeHook(a: SomeTable[string, auto] or SomeSet[auto] or StringTableRef;\n           v: var KdlNode; name: string)	
+encodeHook	kdl/encoder.html#encodeHook,Option[auto],KdlNode,string	encoder: encodeHook(a: Option[auto]; v: var KdlNode; name: string)	
+encodeHook	kdl/encoder.html#encodeHook,Option[auto],KdlVal	encoder: encodeHook(a: Option[auto]; v: var KdlVal)	
+Encoder	kdl/encoder.html#encoder	  Encoder	
+Custom Encode Hooks	kdl/encoder.html#encoder-custom-encode-hooks	   Custom Encode Hooks	

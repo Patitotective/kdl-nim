@@ -1,60 +1,28 @@
 import std/[strformat, strutils, options, tables, macros]
 
-import utils
+import types, utils
 
 export options, tables
 
-type
-  KValKind* = enum
-    KEmpty, 
-    KString, 
-    KFloat, 
-    KBool, 
-    KNull
-    KInt, 
-
-  KdlVal* = object
-    tag*: Option[string] # Type annotation
-
-    case kind*: KValKind
-    of KString:
-      str*: string
-    of KFloat:
-      fnum*: float
-    of KBool:
-      boolean*: bool
-    of KNull, KEmpty:
-      discard
-    of KInt:
-      num*: int64
-
-  KdlProp* = tuple[key: string, val: KdlVal]
-
-  KdlNode* = object
-    tag*: Option[string]
-    name*: string
-    args*: seq[KdlVal]
-    props*: Table[string, KdlVal]
-    children*: seq[KdlNode]
-
-  KdlDoc* = seq[KdlNode]
-
 # ----- Initializers -----
 
-proc initKNode*(name: string, tag = string.none, args: openArray[KdlVal] = newSeq[KdlVal](), props = initTable[string, KdlVal](), children: openArray[KdlNode] = newSeq[KdlNode]()): KdlNode = 
+proc initKNode*(name: string, tag = string.none, args: openarray[KdlVal] = newSeq[KdlVal](), props = initTable[string, KdlVal](), children: openarray[KdlNode] = newSeq[KdlNode]()): KdlNode = 
   KdlNode(tag: tag, name: name, args: @args, props: props, children: @children)
 
 proc initKVal*(val: string, tag = string.none): KdlVal = 
   KdlVal(tag: tag, kind: KString, str: val)
 
 proc initKVal*(val: SomeFloat, tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KFloat, fnum: val)
+  KdlVal(tag: tag, kind: KFloat, fnum: val.float)
 
 proc initKVal*(val: bool, tag = string.none): KdlVal = 
   KdlVal(tag: tag, kind: KBool, boolean: val)
 
 proc initKVal*(val: SomeInteger, tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KInt, num: val)
+  KdlVal(tag: tag, kind: KInt, num: val.int64)
+
+proc initKVal*(val: typeof(nil), tag = string.none): KdlVal = 
+  KdlVal(tag: tag, kind: KNull)
 
 proc initKVal*(val: KdlVal): KdlVal = val
 
@@ -62,16 +30,16 @@ proc initKString*(val = string.default, tag = string.none): KdlVal =
   initKVal(val, tag)
 
 proc initKFloat*(val: SomeFloat = float.default, tag = string.none): KdlVal = 
-  initKVal(val, tag)
+  initKVal(val.float, tag)
 
 proc initKBool*(val = bool.default, tag = string.none): KdlVal = 
   initKVal(val, tag)
 
 proc initKNull*(tag = string.none): KdlVal = 
-  KdlVal(tag: tag, kind: KNUll)
+  KdlVal(tag: tag, kind: KNull)
 
 proc initKInt*(val: SomeInteger = int64.default, tag = string.none): KdlVal = 
-  initKVal(val, tag)
+  initKVal(val.int64, tag)
 
 # ----- Comparisions -----
 
@@ -96,19 +64,19 @@ proc isEmpty*(val: KdlVal): bool =
 # ----- Getters -----
 
 proc getString*(val: KdlVal): string = 
-  assert val.isString()
+  check val.isString()
   val.str
 
 proc getFloat*(val: KdlVal): float = 
-  assert val.isFloat()
+  check val.isFloat()
   val.fnum
 
 proc getBool*(val: KdlVal): bool = 
-  assert val.isBool()
+  check val.isBool()
   val.boolean
 
 proc getInt*(val: KdlVal): int64 = 
-  assert val.isInt()
+  check val.isInt()
   val.num
 
 proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T = 
@@ -122,10 +90,22 @@ proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T =
     assert val.get(float32) == 3.14f
 
   when T is string:
-    assert val.isString
-    result = val.getString
+    result = 
+      case val.kind
+      of KFloat:
+        $val.getFloat()
+      of KString:
+        val.getString()
+      of KBool:
+        $val.getBool()
+      of KNull:
+        "null"
+      of KInt:
+        $val.getInt()
+      of KEmpty:
+        "empty"
   elif T is SomeNumber:
-    assert val.isFloat or val.isInt
+    check val.isFloat or val.isInt
 
     result = 
       if val.isInt:
@@ -133,26 +113,26 @@ proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T =
       else:
         T(val.getFloat)
   elif T is bool:
-    assert val.isBool
+    check val.isBool
 
     result = val.getBool
 
 # ----- Setters -----
 
 proc setString*(val: var KdlVal, x: string) = 
-  assert val.isString()
+  check val.isString()
   val.str = x
 
 proc setFloat*(val: var KdlVal, x: SomeFloat) = 
-  assert val.isFloat()
+  check val.isFloat()
   val.fnum = x
 
 proc setBool*(val: var KdlVal, x: bool) = 
-  assert val.isBool()
+  check val.isBool()
   val.boolean = x
 
 proc setInt*(val: var KdlVal, x: SomeInteger) = 
-  assert val.isInt()
+  check val.isInt()
   val.num = x
 
 proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) = 
@@ -178,7 +158,7 @@ proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) =
   elif T is bool:
     val.setBool(x)
 
-# ----- Stringifier -----
+# ----- Operators -----
 
 proc `$`*(val: KdlVal): string = 
   if val.tag.isSome:
@@ -237,13 +217,10 @@ proc `$`*(doc: KdlDoc): string =
     if e < doc.high:
       result.add "\n"
 
-
-# ----- Operators -----
-
 proc `==`*(val1, val2: KdlVal): bool = 
   ## Checks if val1 and val2 have the same value. They must be of the same kind.
 
-  assert val1.kind == val2.kind
+  check val1.kind == val2.kind
 
   case val1.kind
   of KString:
@@ -261,10 +238,10 @@ proc `==`*[T: SomeNumber or string or bool](val: KdlVal, x: T): bool =
   ## Checks if val is x, raises an error when they are not comparable.
 
   when T is string:
-    assert val.isString
+    check val.isString
     result = val.getString() == x
   elif T is SomeNumber:
-    assert val.isFloat or val.isInt
+    check val.isFloat or val.isInt
 
     result = 
       if val.isInt:
@@ -272,23 +249,15 @@ proc `==`*[T: SomeNumber or string or bool](val: KdlVal, x: T): bool =
       else:
         val.getFloat() == x.float
   elif T is bool:
-    assert val.isBool
+    check val.isBool
 
     result = val.getBool() == x
-
-proc `[]`*(node: KdlNode, idx: int | BackwardsIndex): KdlVal = 
-  ## Gets the argument at idx.
-  node.args[idx]
 
 proc `[]`*(node: KdlNode, key: string): KdlVal = 
   ## Gets the value of the key property.
   node.props[key]
 
-proc `[]`*(node: var KdlNode, idx: int | BackwardsIndex): var KdlVal = 
-  ## Gets the argument at idx.
-  node.args[idx]
-
-proc `[]`*(node: var KdlNode, key: string): var KdlVal = 
+proc `[]`*(node: var KdlNode, key: string): var KdlVal = # TODO test
   ## Gets the value of the key property.
   node.props[key]
 
@@ -308,26 +277,19 @@ proc contains*(node: KdlNode, val: KdlVal): bool =
   ## Checks if node has the val argument.
   node.args.contains(val)
 
-proc len*(node: KdlNode): int = 
-  ## Node's arguments length.
-  node.args.len
+proc contains*(node: KdlNode, child: KdlNode): bool = 
+  ## Checks if node has the child children.
+  node.children.contains(child)
 
 proc add*(node: var KdlNode, val: KdlVal) = 
   ## Adds val to node's arguments.
 
   node.args.add(val)
 
-# ----- Iterators -----
+proc add*(node: var KdlNode, child: KdlNode) = 
+  ## Adds child to node's children.
 
-iterator items*(node: KdlNode): KdlVal = 
-  ## Yields arguments.
-  for arg in node.args:
-    yield arg
-
-iterator pairs*(node: KdlNode): (string, KdlVal) = 
-  ## Yields properties.
-  for key, val in node.props:
-    yield (key, val)
+  node.children.add(child)
 
 # ----- Macros -----
 
@@ -350,9 +312,6 @@ proc withTag(body: NimNode): tuple[body, tag: NimNode] =
 
 proc toKdlValImpl(body: NimNode): NimNode = 
   let (value, tag) = body.withTag()
-
-  if value.kind == nnkNilLit:
-    return newCall("initKNull", tag)
 
   newCall("initKVal", value, tag)
 
@@ -395,13 +354,13 @@ proc toKdlNodeImpl(body: NimNode): NimNode =
     body[i].expectKind(nnkStmtList)
     result.add newTree(nnkExprEqExpr, ident"children", newCall("toKdl", body[i]))
 
-macro toKdlVal*(body: untyped): untyped = 
+macro toKdlVal*(body: untyped): KdlVal = 
   ## Generate a KdlVal from Nim's AST that is somehat similar to KDL's syntax.
   ## - For type annotations use a bracket expresion: `node[tag]` instead of `(tag)node`.
 
   toKdlValImpl(body)
 
-macro toKdlNode*(body: untyped): untyped = 
+macro toKdlNode*(body: untyped): KdlNode = 
   ## Generate a KdlNode from Nim's AST that is somewhat similar to KDL's syntax.
   ## - For nodes use call syntax: `node(args, props)`.
   ## - For properties use an equal expression: `key=val`.
@@ -419,7 +378,7 @@ macro toKdlNode*(body: untyped): untyped =
 
   toKdlNodeImpl(body)
 
-macro toKdl*(body: untyped): untyped = 
+macro toKdl*(body: untyped): KdlDoc = 
   ## Generate a KdlDoc from Nim's AST that is somewhat similar to KDL's syntax.
   ## 
   ## See also [toKdlNode](#toKdlNode.m,untyped).
@@ -433,3 +392,29 @@ macro toKdl*(body: untyped): untyped =
     result = prefix(doc, "@")
   else:
     result = toKdlValImpl(body)
+
+macro toKdlArgs*(args: varargs[typed]): untyped = 
+  ## Creates an array of `KdlVal`s by calling `initKVal` through `args`.
+  runnableExamples:
+    assert toKdlArgs(1, 2, "a") == [1.initKVal, 2.initKVal, "a".initKVal]
+    assert initKNode("name", args = toKdlArgs(nil, true, "b")) == initKNode("name", args = [initKNull(), true.initKVal, "b".initKVal])
+
+  args.expectKind nnkBracket
+  result = newNimNode(nnkBracket)
+  for arg in args:
+    result.add newCall("initKVal", arg)
+
+macro toKdlProps*(props: untyped): Table[string, KdlVal] = 
+  ## Creates a `Table[string, KdlVal]` from a array-of-tuples/table-constructor by calling `initKVal` through the values.
+  runnableExamples:
+    assert toKdlProps({"a": 1, "b": 2}) == {"a": 1.initKVal, "b": 2.initKVal}.toTable
+    assert initKNode("name", props = toKdlProps({"c": nil, "d": true})) == initKNode("name", props = {"c": initKNull(), "d": true.initKVal}.toTable)
+
+  props.expectKind nnkTableConstr
+  
+  result = newNimNode(nnkTableConstr)
+  for i in props:
+    i.expectKind nnkExprColonExpr
+    result.add newTree(nnkExprColonExpr, i[0], newCall("initKVal", i[1]))
+
+  result = newCall("toTable", result)

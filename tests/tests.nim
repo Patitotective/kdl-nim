@@ -1,10 +1,9 @@
-import std/[unittest, xmlparser, xmltree, json, os]
+import std/[xmlparser, unittest, xmltree, json, os]
 
-import kdl, kdl/[schema, query, jik, xik]
+import kdl
+import kdl/[schema, query, jik, xik]
 
 let testsDir = getAppDir() / "test_cases"
-
-proc quoted*(x: string): string = result.addQuoted(x)
 
 suite "spec":
   for kind, path in walkDir(testsDir / "input"):
@@ -19,10 +18,15 @@ suite "spec":
     elif fileExists(expectedPath):
       test "Valid: " & filename:
         check readFile(expectedPath) == parseKdlFile(path).pretty()
+      test "Valid: " & filename & " [Stream]":
+        check readFile(expectedPath) == parseKdlFileStream(path).pretty()
     else:
       test "Invalid: " & filename:
-        expect(KDLError):
+        expect(KdlError):
           discard parseKdlFile(path)
+      test "Invalid: " & filename & " [Stream]":
+        expect(KdlError):
+          discard parseKdlFileStream(path)
 
 suite "examples": # Check that kdl-nim can parse all the documents in the examples folder
   for kind, path in walkDir(testsDir / "examples"):
@@ -52,3 +56,8 @@ suite "JiK": # Check that kdl-nim can convert JSON into KDL forth and back
     test "File: " & filename:
       let data = parseFile(path)
       check data == data.toKdl().toJson()
+
+suite "Other":
+  test "Nodes":
+    check toKdlArgs("abc", 123, 3.14, true, nil) == ["abc".initKVal, 123.initKVal, 3.14.initKVal, true.initKVal, initKNull()]
+    check toKdlProps({"a": "abc", "b": 123, "c": 3.14, "d": false, "e": nil}) == {"a": "abc".initKVal, "b": 123.initKVal, "c": 3.14.initKVal, "d": false.initKVal, "e": initKNull()}.toTable

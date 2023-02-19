@@ -20,6 +20,7 @@ nimble install https://github.com/Patitotective/kdl-nim
 - [Encoder/Serializer](https://patitotective.github.io/kdl-nim/kdl/encoder.html)
 - [JSON-in-KDL](https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md) ([JiK](https://patitotective.github.io/kdl-nim/kdl/jik.html))
 - [XML-in-KDL](https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md) ([Xik](https://patitotective.github.io/kdl-nim/kdl/xik.html))
+- [Prefs](https://patitotective.github.io/kdl-nim/kdl/prefs.html)
 
 ## Overview
 ```nim

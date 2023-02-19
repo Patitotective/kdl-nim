@@ -93,10 +93,11 @@ runnableExamples:
 ## - [kdl/encoder](kdl/encoder.html) for KDL serializing
 ## - [kdl/xix](kdl/xik.html) for [XML-in-KDL](https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md)
 ## - [kdl/jix](kdl/jix.html) for [JSON-in-KDL](https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md)
+## - [kdl/prefs](kdl/prefs.html) for simple preferences sytem.
 
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
 
-import kdl/[decoder, encoder, parser, lexer, nodes, types, utils, xik, jik]
+import kdl/[decoder, encoder, parser, lexer, nodes, types, utils, prefs, xik, jik]
 
 export decoder, encoder, parser, nodes, types
 export scanKdl, scanKdlFile, lexer.`$` # lexer

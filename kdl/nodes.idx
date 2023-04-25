@@ -1,4 +1,4 @@
-initKNode	kdl/nodes.html#initKNode,string,openArray[KdlVal],openArray[KdlNode]	nodes: initKNode(name: string; tag = string.none;\n          args: openArray[KdlVal] = newSeq[KdlVal](); props = initTable();\n          children: openArray[KdlNode] = newSeq[KdlNode]()): KdlNode	
+initKNode	kdl/nodes.html#initKNode,string,openArray[KdlVal],openArray[KdlNode]	nodes: initKNode(name: string; tag = string.none; args: openArray[KdlVal] = newSeq();\n          props = initTable(); children: openArray[KdlNode] = newSeq()): KdlNode	
 initKVal	kdl/nodes.html#initKVal,string	nodes: initKVal(val: string; tag = string.none): KdlVal	
 initKVal	kdl/nodes.html#initKVal,SomeFloat	nodes: initKVal(val: SomeFloat; tag = string.none): KdlVal	
 initKVal	kdl/nodes.html#initKVal,bool	nodes: initKVal(val: bool; tag = string.none): KdlVal	

@@ -177,7 +177,7 @@ proc toJArray(node: KdlNode): JsonNode =
     result.add child.toJson
 
 proc toJson*(node: KdlNode): JsonNode = 
-  ## Converts node into its XML representation.
+  ## Converts node into its JSON representation.
 
   case node.jsonKind
   of JArray:

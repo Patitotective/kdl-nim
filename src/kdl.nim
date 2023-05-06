@@ -97,7 +97,9 @@ runnableExamples:
 
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
 
-import kdl/[decoder, encoder, parser, lexer, nodes, types, utils, prefs, xik, jik]
+import kdl/[decoder, encoder, parser, lexer, nodes, types, utils, xik, jik]
+when not defined(js):
+  import kdl/prefs
 
 export decoder, encoder, parser, nodes, types
 export scanKdl, scanKdlFile, lexer.`$` # lexer

@@ -43,7 +43,7 @@ runnableExamples:
             width 500
             height 500
         }
-        (object)image {
+        (object)image { 
             src "Images/Sun.png"
             name "sun1"
             hOffset 250

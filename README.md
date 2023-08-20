@@ -90,6 +90,7 @@ Documentation is live at https://patitotective.github.io/kdl-nim/.
 ## TODO
 - Implement [KDL schema language](https://github.com/kdl-org/kdl/blob/main/SCHEMA-SPEC.md).
 - Implement [KDL query language](https://github.com/kdl-org/kdl/blob/main/QUERY-SPEC.md).
+- Support OrderedTables
 
 ## About
 - GitHub: https://github.com/Patitotective/kdl-nim.

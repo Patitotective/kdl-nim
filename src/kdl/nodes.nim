@@ -281,6 +281,12 @@ proc contains*(node: KdlNode, child: KdlNode): bool =
   ## Checks if node has the child children.
   node.children.contains(child)
 
+proc contains*(doc: KdlDoc, nodeName: string): bool = 
+  ## Checks if doc has a node called nodeName
+  for node in doc:
+    if node.name == nodeName:
+      return true
+
 proc add*(node: var KdlNode, val: KdlVal) = 
   ## Adds val to node's arguments.
 

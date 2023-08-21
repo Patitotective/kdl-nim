@@ -265,21 +265,17 @@ proc `[]=`*(node: var KdlNode, key: string, val: KdlVal) =
   ## Sets the key property to val in node.
   node.props[key] = val
 
-proc hasKey*(node: KdlNode, key: string): bool = 
-  ## Checks if node has the key property.
-  node.props.hasKey(key)
-
 proc contains*(node: KdlNode, key: string): bool = 
   ## Checks if node has the key property.
-  node.props.contains(key)
+  key in node.props
 
 proc contains*(node: KdlNode, val: KdlVal): bool = 
   ## Checks if node has the val argument.
-  node.args.contains(val)
+  val in node.args
 
 proc contains*(node: KdlNode, child: KdlNode): bool = 
   ## Checks if node has the child children.
-  node.children.contains(child)
+  child in node.children
 
 proc contains*(doc: KdlDoc, name: string): bool = 
   ## Checks if doc has a node called name

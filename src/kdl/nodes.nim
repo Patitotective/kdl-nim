@@ -281,10 +281,10 @@ proc contains*(node: KdlNode, child: KdlNode): bool =
   ## Checks if node has the child children.
   node.children.contains(child)
 
-proc contains*(doc: KdlDoc, nodeName: string): bool = 
-  ## Checks if doc has a node called nodeName
+proc contains*(doc: KdlDoc, name: string): bool = 
+  ## Checks if doc has a node called name
   for node in doc:
-    if node.name == nodeName:
+    if node.name == name:
       return true
 
 proc add*(node: var KdlNode, val: KdlVal) = 
@@ -296,6 +296,28 @@ proc add*(node: var KdlNode, child: KdlNode) =
   ## Adds child to node's children.
 
   node.children.add(child)
+
+proc findFirst*(doc: KdlDoc, name: string): KdlNode = 
+  ## Returns the first node called name. Raises an exception when it doesn't exist
+  for node in doc:
+    if node.name == name:
+      return node
+
+  raise newException(KeyError, &"A node called {name} doesn't exist")
+
+proc findLast*(doc: KdlDoc, name: string): KdlNode = 
+  ## Returns the last node called name. Raises an exception when it doesn't exist
+  for e in countdown(doc.high, 0):
+    if doc[e].name == name:
+      return doc[e]
+
+  raise newException(KeyError, &"A node called {name} doesn't exist")
+
+proc find*(doc: KdlDoc, name: string): seq[KdlNode] = 
+  ## Returns all the nodes called name.
+  for node in doc:
+    if node.name == name:
+      result.add node
 
 # ----- Macros -----
 

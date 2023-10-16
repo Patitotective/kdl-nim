@@ -1,15 +1,16 @@
-KdlError	kdl/types.html#KdlError	types: KdlError	
-KdlLexerError	kdl/types.html#KdlLexerError	types: KdlLexerError	
-KdlParserError	kdl/types.html#KdlParserError	types: KdlParserError	
-KEmpty	kdl/types.html#KEmpty	KValKind.KEmpty	
-KString	kdl/types.html#KString	KValKind.KString	
-KFloat	kdl/types.html#KFloat	KValKind.KFloat	
-KBool	kdl/types.html#KBool	KValKind.KBool	
-KNull	kdl/types.html#KNull	KValKind.KNull	
-KInt	kdl/types.html#KInt	KValKind.KInt	
-KValKind	kdl/types.html#KValKind	types: KValKind	
-KdlVal	kdl/types.html#KdlVal	types: KdlVal	
-KdlProp	kdl/types.html#KdlProp	types: KdlProp	
-KdlNode	kdl/types.html#KdlNode	types: KdlNode	
-KdlDoc	kdl/types.html#KdlDoc	types: KdlDoc	
-KdlPrefs	kdl/types.html#KdlPrefs	types: KdlPrefs	
+nimTitle	types	kdl/types.html	module src/kdl/types		0
+nim	KdlError	kdl/types.html#KdlError	object KdlError		4
+nim	KdlLexerError	kdl/types.html#KdlLexerError	object KdlLexerError		5
+nim	KdlParserError	kdl/types.html#KdlParserError	object KdlParserError		6
+nim	KEmpty	kdl/types.html#KEmpty	KValKind.KEmpty		8
+nim	KString	kdl/types.html#KString	KValKind.KString		8
+nim	KFloat	kdl/types.html#KFloat	KValKind.KFloat		8
+nim	KBool	kdl/types.html#KBool	KValKind.KBool		8
+nim	KNull	kdl/types.html#KNull	KValKind.KNull		8
+nim	KInt	kdl/types.html#KInt	KValKind.KInt		8
+nim	KValKind	kdl/types.html#KValKind	enum KValKind		8
+nim	KdlVal	kdl/types.html#KdlVal	object KdlVal		16
+nim	KdlProp	kdl/types.html#KdlProp	tuple KdlProp		31
+nim	KdlNode	kdl/types.html#KdlNode	object KdlNode		33
+nim	KdlDoc	kdl/types.html#KdlDoc	type KdlDoc		40
+nim	KdlPrefs	kdl/types.html#KdlPrefs	object KdlPrefs		42

@@ -1,3 +1,4 @@
-toKdl	kdl/xik.html#toKdl,XmlNode	xik: toKdl(node: XmlNode; comments = false): KdlNode	
-toXml	kdl/xik.html#toXml,KdlNode	xik: toXml(node: KdlNode; comments = false): XmlNode	
-XiK	kdl/xik.html#xik	 XiK	
+nimTitle	xik	kdl/xik.html	module src/kdl/xik		0
+nim	toKdl	kdl/xik.html#toKdl,XmlNode	proc toKdl(node: XmlNode; comments = false): KdlNode		51
+nim	toXml	kdl/xik.html#toXml,KdlNode	proc toXml(node: KdlNode; comments = false): XmlNode		76
+heading	XiK	kdl/xik.html#xik	 XiK		0

@@ -1,58 +1,60 @@
-tkEmpty	kdl/lexer.html#tkEmpty	TokenKind.tkEmpty	
-tkNull	kdl/lexer.html#tkNull	TokenKind.tkNull	
-tkStar	kdl/lexer.html#tkStar	TokenKind.tkStar	
-tkPlus	kdl/lexer.html#tkPlus	TokenKind.tkPlus	
-tkBool	kdl/lexer.html#tkBool	TokenKind.tkBool	
-tkTilde	kdl/lexer.html#tkTilde	TokenKind.tkTilde	
-tkComma	kdl/lexer.html#tkComma	TokenKind.tkComma	
-tkCaret	kdl/lexer.html#tkCaret	TokenKind.tkCaret	
-tkDollar	kdl/lexer.html#tkDollar	TokenKind.tkDollar	
-tkIdent	kdl/lexer.html#tkIdent	TokenKind.tkIdent	
-tkSemicolon	kdl/lexer.html#tkSemicolon	TokenKind.tkSemicolon	
-tkGreater	kdl/lexer.html#tkGreater	TokenKind.tkGreater	
-tkSlashDash	kdl/lexer.html#tkSlashDash	TokenKind.tkSlashDash	
-tkDoublePipe	kdl/lexer.html#tkDoublePipe	TokenKind.tkDoublePipe	
-tkLineCont	kdl/lexer.html#tkLineCont	TokenKind.tkLineCont	
-tkEqual	kdl/lexer.html#tkEqual	TokenKind.tkEqual	
-tkNotEqual	kdl/lexer.html#tkNotEqual	TokenKind.tkNotEqual	
-tkString	kdl/lexer.html#tkString	TokenKind.tkString	
-tkRawString	kdl/lexer.html#tkRawString	TokenKind.tkRawString	
-tkWhitespace	kdl/lexer.html#tkWhitespace	TokenKind.tkWhitespace	
-tkNewLine	kdl/lexer.html#tkNewLine	TokenKind.tkNewLine	
-tkOpenPar	kdl/lexer.html#tkOpenPar	TokenKind.tkOpenPar	
-tkClosePar	kdl/lexer.html#tkClosePar	TokenKind.tkClosePar	
-tkOpenBra	kdl/lexer.html#tkOpenBra	TokenKind.tkOpenBra	
-tkCloseBra	kdl/lexer.html#tkCloseBra	TokenKind.tkCloseBra	
-tkOpenSqu	kdl/lexer.html#tkOpenSqu	TokenKind.tkOpenSqu	
-tkCloseSqu	kdl/lexer.html#tkCloseSqu	TokenKind.tkCloseSqu	
-tkNumFloat	kdl/lexer.html#tkNumFloat	TokenKind.tkNumFloat	
-tkNumInt	kdl/lexer.html#tkNumInt	TokenKind.tkNumInt	
-tkNumHex	kdl/lexer.html#tkNumHex	TokenKind.tkNumHex	
-tkNumBin	kdl/lexer.html#tkNumBin	TokenKind.tkNumBin	
-tkNumOct	kdl/lexer.html#tkNumOct	TokenKind.tkNumOct	
-TokenKind	kdl/lexer.html#TokenKind	lexer: TokenKind	
-Token	kdl/lexer.html#Token	lexer: Token	
-Lexer	kdl/lexer.html#Lexer	lexer: Lexer	
-escapeTable	kdl/lexer.html#escapeTable	lexer: escapeTable	
-`$`	kdl/lexer.html#$,Lexer	lexer: `$`(lexer: Lexer): string	
-getPos	kdl/lexer.html#getPos,Lexer	lexer: getPos(lexer: Lexer): int	
-tokenNewLine	kdl/lexer.html#tokenNewLine,Lexer,bool,bool	lexer: tokenNewLine(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenNumInt	kdl/lexer.html#tokenNumInt,Lexer,bool,bool	lexer: tokenNumInt(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenNumBin	kdl/lexer.html#tokenNumBin,Lexer,bool,bool	lexer: tokenNumBin(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenNumHex	kdl/lexer.html#tokenNumHex,Lexer,bool,bool	lexer: tokenNumHex(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenNumOct	kdl/lexer.html#tokenNumOct,Lexer,bool,bool	lexer: tokenNumOct(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenString	kdl/lexer.html#tokenString,Lexer,bool,bool	lexer: tokenString(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenRawString	kdl/lexer.html#tokenRawString,Lexer,bool,bool	lexer: tokenRawString(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenMultiLineComment	kdl/lexer.html#tokenMultiLineComment,Lexer,bool,bool	lexer: tokenMultiLineComment(lexer: var Lexer; consume: bool = true;\n                      addToStack: bool = true): bool	
-tokenWhitespace	kdl/lexer.html#tokenWhitespace,Lexer,bool,bool	lexer: tokenWhitespace(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-skipWhitespaces	kdl/lexer.html#skipWhitespaces,Lexer,bool,bool	lexer: skipWhitespaces(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenIdent	kdl/lexer.html#tokenIdent,Lexer,bool,bool	lexer: tokenIdent(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-tokenSingleLineComment	kdl/lexer.html#tokenSingleLineComment,Lexer,bool,bool	lexer: tokenSingleLineComment(lexer: var Lexer; consume: bool = true;\n                       addToStack: bool = true): bool	
-tokenLineCont	kdl/lexer.html#tokenLineCont,Lexer,bool,bool	lexer: tokenLineCont(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool	
-validToken	kdl/lexer.html#validToken,sinkstring,proc(Lexer,,)	lexer: validToken(source: sink string; token: proc (lexer: var Lexer; consume = true;\n    addToStack = true): bool): bool	
-scanKdl	kdl/lexer.html#scanKdl,Lexer	lexer: scanKdl(lexer: var Lexer)	
-scanKdl	kdl/lexer.html#scanKdl,string,int	lexer: scanKdl(source: string; start = 0): Lexer	
-scanKdlFile	kdl/lexer.html#scanKdlFile,string	lexer: scanKdlFile(path: string): Lexer	
-scanKdl	kdl/lexer.html#scanKdl,sinkStream	lexer: scanKdl(stream: sink Stream): Lexer	
-scanKdlStream	kdl/lexer.html#scanKdlStream,sinkstring	lexer: scanKdlStream(source: sink string): Lexer	
-scanKdlFileStream	kdl/lexer.html#scanKdlFileStream,string	lexer: scanKdlFileStream(path: string): Lexer	
+nimTitle	lexer	kdl/lexer.html	module src/kdl/lexer		0
+nim	tkEmpty	kdl/lexer.html#tkEmpty	TokenKind.tkEmpty		5
+nim	tkNull	kdl/lexer.html#tkNull	TokenKind.tkNull		5
+nim	tkStar	kdl/lexer.html#tkStar	TokenKind.tkStar		5
+nim	tkPlus	kdl/lexer.html#tkPlus	TokenKind.tkPlus		5
+nim	tkBool	kdl/lexer.html#tkBool	TokenKind.tkBool		5
+nim	tkTilde	kdl/lexer.html#tkTilde	TokenKind.tkTilde		5
+nim	tkComma	kdl/lexer.html#tkComma	TokenKind.tkComma		5
+nim	tkCaret	kdl/lexer.html#tkCaret	TokenKind.tkCaret		5
+nim	tkDollar	kdl/lexer.html#tkDollar	TokenKind.tkDollar		5
+nim	tkIdent	kdl/lexer.html#tkIdent	TokenKind.tkIdent		5
+nim	tkSemicolon	kdl/lexer.html#tkSemicolon	TokenKind.tkSemicolon		5
+nim	tkGreater	kdl/lexer.html#tkGreater	TokenKind.tkGreater		5
+nim	tkSlashDash	kdl/lexer.html#tkSlashDash	TokenKind.tkSlashDash		5
+nim	tkDoublePipe	kdl/lexer.html#tkDoublePipe	TokenKind.tkDoublePipe		5
+nim	tkLineCont	kdl/lexer.html#tkLineCont	TokenKind.tkLineCont		5
+nim	tkEqual	kdl/lexer.html#tkEqual	TokenKind.tkEqual		5
+nim	tkNotEqual	kdl/lexer.html#tkNotEqual	TokenKind.tkNotEqual		5
+nim	tkString	kdl/lexer.html#tkString	TokenKind.tkString		5
+nim	tkRawString	kdl/lexer.html#tkRawString	TokenKind.tkRawString		5
+nim	tkWhitespace	kdl/lexer.html#tkWhitespace	TokenKind.tkWhitespace		5
+nim	tkNewLine	kdl/lexer.html#tkNewLine	TokenKind.tkNewLine		5
+nim	tkOpenPar	kdl/lexer.html#tkOpenPar	TokenKind.tkOpenPar		5
+nim	tkClosePar	kdl/lexer.html#tkClosePar	TokenKind.tkClosePar		5
+nim	tkOpenBra	kdl/lexer.html#tkOpenBra	TokenKind.tkOpenBra		5
+nim	tkCloseBra	kdl/lexer.html#tkCloseBra	TokenKind.tkCloseBra		5
+nim	tkOpenSqu	kdl/lexer.html#tkOpenSqu	TokenKind.tkOpenSqu		5
+nim	tkCloseSqu	kdl/lexer.html#tkCloseSqu	TokenKind.tkCloseSqu		5
+nim	tkNumFloat	kdl/lexer.html#tkNumFloat	TokenKind.tkNumFloat		5
+nim	tkNumInt	kdl/lexer.html#tkNumInt	TokenKind.tkNumInt		5
+nim	tkNumHex	kdl/lexer.html#tkNumHex	TokenKind.tkNumHex		5
+nim	tkNumBin	kdl/lexer.html#tkNumBin	TokenKind.tkNumBin		5
+nim	tkNumOct	kdl/lexer.html#tkNumOct	TokenKind.tkNumOct		5
+nim	TokenKind	kdl/lexer.html#TokenKind	enum TokenKind		5
+nim	Token	kdl/lexer.html#Token	object Token		29
+nim	Lexer	kdl/lexer.html#Lexer	object Lexer		34
+nim	escapeTable	kdl/lexer.html#escapeTable	const escapeTable		49
+nim	`$`	kdl/lexer.html#$,Lexer	proc `$`(lexer: Lexer): string		81
+nim	getPos	kdl/lexer.html#getPos,Lexer	proc getPos(lexer: Lexer): int		92
+nim	tokenNewLine	kdl/lexer.html#tokenNewLine,Lexer,bool,bool	proc tokenNewLine(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		234
+nim	tokenNumInt	kdl/lexer.html#tokenNumInt,Lexer,bool,bool	proc tokenNumInt(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		288
+nim	tokenNumBin	kdl/lexer.html#tokenNumBin,Lexer,bool,bool	proc tokenNumBin(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		291
+nim	tokenNumHex	kdl/lexer.html#tokenNumHex,Lexer,bool,bool	proc tokenNumHex(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		299
+nim	tokenNumOct	kdl/lexer.html#tokenNumOct,Lexer,bool,bool	proc tokenNumOct(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		307
+nim	tokenString	kdl/lexer.html#tokenString,Lexer,bool,bool	proc tokenString(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		378
+nim	tokenRawString	kdl/lexer.html#tokenRawString,Lexer,bool,bool	proc tokenRawString(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		381
+nim	tokenMultiLineComment	kdl/lexer.html#tokenMultiLineComment,Lexer,bool,bool	proc tokenMultiLineComment(lexer: var Lexer; consume: bool = true;\n                      addToStack: bool = true): bool		384
+nim	tokenWhitespace	kdl/lexer.html#tokenWhitespace,Lexer,bool,bool	proc tokenWhitespace(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		405
+nim	skipWhitespaces	kdl/lexer.html#skipWhitespaces,Lexer,bool,bool	proc skipWhitespaces(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		411
+nim	tokenIdent	kdl/lexer.html#tokenIdent,Lexer,bool,bool	proc tokenIdent(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		415
+nim	tokenSingleLineComment	kdl/lexer.html#tokenSingleLineComment,Lexer,bool,bool	proc tokenSingleLineComment(lexer: var Lexer; consume: bool = true;\n                       addToStack: bool = true): bool		440
+nim	tokenLineCont	kdl/lexer.html#tokenLineCont,Lexer,bool,bool	proc tokenLineCont(lexer: var Lexer; consume: bool = true; addToStack: bool = true): bool		452
+nim	validToken	kdl/lexer.html#validToken,sinkstring,proc(Lexer,,)	proc validToken(source: sink string; token: proc (lexer: var Lexer; consume = true;\n    addToStack = true): bool): bool		469
+nim	scanKdl	kdl/lexer.html#scanKdl,Lexer	proc scanKdl(lexer: var Lexer)		477
+nim	scanKdl	kdl/lexer.html#scanKdl,string,int	proc scanKdl(source: string; start = 0): Lexer		505
+nim	scanKdlFile	kdl/lexer.html#scanKdlFile,string	proc scanKdlFile(path: string): Lexer		509
+nim	scanKdl	kdl/lexer.html#scanKdl,sinkStream	proc scanKdl(stream: sink Stream): Lexer		512
+nim	scanKdlStream	kdl/lexer.html#scanKdlStream,sinkstring	proc scanKdlStream(source: sink string): Lexer		517
+nim	scanKdlFileStream	kdl/lexer.html#scanKdlFileStream,string	proc scanKdlFileStream(path: string): Lexer		520
+nimgrp	scankdl	kdl/lexer.html#scanKdl-procs-all	proc		477

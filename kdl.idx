@@ -1,14 +1,16 @@
-prettyIdent	kdl.html#prettyIdent,string	kdl: prettyIdent(ident: string): string	
-pretty	kdl.html#pretty,KdlVal	kdl: pretty(val: KdlVal): string	
-pretty	kdl.html#pretty,KdlNode	kdl: pretty(node: KdlNode): string	
-pretty	kdl.html#pretty,KdlDoc	kdl: pretty(doc: KdlDoc; newLine = true): string	
-writeFile	kdl.html#writeFile,string,KdlDoc	kdl: writeFile(path: string; doc: KdlDoc; pretty = false)	
-kdl-nim	kdl.html#kdlminusnim	 kdl-nim	
-Installation	kdl.html#kdlminusnim-installation	  Installation	
-Overview	kdl.html#kdlminusnim-overview	  Overview	
-Parsing KDL	kdl.html#overview-parsing-kdl	   Parsing KDL	
-Reading nodes	kdl.html#overview-reading-nodes	   Reading nodes	
-Reading values	kdl.html#overview-reading-values	   Reading values	
-Setting values	kdl.html#overview-setting-values	   Setting values	
-Creating KDL	kdl.html#overview-creating-kdl	   Creating KDL	
-More	kdl.html#kdlminusnim-more	  More	
+nimTitle	kdl	kdl.html	module src/kdl		0
+nim	prettyIdent	kdl.html#prettyIdent,string	proc prettyIdent(ident: string): string		117
+nim	pretty	kdl.html#pretty,KdlVal	proc pretty(val: KdlVal): string		123
+nim	pretty	kdl.html#pretty,KdlDoc	proc pretty(doc: KdlDoc; newLine = true): string		142
+nim	pretty	kdl.html#pretty,KdlNode	proc pretty(node: KdlNode): string		144
+nim	writeFile	kdl.html#writeFile,string,KdlDoc	proc writeFile(path: string; doc: KdlDoc; pretty = false)		182
+nimgrp	pretty	kdl.html#pretty-procs-all	proc		123
+heading	kdl-nim	kdl.html#kdlminusnim	 kdl-nim		0
+heading	Installation	kdl.html#kdlminusnim-installation	  Installation		0
+heading	Overview	kdl.html#kdlminusnim-overview	  Overview		0
+heading	Parsing KDL	kdl.html#overview-parsing-kdl	   Parsing KDL		0
+heading	Reading nodes	kdl.html#overview-reading-nodes	   Reading nodes		0
+heading	Reading values	kdl.html#overview-reading-values	   Reading values		0
+heading	Setting values	kdl.html#overview-setting-values	   Setting values		0
+heading	Creating KDL	kdl.html#overview-creating-kdl	   Creating KDL		0
+heading	More	kdl.html#kdlminusnim-more	  More		0

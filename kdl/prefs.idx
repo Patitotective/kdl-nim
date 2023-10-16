@@ -1,9 +1,12 @@
-initKPrefs	kdl/prefs.html#initKPrefs,string,KdlDoc	prefs: initKPrefs(path: string; default: KdlDoc; stream = false): KdlPrefs[KdlDoc]	
-initKPrefs	kdl/prefs.html#initKPrefs,string,T	prefs: initKPrefs[T](path: string; default: T; stream = false): KdlPrefs[T]	
-save	kdl/prefs.html#save,KdlPrefs[KdlDoc]	prefs: save(prefs: KdlPrefs[KdlDoc])	
-save	kdl/prefs.html#save,KdlPrefs[auto]	prefs: save(prefs: KdlPrefs[auto])	
-removeFile	kdl/prefs.html#removeFile,KdlPrefs[auto]	prefs: removeFile(prefs: KdlPrefs[auto])	
-`[]`	kdl/prefs.html#[].t,KdlPrefs[auto],	prefs: `[]`(prefs: KdlPrefs[auto]; field): untyped	
-`[]=`	kdl/prefs.html#[]=.t,KdlPrefs[auto],,	prefs: `[]=`(prefs: KdlPrefs[auto]; field, val): untyped	
-`{}`	kdl/prefs.html#{}.t,KdlPrefs[auto],	prefs: `{}`(prefs: KdlPrefs[auto]; field): untyped	
-Prefs	kdl/prefs.html#prefs	  Prefs	
+nimTitle	prefs	kdl/prefs.html	module src/kdl/prefs		0
+nim	initKPrefs	kdl/prefs.html#initKPrefs,string,KdlDoc	proc initKPrefs(path: string; default: KdlDoc; stream = false): KdlPrefs[KdlDoc]		78
+nim	initKPrefs	kdl/prefs.html#initKPrefs,string,T	proc initKPrefs[T](path: string; default: T; stream = false): KdlPrefs[T]		92
+nim	save	kdl/prefs.html#save,KdlPrefs[KdlDoc]	proc save(prefs: KdlPrefs[KdlDoc])		106
+nim	save	kdl/prefs.html#save,KdlPrefs[auto]	proc save(prefs: KdlPrefs[auto])		111
+nim	removeFile	kdl/prefs.html#removeFile,KdlPrefs[auto]	proc removeFile(prefs: KdlPrefs[auto])		116
+nim	`[]`	kdl/prefs.html#[].t,KdlPrefs[auto],	template `[]`(prefs: KdlPrefs[auto]; field): untyped		121
+nim	`[]=`	kdl/prefs.html#[]=.t,KdlPrefs[auto],,	template `[]=`(prefs: KdlPrefs[auto]; field, val): untyped		125
+nim	`{}`	kdl/prefs.html#{}.t,KdlPrefs[auto],	template `{}`(prefs: KdlPrefs[auto]; field): untyped		129
+nimgrp	save	kdl/prefs.html#save-procs-all	proc		106
+nimgrp	initkprefs	kdl/prefs.html#initKPrefs-procs-all	proc		78
+heading	Prefs	kdl/prefs.html#prefs	  Prefs		0

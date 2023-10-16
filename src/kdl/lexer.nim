@@ -3,28 +3,28 @@ import utils, types
 
 type
   TokenKind* = enum
-    tkEmpty = "empty", 
-    tkNull = "null", 
-    tkStar = "star", 
-    tkPlus = "plus", 
-    tkBool = "bool", 
-    tkTilde = "tilde", 
-    tkComma = "comma", 
-    tkCaret = "caret", 
-    tkDollar = "dollar", 
-    tkIdent = "identifier", 
-    tkSemicolon = "semicolon", 
-    tkGreater = "greater_than", 
-    tkSlashDash = "slash_dash", 
-    tkDoublePipe = "double_pipe", 
+    tkEmpty = "empty",
+    tkNull = "null",
+    tkStar = "star",
+    tkPlus = "plus",
+    tkBool = "bool",
+    tkTilde = "tilde",
+    tkComma = "comma",
+    tkCaret = "caret",
+    tkDollar = "dollar",
+    tkIdent = "identifier",
+    tkSemicolon = "semicolon",
+    tkGreater = "greater_than",
+    tkSlashDash = "slash_dash",
+    tkDoublePipe = "double_pipe",
     tkLineCont = "line_continuation"
-    tkEqual = "equal", tkNotEqual = "not_equal", 
-    tkString = "string", tkRawString = "raw_string", 
-    tkWhitespace = "whitespace", tkNewLine = "new_line", 
+    tkEqual = "equal", tkNotEqual = "not_equal",
+    tkString = "string", tkRawString = "raw_string",
+    tkWhitespace = "whitespace", tkNewLine = "new_line",
     tkOpenPar = "open_parenthesis", tkClosePar = "close_parenthesis", # Type tagation
     tkOpenBra = "open_bracket", tkCloseBra = "close_bracket", # Children block
-    tkOpenSqu = "open_square_bracket", tkCloseSqu = "close_square_bracket", 
-    tkNumFloat = "float_number", tkNumInt = "integer_number", tkNumHex = "hexadecimal_number", tkNumBin = "binary_number", tkNumOct = "octagonal_number", 
+    tkOpenSqu = "open_square_bracket", tkCloseSqu = "close_square_bracket",
+    tkNumFloat = "float_number", tkNumInt = "integer_number", tkNumHex = "hexadecimal_number", tkNumBin = "binary_number", tkNumOct = "octagonal_number",
 
   Token* = object
     lexeme*: string
@@ -44,7 +44,7 @@ type
 const
   nonIdenChars = {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'}
   nonInitialChars = Digits + nonIdenChars
-  whitespaces = {0x0009, 0x0020, 0x00A0, 0x1680, 0x2000..0x200A, 0x202F, 0x205F, 0x3000}
+  whitespaces = [0x0009, 0x0020, 0x00A0, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000]
   newLines = ["\c\l", "\r", "\n", "\u0085", "\f", "\u2028", "\u2029"]
   escapeTable* = {
     'n': "\u000A", # Line Feed
@@ -59,27 +59,27 @@ const
   }.toTable
 
   litMatches = {
-    "*": tkStar, 
-    "+": tkPlus, 
-    "~": tkTilde, 
-    "^": tkCaret, 
-    ",": tkComma, 
-    "$": tkDollar, 
-    ">": tkGreater,  
-    "null": tkNull, 
-    "true": tkBool, 
-    "false": tkBool, 
-    ";": tkSemicolon, 
-    "/-": tkSlashDash,  
-    "||": tkDoublePipe, 
-    "=": tkEqual, "!=": tkNotEqual, 
+    "*": tkStar,
+    "+": tkPlus,
+    "~": tkTilde,
+    "^": tkCaret,
+    ",": tkComma,
+    "$": tkDollar,
+    ">": tkGreater,
+    "null": tkNull,
+    "true": tkBool,
+    "false": tkBool,
+    ";": tkSemicolon,
+    "/-": tkSlashDash,
+    "||": tkDoublePipe,
+    "=": tkEqual, "!=": tkNotEqual,
     "(": tkOpenPar, ")": tkClosePar,
-    "{": tkOpenBra, "}": tkCloseBra, 
+    "{": tkOpenBra, "}": tkCloseBra,
     "[": tkOpenSqu, "]": tkCloseSqu,
   }
 
-proc `$`*(lexer: Lexer): string = 
-  result = 
+proc `$`*(lexer: Lexer): string =
+  result =
     if lexer.isStream:
       &"{(if lexer.stream.atEnd: \"SUCCESS\" else: \"FAIL\")}\n\t"
     else:
@@ -89,33 +89,33 @@ proc `$`*(lexer: Lexer): string =
     result.addQuoted(token.lexeme)
     result.add(&"({token.kind}) ")
 
-proc getPos*(lexer: Lexer): int = 
+proc getPos*(lexer: Lexer): int =
   if lexer.isStream:
     lexer.stream.getPosition()
   else:
     lexer.current
 
-proc setPos(lexer: var Lexer, x: int) = 
+proc setPos(lexer: var Lexer, x: int) =
   if lexer.isStream:
     lexer.stream.setPosition(x)
   else:
     lexer.current = x
 
-proc inc(lexer: var Lexer, x = 1) = 
+proc inc(lexer: var Lexer, x = 1) =
   lexer.setPos(lexer.getPos() + x)
 
-proc dec(lexer: var Lexer, x = 1) = 
+proc dec(lexer: var Lexer, x = 1) =
   lexer.setPos(lexer.getPos() - x)
 
-macro lexing(token: TokenKind, body: untyped) = 
+macro lexing(token: TokenKind, body: untyped) =
   ## Converts a procedure definition like:
   ## ```nim
-  ## proc foo() {.lexing: tkEmpty.} = 
+  ## proc foo() {.lexing: tkEmpty.} =
   ##   echo "hi"
   ## ```
   ## Into
   ## ```nim
-  ## proc foo(lexer: var Lexer, consume: bool = true, addToStack: bool = true): bool {.discardable.} = 
+  ## proc foo(lexer: var Lexer, consume: bool = true, addToStack: bool = true): bool {.discardable.} =
   ##   let before = getPos(lexer)
   ##   echo "hi"
   ##   result = before != getPos(lexer)
@@ -155,11 +155,11 @@ macro lexing(token: TokenKind, body: untyped) =
 
   result = body
 
-proc eof(lexer: var Lexer, extra = 0): bool = 
+proc eof(lexer: var Lexer, extra = 0): bool =
   let before = lexer.getPos
-  inc lexer, extra 
+  inc lexer, extra
 
-  result = 
+  result =
     if lexer.isStream:
       lexer.stream.atEnd
     else:
@@ -167,12 +167,12 @@ proc eof(lexer: var Lexer, extra = 0): bool =
 
   lexer.setPos before
 
-proc peek(lexer: var Lexer, next = 0): char = 
+proc peek(lexer: var Lexer, next = 0): char =
   if not lexer.eof(next):
     let before = lexer.getPos
     inc lexer, next
 
-    result = 
+    result =
       if lexer.isStream:
         lexer.stream.peekChar()
       else:
@@ -180,7 +180,7 @@ proc peek(lexer: var Lexer, next = 0): char =
 
     lexer.setPos before
 
-proc peekStr(lexer: var Lexer, until: int): string = 
+proc peekStr(lexer: var Lexer, until: int): string =
   if lexer.eof(until-1): return
 
   if lexer.isStream:
@@ -188,11 +188,11 @@ proc peekStr(lexer: var Lexer, until: int): string =
   else:
     lexer.source[lexer.current..<lexer.current + until]
 
-proc peek(lexer: var Lexer, x: string): bool = 
+proc peek(lexer: var Lexer, x: string): bool =
   if not lexer.eof(x.high):
     result = lexer.peekStr(x.len) == x
 
-proc peekRune(lexer: var Lexer): Rune = 
+proc peekRune(lexer: var Lexer): Rune =
   if lexer.eof(): return
 
   if lexer.isStream:
@@ -200,20 +200,20 @@ proc peekRune(lexer: var Lexer): Rune =
   else:
     lexer.source.runeAt(lexer.current)
 
-proc add(lexer: var Lexer, kind: TokenKind, start: int) = 
+proc add(lexer: var Lexer, kind: TokenKind, start: int) =
   let before = lexer.getPos()
   lexer.setPos start
   lexer.stack.add(Token(kind: kind, lexeme: lexer.peekStr(before - start), start: start))
   lexer.setPos before
 
-proc error(lexer: Lexer, msg: string) = 
-  let coord = 
+proc error(lexer: Lexer, msg: string) =
+  let coord =
     if lexer.isStream:
       lexer.stream.getCoord(lexer.getPos)
     else:
       lexer.source.getCoord(lexer.getPos)
 
-  let errorMsg = 
+  let errorMsg =
     if lexer.isStream:
       lexer.stream.errorAt(coord)
     else:
@@ -221,23 +221,23 @@ proc error(lexer: Lexer, msg: string) =
 
   raise newException(KdlLexerError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{errorMsg.indent(2)}\n")
 
-proc literal(lexer: var Lexer, lit: string, consume = true): bool {.discardable.} = 
+proc literal(lexer: var Lexer, lit: string, consume = true): bool {.discardable.} =
   result = lexer.peek(lit)
   if result and consume:
     lexer.inc lit.len
 
-proc skipWhile(lexer: var Lexer, x: set[char]): int {.discardable.} = 
+proc skipWhile(lexer: var Lexer, x: set[char]): int {.discardable.} =
   while not lexer.eof() and lexer.peek() in x:
     inc result
     inc lexer
 
-proc tokenNewLine*() {.lexing: tkNewLine.} = 
+proc tokenNewLine*() {.lexing: tkNewLine.} =
   for nl in newLines:
     if lexer.peek(nl):
       lexer.inc nl.len
       break
 
-proc tokenNumWhole() {.lexing: tkEmpty.} = 
+proc tokenNumWhole() {.lexing: tkEmpty.} =
   if lexer.peek() in {'-', '+'}:
     inc lexer
 
@@ -249,21 +249,21 @@ proc tokenNumWhole() {.lexing: tkEmpty.} =
 
   lexer.skipWhile(Digits + {'_'})
 
-proc tokenNumExp(lexer: var Lexer) = 
+proc tokenNumExp(lexer: var Lexer) =
   if lexer.peek().toLowerAscii() != 'e':
     return
 
   inc lexer
 
   if lexer.peek() in {'-', '+'}:
-    inc lexer  
+    inc lexer
 
   if lexer.peek() notin Digits:
     lexer.error "Expected one or more digits"
 
   lexer.skipWhile(Digits + {'_'})
 
-proc tokenNumFloat() {.lexing: tkNumFloat.} = 
+proc tokenNumFloat() {.lexing: tkNumFloat.} =
   if not lexer.tokenNumWhole():
     lexer.setPos before
     return
@@ -278,17 +278,17 @@ proc tokenNumFloat() {.lexing: tkNumFloat.} =
 
     if lexer.peek().toLowerAscii() == 'e':
       lexer.tokenNumExp()
- 
+
   elif lexer.peek().toLowerAscii() == 'e':
     lexer.tokenNumExp()
   else:
     lexer.setPos before
     return
 
-proc tokenNumInt*() {.lexing: tkNumInt.} = 
+proc tokenNumInt*() {.lexing: tkNumInt.} =
   lexer.tokenNumWhole()
 
-proc tokenNumBin*() {.lexing: tkNumBin.} = 
+proc tokenNumBin*() {.lexing: tkNumBin.} =
   if lexer.peek("0b"):
     lexer.inc 2
     if lexer.peek() notin {'0', '1'}:
@@ -296,7 +296,7 @@ proc tokenNumBin*() {.lexing: tkNumBin.} =
 
     lexer.skipWhile({'0', '1', '_'})
 
-proc tokenNumHex*() {.lexing: tkNumHex.} = 
+proc tokenNumHex*() {.lexing: tkNumHex.} =
   if lexer.peek("0x"):
     lexer.inc 2
     if lexer.peek() notin HexDigits:
@@ -304,7 +304,7 @@ proc tokenNumHex*() {.lexing: tkNumHex.} =
 
     lexer.skipWhile(HexDigits + {'_'})
 
-proc tokenNumOct*() {.lexing: tkNumOct.} = 
+proc tokenNumOct*() {.lexing: tkNumOct.} =
   if lexer.peek("0o"):
     lexer.inc 2
     if lexer.peek() notin {'0'..'7'}:
@@ -312,7 +312,7 @@ proc tokenNumOct*() {.lexing: tkNumOct.} =
 
     lexer.skipWhile({'0'..'7', '_'})
 
-proc tokenStringBody(lexer: var Lexer, raw = false) = 
+proc tokenStringBody(lexer: var Lexer, raw = false) =
   let before = lexer.getPos()
 
   if raw:
@@ -381,7 +381,7 @@ proc tokenString*() {.lexing: tkString.} =
 proc tokenRawString*() {.lexing: tkRawString.} =
   lexer.tokenStringBody(raw = true)
 
-proc tokenMultiLineComment*() {.lexing: tkEmpty.} = 
+proc tokenMultiLineComment*() {.lexing: tkEmpty.} =
   if not lexer.peek("/*"):
     return
 
@@ -402,23 +402,23 @@ proc tokenMultiLineComment*() {.lexing: tkEmpty.} =
   if nested > 0:
     lexer.error "Expected end of multi-line comment"
 
-proc tokenWhitespace*() {.lexing: tkWhitespace.} = 
+proc tokenWhitespace*() {.lexing: tkWhitespace.} =
   if not lexer.eof() and (let rune = lexer.peekRune(); rune.int in whitespaces):
     lexer.inc rune.size
   else:
     lexer.tokenMultiLineComment()
 
-proc skipWhitespaces*() {.lexing: tkEmpty.} = 
+proc skipWhitespaces*() {.lexing: tkEmpty.} =
   while lexer.tokenWhitespace():
     discard
 
-proc tokenIdent*() {.lexing: tkIdent.} = 
+proc tokenIdent*() {.lexing: tkIdent.} =
   if lexer.eof() or lexer.peek() in nonInitialChars:
     return
 
   # Check the identifier is similar to a boolean, null or number, and if it is it should follow the EOF, a whitespace, a new line or any non-ident char in order to be discarded.
   if (
-      lexer.literal("true") or lexer.literal("false") or lexer.literal("null") or 
+      lexer.literal("true") or lexer.literal("false") or lexer.literal("null") or
       lexer.tokenNumHex(addToStack = false) or lexer.tokenNumBin(addToStack = false) or lexer.tokenNumOct(addToStack = false) or lexer.tokenNumFloat(addToStack = false) or lexer.tokenNumInt(addToStack = false)
     ):
     if (lexer.eof() or lexer.tokenWhitespace(addToStack = false) or lexer.tokenNewLine(addToStack = false) or lexer.peek() in nonIdenChars):
@@ -437,7 +437,7 @@ proc tokenIdent*() {.lexing: tkIdent.} =
 
       lexer.inc rune.size
 
-proc tokenSingleLineComment*() {.lexing: tkEmpty.} = 
+proc tokenSingleLineComment*() {.lexing: tkEmpty.} =
   if not lexer.peek("//"):
     return
 
@@ -449,7 +449,7 @@ proc tokenSingleLineComment*() {.lexing: tkEmpty.} =
 
     inc lexer
 
-proc tokenLineCont*() {.lexing: tkLineCont.} = 
+proc tokenLineCont*() {.lexing: tkLineCont.} =
   if lexer.peek() != '\\':
     return
 
@@ -459,14 +459,14 @@ proc tokenLineCont*() {.lexing: tkLineCont.} =
   if not lexer.tokenSingleLineComment(addToStack = false) and not lexer.tokenNewLine(addToStack = false):
       lexer.error "Expected a new line"
 
-proc tokenLitMatches() {.lexing: tkEmpty.} = 
+proc tokenLitMatches() {.lexing: tkEmpty.} =
   ## Tries to match any of the litMatches literals.
   for (lit, kind) in litMatches:
     if lexer.literal(lit):
       lexer.add(kind, before)
       break
 
-proc validToken*(source: sink string, token: proc(lexer: var Lexer, consume = true, addToStack = true): bool): bool = 
+proc validToken*(source: sink string, token: proc(lexer: var Lexer, consume = true, addToStack = true): bool): bool =
   var lexer = Lexer(isStream: true, stream: newStringStream(source))
 
   try:
@@ -474,21 +474,21 @@ proc validToken*(source: sink string, token: proc(lexer: var Lexer, consume = tr
   except KdlLexerError:
     return
 
-proc scanKdl*(lexer: var Lexer) = 
+proc scanKdl*(lexer: var Lexer) =
   const choices = [
-    tokenWhitespace, 
-    tokenNewLine, 
-    tokenLineCont, 
-    tokenSingleLineComment, 
-    tokenRawString, 
-    tokenString, 
-    tokenIdent, 
-    tokenNumHex, 
-    tokenNumBin, 
-    tokenNumOct, 
-    tokenNumFloat, 
-    tokenNumInt, 
-    tokenLitMatches, 
+    tokenWhitespace,
+    tokenNewLine,
+    tokenLineCont,
+    tokenSingleLineComment,
+    tokenRawString,
+    tokenString,
+    tokenIdent,
+    tokenNumHex,
+    tokenNumBin,
+    tokenNumOct,
+    tokenNumFloat,
+    tokenNumInt,
+    tokenLitMatches,
   ]
 
   while not lexer.eof():
@@ -502,20 +502,20 @@ proc scanKdl*(lexer: var Lexer) =
     if not anyMatch:
       lexer.error "Could not match any pattern"
 
-proc scanKdl*(source: string, start = 0): Lexer = 
+proc scanKdl*(source: string, start = 0): Lexer =
   result = Lexer(isStream: false, source: source, current: start)
   result.scanKdl()
 
-proc scanKdlFile*(path: string): Lexer = 
+proc scanKdlFile*(path: string): Lexer =
   scanKdl(readFile(path))
 
-proc scanKdl*(stream: sink Stream): Lexer = 
+proc scanKdl*(stream: sink Stream): Lexer =
   result = Lexer(isStream: true, stream: stream)
   defer: result.stream.close()
   result.scanKdl()
 
-proc scanKdlStream*(source: sink string): Lexer = 
+proc scanKdlStream*(source: sink string): Lexer =
   scanKdl(newStringStream(source))
 
-proc scanKdlFileStream*(path: string): Lexer = 
+proc scanKdlFileStream*(path: string): Lexer =
   scanKdl(openFileStream(path))

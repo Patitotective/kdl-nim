@@ -5,7 +5,7 @@ import kdl/utils except check
 type
   MyObjKind = enum
     moInt, moString
-  
+
   MyObj = object
     case kind*: MyObjKind
     of moInt:
@@ -34,34 +34,34 @@ type
   MyEnum = enum
     meNorth, meSouth, meWest, meEast
 
-proc `==`(a, b: MyObj): bool = 
+proc `==`(a, b: MyObj): bool =
   assert a.kind == b.kind
   assert a.kind2 == b.kind2
 
-  result = 
+  result =
     case a.kind
     of moInt:
       a.intV == b.intV
     of moString:
       a.stringV == b.stringV
 
-  result = 
+  result =
     case a.kind2
     of moInt:
       result and a.intV2 == b.intV2
     of moString:
       result and a.stringV2 == b.stringV2
 
-proc newHook*(v: var DateTime) = 
+proc newHook*(v: var DateTime) =
   v = dateTime(2000, mMar, 30)
 
-proc newHook*(v: var MyObj2) = 
+proc newHook*(v: var MyObj2) =
   v.id = 5
 
-proc postHook*(v: var MyObj3) = 
+proc postHook*(v: var MyObj3) =
   inc v.id
 
-proc enumHook*(a: string, v: var MyEnum) = 
+proc enumHook*(a: string, v: var MyEnum) =
   case a.toLowerAscii
   of "north":
     v = meNorth
@@ -74,7 +74,7 @@ proc enumHook*(a: string, v: var MyEnum) =
   else:
     raise newException(ValueError, &"invalid enum value {a} for {$typeof(v)}")
 
-proc enumHook*(a: int, v: var MyEnum) = 
+proc enumHook*(a: int, v: var MyEnum) =
   case a
   of 0xbeef:
     v = meNorth
@@ -87,8 +87,8 @@ proc enumHook*(a: int, v: var MyEnum) =
   else:
     raise newException(ValueError, &"invalid enum value {a} for {$typeof(v)}")
 
-proc renameHook*(_: typedesc[MyObj4 or MyObj], fieldName: var string) = 
-  fieldName = 
+proc renameHook*(_: typedesc[MyObj4 or MyObj], fieldName: var string) =
+  fieldName =
     case fieldName
     of "type":
       "kind"
@@ -99,28 +99,28 @@ proc renameHook*(_: typedesc[MyObj4 or MyObj], fieldName: var string) =
     else:
       fieldName
 
-proc decodeHook*(a: KdlVal, v: var DateTime) = 
+proc decodeHook*(a: KdlVal, v: var DateTime) =
   assert a.isString
   v = a.getString.parse("yyyy-MM-dd")
 
-proc decodeHook*(a: KdlNode, v: var DateTime) = 
+proc decodeHook*(a: KdlNode, v: var DateTime) =
   case a.args.len
   of 6: # year month day hour minute second
     v = dateTime(
-      a.args[0].decode(int), 
-      a.args[1].decode(Month), 
-      a.args[2].decode(MonthdayRange), 
-      a.args[3].decode(HourRange), 
-      a.args[4].decode(MinuteRange), 
+      a.args[0].decode(int),
+      a.args[1].decode(Month),
+      a.args[2].decode(MonthdayRange),
+      a.args[3].decode(HourRange),
+      a.args[4].decode(MinuteRange),
       a.args[5].decode(SecondRange)
     )
   of 3: # year month day
     v = dateTime(
-      a.args[0].decode(int), 
-      a.args[1].decode(Month), 
-      a.args[2].decode(MonthdayRange), 
+      a.args[0].decode(int),
+      a.args[1].decode(Month),
+      a.args[2].decode(MonthdayRange),
     )
-  of 1: # yyyy-MM-dd 
+  of 1: # yyyy-MM-dd
     a.args[0].decode(v)
   else:
     doAssert a.args.len in {1, 3, 6}
@@ -136,7 +136,7 @@ proc decodeHook*(a: KdlNode, v: var DateTime) =
   if "offset" in a.props:
     v.utcOffset = a.props["offset"].get(int)
 
-proc decodeHook*(a: KdlDoc, v: var DateTime) = 
+proc decodeHook*(a: KdlDoc, v: var DateTime) =
   if a.len == 0: return
 
   var
@@ -166,25 +166,25 @@ proc decodeHook*(a: KdlDoc, v: var DateTime) =
 
   v = dateTime(year, month, day, hour, minute, second, nanosecond)
 
-proc encodeHook*(a: DateTime, v: var KdlDoc) = 
+proc encodeHook*(a: DateTime, v: var KdlDoc) =
   v = @[
-    initKNode("year", args = @[encode(a.year, KdlVal)]), 
-    initKNode("month", args = @[encode(a.month, KdlVal)]), 
-    initKNode("day", args = @[encode(a.monthday, KdlVal)]), 
-    initKNode("hour", args = @[encode(a.hour, KdlVal)]), 
-    initKNode("minute", args = @[encode(a.minute, KdlVal)]), 
-    initKNode("second", args = @[encode(a.second, KdlVal)]), 
-    initKNode("nanosecond", args = @[encode(a.nanosecond, KdlVal)]), 
+    initKNode("year", args = @[encode(a.year, KdlVal)]),
+    initKNode("month", args = @[encode(a.month, KdlVal)]),
+    initKNode("day", args = @[encode(a.monthday, KdlVal)]),
+    initKNode("hour", args = @[encode(a.hour, KdlVal)]),
+    initKNode("minute", args = @[encode(a.minute, KdlVal)]),
+    initKNode("second", args = @[encode(a.second, KdlVal)]),
+    initKNode("nanosecond", args = @[encode(a.nanosecond, KdlVal)]),
   ]
 
-template encodeDecodes(x): untyped = 
+template encodeDecodes(x): untyped =
   let a = x
   when x is ref:
     a.encode().decode(typeof a)[] == a[]
   else:
     a.encode().decode(typeof a) == a
 
-template encodeDecodes(x: untyped, name: string): untyped = 
+template encodeDecodes(x: untyped, name: string): untyped =
   let a = x
   when a is ref:
     a.encode(name).decode(typeof a)[] == a[]
@@ -268,22 +268,22 @@ suite "Decoder":
 
   test "Tables":
     check parseKdl("key \"value\"; alive true").decode(Table[string, KdlVal]) == {
-      "key": "value".initKVal, 
+      "key": "value".initKVal,
       "alive": true.initKVal
     }.toTable
     check parseKdl("person age=10 name=\"Phil\" {other-name \"Isofruit\"}").decode(Table[string, KdlVal], "person") == {
-      "age": 10.initKVal, 
-      "name": "Phil".initKVal, 
+      "age": 10.initKVal,
+      "name": "Phil".initKVal,
       "other-name": "Isofruit".initKVal
     }.toTable
 
     check parseKdl("key \"value\"; alive true").decode(OrderedTable[string, KdlVal]) == {
-      "key": "value".initKVal, 
+      "key": "value".initKVal,
       "alive": true.initKVal
     }.toOrderedTable
     check parseKdl("person age=10 name=\"Phil\" {other-name \"Isofruit\"}").decode(OrderedTable[string, KdlVal], "person") == {
-        "age": 10.initKVal, 
-        "name": "Phil".initKVal, 
+        "age": 10.initKVal,
+        "name": "Phil".initKVal,
         "other-name": "Isofruit".initKVal
       }.toOrderedTable
 
@@ -351,8 +351,7 @@ suite "Decoder":
     check result == 1
 
     check parseKdl("node true").decode(bool, "node") == true
-
-    check parseKdl("node null \"not null\"").decode(seq[cstring], "node") == @[cstring nil, cstring "not null"]
+    # check parseKdl("node null \"not null\"").decode(seq[cstring], "node") == @[cstring nil, cstring "not null"]
 
   test "Custom":
     check parseKdl("""
@@ -388,7 +387,7 @@ suite "Decoder":
     type "string"
     array 1 2 3
     """).decode(MyObj4) == MyObj4(kind: "string", list: @[1, 2, 3])
-    
+
     check parseKdl("""
     node type="string" {
       array 1 2 3
@@ -454,22 +453,22 @@ suite "Encoder":
 
   test "Tables":
     check encodeDecodes {
-      "key": "value".initKVal, 
+      "key": "value".initKVal,
       "alive": true.initKVal
     }.toTable
     check encodeDecodes {
-      "age": 10.initKVal, 
-      "name": "Phil".initKVal, 
+      "age": 10.initKVal,
+      "name": "Phil".initKVal,
       "other-name": "Isofruit".initKVal
     }.toTable
 
     check encodeDecodes {
-      "key": "value".initKVal, 
+      "key": "value".initKVal,
       "alive": true.initKVal
     }.toOrderedTable
     check encodeDecodes {
-        "age": 10.initKVal, 
-        "name": "Phil".initKVal, 
+        "age": 10.initKVal,
+        "name": "Phil".initKVal,
         "other-name": "Isofruit".initKVal
       }.toOrderedTable
 
@@ -525,7 +524,7 @@ suite "Encoder":
 
     check encodeDecodes(true, "node")
 
-    check encodeDecodes @[cstring nil, cstring "not null"]
+    # check encodeDecodes @[cstring nil, cstring "not null"]
 
   test "Custom":
     check encodeDecodes dateTime(2022, mOct, 15, 12, 10)

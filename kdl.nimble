@@ -1,6 +1,6 @@
 # Package
 
-version       = "1.2.0"
+version       = "1.2.2"
 author        = "Patitotective"
 description   = "KDL document language Nim implementation"
 license       = "MIT"
@@ -9,7 +9,7 @@ skipFiles     = @["src/kdl/query.nim", "src/kdl/schema.nim"]
 
 # Dependencies
 
-requires "nim >= 1.6.8"
+requires "nim >= 1.6.0"
 
 task docs, "Generate documentation":
   exec "nim doc --git.url:https://github.com/Patitotective/kdl-nim --git.commit:main --outdir:docs --project src/kdl.nim"

@@ -1,17 +1,17 @@
 ## # kdl-nim
 ## kdl-nim is an implementation of the [KDL document language](https://kdl.dev) in the Nim programming language.
-## 
+##
 ## ## Installation
 ## ```
 ## nimble install kdl
 ## ```
-## 
+##
 ## ## Overview
 ## ### Parsing KDL
 ## kdl-nim parses strings (or files) into a `KdlDoc` which is a sequence of `KdlNode`s.
-## 
+##
 ## Each `KdlNode` holds a name, an optional type annotation (tag), zero ore more arguments, zero or more properties and optionally children nodes.
-## 
+##
 ## Arguments and properties' values are represented by an object variant `KdlVal`. `KdlVal` can be any of `KString`, `KFloat`, `KBool`, `KNull` or `KInt`.
 runnableExamples:
   let doc = parseKdl("node 1 null {child \"abc\" true}") # You can also read files using parseKdlFile("file.kdl")
@@ -53,7 +53,7 @@ runnableExamples:
   assert doc[0].args[2].get(uint8) == 255u8
 
 ## It only converts between numbers, you can't `val.get(string)` if `val.isBool()`.
-## 
+##
 ## ### Setting values
 runnableExamples:
   var doc = parseKdl("node 1 3.14 {child \"abc\" true}")
@@ -98,8 +98,6 @@ runnableExamples:
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
 
 import kdl/[decoder, encoder, parser, lexer, nodes, types, utils, xik, jik]
-when not defined(js):
-  import kdl/prefs
 
 export decoder, encoder, parser, nodes, types
 export scanKdl, scanKdlFile, lexer.`$` # lexer
@@ -114,13 +112,13 @@ func indent(s: string, count: Natural, padding = " ", newLine = "\n"): string =
 
     result.add line
 
-proc prettyIdent*(ident: string): string = 
+proc prettyIdent*(ident: string): string =
   if validToken(ident, tokenIdent):
     ident
   else:
     ident.quoted()
 
-proc pretty*(val: KdlVal): string = 
+proc pretty*(val: KdlVal): string =
   if val.tag.isSome:
     result = &"({val.tag.get.prettyIdent})"
 
@@ -139,9 +137,9 @@ proc pretty*(val: KdlVal): string =
     of KEmpty:
       "empty"
 
-proc pretty*(doc: KdlDoc, newLine = true): string 
+proc pretty*(doc: KdlDoc, newLine = true): string
 
-proc pretty*(node: KdlNode): string = 
+proc pretty*(node: KdlNode): string =
   if node.tag.isSome:
     result = &"({node.tag.get.prettyIdent})"
 
@@ -168,9 +166,9 @@ proc pretty*(node: KdlNode): string =
     result.add indent(node.children.pretty(newLine = false), 4, newLine = "\p")
     result.add "\p}"
 
-proc pretty*(doc: KdlDoc, newLine = true): string = 
+proc pretty*(doc: KdlDoc, newLine = true): string =
   ## Pretty print a KDL document according to the [translation rules](https://github.com/kdl-org/kdl/tree/main/tests#translation-rules).
-  ## 
+  ##
   ## If `newLine`, inserts a new line at the end.
   for e, node in doc:
     result.add node.pretty()
@@ -179,7 +177,7 @@ proc pretty*(doc: KdlDoc, newLine = true): string =
 
   if newLine: result.add "\p"
 
-proc writeFile*(path: string, doc: KdlDoc, pretty = false) = 
+proc writeFile*(path: string, doc: KdlDoc, pretty = false) =
   ## Writes `doc` to path. Set `pretty` to true to use `pretty` instead of `$`.
   if pretty:
     writeFile(path, doc.pretty())

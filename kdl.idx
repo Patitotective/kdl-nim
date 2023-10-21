@@ -1,10 +1,10 @@
 nimTitle	kdl	kdl.html	module src/kdl		0
-nim	prettyIdent	kdl.html#prettyIdent,string	proc prettyIdent(ident: string): string		117
-nim	pretty	kdl.html#pretty,KdlVal	proc pretty(val: KdlVal): string		123
-nim	pretty	kdl.html#pretty,KdlDoc	proc pretty(doc: KdlDoc; newLine = true): string		142
-nim	pretty	kdl.html#pretty,KdlNode	proc pretty(node: KdlNode): string		144
-nim	writeFile	kdl.html#writeFile,string,KdlDoc	proc writeFile(path: string; doc: KdlDoc; pretty = false)		182
-nimgrp	pretty	kdl.html#pretty-procs-all	proc		123
+nim	prettyIdent	kdl.html#prettyIdent,string	proc prettyIdent(ident: string): string		115
+nim	pretty	kdl.html#pretty,KdlVal	proc pretty(val: KdlVal): string		121
+nim	pretty	kdl.html#pretty,KdlDoc	proc pretty(doc: KdlDoc; newLine = true): string		140
+nim	pretty	kdl.html#pretty,KdlNode	proc pretty(node: KdlNode): string		142
+nim	writeFile	kdl.html#writeFile,string,KdlDoc	proc writeFile(path: string; doc: KdlDoc; pretty = false)		180
+nimgrp	pretty	kdl.html#pretty-procs-all	proc		121
 heading	kdl-nim	kdl.html#kdlminusnim	 kdl-nim		0
 heading	Installation	kdl.html#kdlminusnim-installation	  Installation		0
 heading	Overview	kdl.html#kdlminusnim-overview	  Overview		0

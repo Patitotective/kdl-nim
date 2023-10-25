@@ -60,7 +60,7 @@
 <li><a class="reference" href="#List" title="List = (array or seq)">List</a></li>
 <li><a class="reference" href="#Object" title="Object = ((object or tuple) and not KdlSome)">Object</a></li>
 <li><a class="reference" href="#SomeTable" title="SomeTable[K; V] = (Table[K, V] or OrderedTable[K, V])">SomeTable</a></li>
-<li><a class="reference" href="#Value" title="Value = (SomeNumber or string or bool)">Value</a></li>
+<li><a class="reference" href="#Value" title="Value = (SomeNumber or string or bool or range)">Value</a></li>
 
     </ul>
   </details>
@@ -213,7 +213,7 @@
   </dd>
 </div>
 <div id="Value">
-  <dt><pre><a href="utils.html#Value"><span class="Identifier">Value</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="Identifier">SomeNumber</span> <span class="Keyword">or</span> <span class="Identifier">string</span> <span class="Keyword">or</span> <span class="Identifier">bool</span><span class="Other">)</span></pre></dt>
+  <dt><pre><a href="utils.html#Value"><span class="Identifier">Value</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="Identifier">SomeNumber</span> <span class="Keyword">or</span> <span class="Identifier">string</span> <span class="Keyword">or</span> <span class="Identifier">bool</span> <span class="Keyword">or</span> <span class="Identifier">range</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -355,8 +355,8 @@
   <dd>
     
     return the discriminant keys
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L154" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L154" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L157" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L157" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -370,8 +370,8 @@
     Does the minimum to construct a valid case object <tt class="docutils literal"><span class="pre"><span class="Identifier">T</span></span></tt>.<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">discriminatorSetter</span></span></tt>: called passing two arguments <tt class="docutils literal"><span class="pre"><span class="Punctuation">(</span><span class="Identifier">key</span><span class="Punctuation">,</span> <span class="Identifier">typ</span><span class="Punctuation">)</span></span></tt> (<tt class="docutils literal"><span class="pre"><span class="Identifier">key</span></span></tt> being the field name and <tt class="docutils literal"><span class="pre"><span class="Identifier">typ</span></span></tt> the field type), last expression should be the value for the field</li>
 </ul>
 
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L183" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L183" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L192" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L192" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -428,8 +428,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L216" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L216" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L225" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L225" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -445,7 +445,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-10-23 23:09:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-10-25 02:42:18 UTC</small>
       </div>
     </div>
   </div>

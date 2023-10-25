@@ -17,9 +17,9 @@ nim	getCoord	kdl/utils.html#getCoord,string,int	proc getCoord(s: string; at: int
 nim	errorAt	kdl/utils.html#errorAt,Stream,Coord	proc errorAt(s: Stream; coord: Coord): string		115
 nim	errorAt	kdl/utils.html#errorAt,string,Coord	proc errorAt(s: string; coord: Coord): string		125
 nim	isObjVariant	kdl/utils.html#isObjVariant.m,typedesc	macro isObjVariant(a: typedesc): bool		134
-nim	getDiscriminants	kdl/utils.html#getDiscriminants.m,typedesc	macro getDiscriminants(a: typedesc): seq[string]		154
-nim	initCaseObject	kdl/utils.html#initCaseObject.m,typedesc,	macro initCaseObject(T: typedesc; discriminatorSetter): untyped		183
-nim	typeofdesc	kdl/utils.html#typeofdesc.t,typedesc[T]	template typeofdesc[T](b: typedesc[T]): untyped		216
+nim	getDiscriminants	kdl/utils.html#getDiscriminants.m,typedesc	macro getDiscriminants(a: typedesc): seq[string]		157
+nim	initCaseObject	kdl/utils.html#initCaseObject.m,typedesc,	macro initCaseObject(T: typedesc; discriminatorSetter): untyped		192
+nim	typeofdesc	kdl/utils.html#typeofdesc.t,typedesc[T]	template typeofdesc[T](b: typedesc[T]): untyped		225
 nimgrp	errorat	kdl/utils.html#errorAt-procs-all	proc		115
 nimgrp	peeklinefromstart	kdl/utils.html#peekLineFromStart-procs-all	proc		58
 nimgrp	getcoord	kdl/utils.html#getCoord-procs-all	proc		90

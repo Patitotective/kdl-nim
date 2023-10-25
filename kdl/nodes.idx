@@ -21,38 +21,38 @@ nim	getString	kdl/nodes.html#getString,KdlVal	proc getString(val: KdlVal): strin
 nim	getFloat	kdl/nodes.html#getFloat,KdlVal	proc getFloat(val: KdlVal): float		70
 nim	getBool	kdl/nodes.html#getBool,KdlVal	proc getBool(val: KdlVal): bool		74
 nim	getInt	kdl/nodes.html#getInt,KdlVal	proc getInt(val: KdlVal): int64		78
-nim	get	kdl/nodes.html#get,KdlVal,typedesc[T]	proc get[T: SomeNumber or string or bool](val: KdlVal; x: typedesc[T]): T		82
-nim	setString	kdl/nodes.html#setString,KdlVal,string	proc setString(val: var KdlVal; x: string)		122
-nim	setFloat	kdl/nodes.html#setFloat,KdlVal,SomeFloat	proc setFloat(val: var KdlVal; x: SomeFloat)		126
-nim	setBool	kdl/nodes.html#setBool,KdlVal,bool	proc setBool(val: var KdlVal; x: bool)		130
-nim	setInt	kdl/nodes.html#setInt,KdlVal,SomeInteger	proc setInt(val: var KdlVal; x: SomeInteger)		134
-nim	setTo	kdl/nodes.html#setTo,KdlVal,T	proc setTo[T: SomeNumber or string or bool](val: var KdlVal; x: T)		138
-nim	`$`	kdl/nodes.html#$,KdlVal	proc `$`(val: KdlVal): string		163
-nim	`$`	kdl/nodes.html#$,KdlDoc	proc `$`(doc: KdlDoc): string		182
-nim	`$`	kdl/nodes.html#$,KdlNode	proc `$`(node: KdlNode): string		184
-nim	`==`	kdl/nodes.html#==,KdlVal,KdlVal	proc `==`(val1, val2: KdlVal): bool		220
-nim	`==`	kdl/nodes.html#==,KdlVal,T	proc `==`[T: SomeNumber or string or bool](val: KdlVal; x: T): bool		237
-nim	`==`	kdl/nodes.html#==,KdlNode,KdlNode	proc `==`(node1, node2: KdlNode): bool		256
-nim	`[]`	kdl/nodes.html#[],KdlNode,string	proc `[]`(node: KdlNode; key: string): KdlVal		260
-nim	`[]`	kdl/nodes.html#[],KdlNode,string_2	proc `[]`(node: var KdlNode; key: string): var KdlVal		264
-nim	`[]=`	kdl/nodes.html#[]=,KdlNode,string,KdlVal	proc `[]=`(node: var KdlNode; key: string; val: KdlVal)		268
-nim	contains	kdl/nodes.html#contains,KdlNode,string	proc contains(node: KdlNode; key: string): bool		272
-nim	contains	kdl/nodes.html#contains,KdlNode,KdlVal	proc contains(node: KdlNode; val: KdlVal): bool		276
-nim	contains	kdl/nodes.html#contains,KdlNode,KdlNode	proc contains(node: KdlNode; child: KdlNode): bool		280
-nim	contains	kdl/nodes.html#contains,KdlDoc,string	proc contains(doc: KdlDoc; name: string): bool		284
-nim	add	kdl/nodes.html#add,KdlNode,KdlVal	proc add(node: var KdlNode; val: KdlVal)		290
-nim	add	kdl/nodes.html#add,KdlNode,KdlNode	proc add(node: var KdlNode; child: KdlNode)		295
-nim	findFirst	kdl/nodes.html#findFirst,KdlDoc,string	proc findFirst(doc: KdlDoc; name: string): KdlNode		300
-nim	findLast	kdl/nodes.html#findLast,KdlDoc,string	proc findLast(doc: KdlDoc; name: string): KdlNode		308
-nim	find	kdl/nodes.html#find,KdlDoc,string	proc find(doc: KdlDoc; name: string): seq[KdlNode]		316
-nim	toKdlVal	kdl/nodes.html#toKdlVal.m,untyped	macro toKdlVal(body: untyped): KdlVal		385
-nim	toKdlNode	kdl/nodes.html#toKdlNode.m,untyped	macro toKdlNode(body: untyped): KdlNode		391
-nim	toKdl	kdl/nodes.html#toKdl.m,untyped	macro toKdl(body: untyped): KdlDoc		409
-nim	toKdlArgs	kdl/nodes.html#toKdlArgs.m,varargs[typed]	macro toKdlArgs(args: varargs[typed]): untyped		424
-nim	toKdlProps	kdl/nodes.html#toKdlProps.m,untyped	macro toKdlProps(props: untyped): Table[string, KdlVal]		435
-nimgrp	contains	kdl/nodes.html#contains-procs-all	proc		272
-nimgrp	$	kdl/nodes.html#$-procs-all	proc		163
-nimgrp	add	kdl/nodes.html#add-procs-all	proc		290
+nim	get	kdl/nodes.html#get,KdlVal,typedesc[T]	proc get[T: Value](val: KdlVal; x: typedesc[T]): T		82
+nim	setString	kdl/nodes.html#setString,KdlVal,string	proc setString(val: var KdlVal; x: string)		125
+nim	setFloat	kdl/nodes.html#setFloat,KdlVal,SomeFloat	proc setFloat(val: var KdlVal; x: SomeFloat)		129
+nim	setBool	kdl/nodes.html#setBool,KdlVal,bool	proc setBool(val: var KdlVal; x: bool)		133
+nim	setInt	kdl/nodes.html#setInt,KdlVal,SomeInteger	proc setInt(val: var KdlVal; x: SomeInteger)		137
+nim	setTo	kdl/nodes.html#setTo,KdlVal,T	proc setTo[T: SomeNumber or string or bool](val: var KdlVal; x: T)		141
+nim	`$`	kdl/nodes.html#$,KdlVal	proc `$`(val: KdlVal): string		166
+nim	`$`	kdl/nodes.html#$,KdlDoc	proc `$`(doc: KdlDoc): string		185
+nim	`$`	kdl/nodes.html#$,KdlNode	proc `$`(node: KdlNode): string		187
+nim	`==`	kdl/nodes.html#==,KdlVal,KdlVal	proc `==`(val1, val2: KdlVal): bool		223
+nim	`==`	kdl/nodes.html#==,KdlVal,T	proc `==`[T: SomeNumber or string or bool](val: KdlVal; x: T): bool		240
+nim	`==`	kdl/nodes.html#==,KdlNode,KdlNode	proc `==`(node1, node2: KdlNode): bool		259
+nim	`[]`	kdl/nodes.html#[],KdlNode,string	proc `[]`(node: KdlNode; key: string): KdlVal		263
+nim	`[]`	kdl/nodes.html#[],KdlNode,string_2	proc `[]`(node: var KdlNode; key: string): var KdlVal		267
+nim	`[]=`	kdl/nodes.html#[]=,KdlNode,string,KdlVal	proc `[]=`(node: var KdlNode; key: string; val: KdlVal)		271
+nim	contains	kdl/nodes.html#contains,KdlNode,string	proc contains(node: KdlNode; key: string): bool		275
+nim	contains	kdl/nodes.html#contains,KdlNode,KdlVal	proc contains(node: KdlNode; val: KdlVal): bool		279
+nim	contains	kdl/nodes.html#contains,KdlNode,KdlNode	proc contains(node: KdlNode; child: KdlNode): bool		283
+nim	contains	kdl/nodes.html#contains,KdlDoc,string	proc contains(doc: KdlDoc; name: string): bool		287
+nim	add	kdl/nodes.html#add,KdlNode,KdlVal	proc add(node: var KdlNode; val: KdlVal)		293
+nim	add	kdl/nodes.html#add,KdlNode,KdlNode	proc add(node: var KdlNode; child: KdlNode)		298
+nim	findFirst	kdl/nodes.html#findFirst,KdlDoc,string	proc findFirst(doc: KdlDoc; name: string): KdlNode		303
+nim	findLast	kdl/nodes.html#findLast,KdlDoc,string	proc findLast(doc: KdlDoc; name: string): KdlNode		311
+nim	find	kdl/nodes.html#find,KdlDoc,string	proc find(doc: KdlDoc; name: string): seq[KdlNode]		319
+nim	toKdlVal	kdl/nodes.html#toKdlVal.m,untyped	macro toKdlVal(body: untyped): KdlVal		388
+nim	toKdlNode	kdl/nodes.html#toKdlNode.m,untyped	macro toKdlNode(body: untyped): KdlNode		394
+nim	toKdl	kdl/nodes.html#toKdl.m,untyped	macro toKdl(body: untyped): KdlDoc		412
+nim	toKdlArgs	kdl/nodes.html#toKdlArgs.m,varargs[typed]	macro toKdlArgs(args: varargs[typed]): untyped		427
+nim	toKdlProps	kdl/nodes.html#toKdlProps.m,untyped	macro toKdlProps(props: untyped): Table[string, KdlVal]		438
+nimgrp	contains	kdl/nodes.html#contains-procs-all	proc		275
+nimgrp	$	kdl/nodes.html#$-procs-all	proc		166
+nimgrp	add	kdl/nodes.html#add-procs-all	proc		293
 nimgrp	initkval	kdl/nodes.html#initKVal-procs-all	proc		12
-nimgrp	==	kdl/nodes.html#==-procs-all	proc		220
-nimgrp	[]	kdl/nodes.html#[]-procs-all	proc		260
+nimgrp	==	kdl/nodes.html#==-procs-all	proc		223
+nimgrp	[]	kdl/nodes.html#[]-procs-all	proc		263

@@ -8,14 +8,14 @@ type
 
   Object* = ((object or tuple) and not KdlSome)
   List* = (array or seq)
-  Value* = (SomeNumber or string or bool)
+  Value* = (SomeNumber or string or bool or range)
   KdlSome* = (KdlDoc or KdlNode or KdlVal)
   SomeTable*[K, V] = (Table[K, V] or OrderedTable[K, V])
 
-template fail*(msg: string) = 
+template fail*(msg: string) =
   raise newException(KdlError, msg)
 
-template check*(cond: untyped, msg = "") = 
+template check*(cond: untyped, msg = "") =
   if not cond:
     let txt = msg
     fail astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
@@ -50,12 +50,12 @@ proc eqIdent*(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnore
 
 # ----- Streams -----
 
-proc peekRune*(s: Stream): Rune = 
+proc peekRune*(s: Stream): Rune =
   let str = s.peekStr(4)
   if str.len > 0:
     result = str.runeAt(0)
 
-proc peekLineFromStart*(s: Stream): string = 
+proc peekLineFromStart*(s: Stream): string =
   let before = s.getPosition()
   while s.getPosition() > 0:
     s.setPosition(s.getPosition() - 1)
@@ -69,7 +69,7 @@ proc peekLineFromStart*(s: Stream): string =
   result = s.peekLine()
   s.setPosition before
 
-proc peekLineFromStart*(s: string, at: int): string = 
+proc peekLineFromStart*(s: string, at: int): string =
   if at >= s.len:
     return
 
@@ -112,7 +112,7 @@ proc getCoord*(s: string, at: int): Coord =
 
     inc result.idx
 
-proc errorAt*(s: Stream, coord: Coord): string = 
+proc errorAt*(s: Stream, coord: Coord): string =
   let before = s.getPosition()
   s.setPosition coord.idx
   let line = s.peekLineFromStart()
@@ -122,7 +122,7 @@ proc errorAt*(s: Stream, coord: Coord): string =
   result.add(&"{lineNum}{line}\n")
   result.add(&"{repeat(' ', lineNum.len + coord.col)}^")
 
-proc errorAt*(s: string, coord: Coord): string = 
+proc errorAt*(s: string, coord: Coord): string =
   let line = s.peekLineFromStart(coord.idx)
 
   let lineNum = &"{coord.line + 1} | "
@@ -131,16 +131,19 @@ proc errorAt*(s: string, coord: Coord): string =
 
 # ----- Object variants -----
 
-macro isObjVariant*(a: typedesc): bool = 
+macro isObjVariant*(a: typedesc): bool =
   var a = a.getTypeImpl
-  doAssert a.kind == nnkBracketExpr
+  if a.kind != nnkBracketExpr:
+    return ident("false")
+
   let sym = a[1]
   let t = sym.getTypeImpl
   if t.kind != nnkObjectTy:
     return ident("false")
 
   let t2 = t[2]
-  doAssert t2.kind == nnkRecList
+  if t2.kind != nnkRecList:
+    return ident("false")
 
   result = ident("false")
 
@@ -155,7 +158,10 @@ macro getDiscriminants*(a: typedesc): seq[string] =
   ## return the discriminant keys
   # candidate for std/typetraits
   var a = a.getTypeImpl
-  doAssert a.kind == nnkBracketExpr
+  if a.kind != nnkBracketExpr:
+    return quote do:
+      newSeq[string]()
+
   let sym = a[1]
   let t = sym.getTypeImpl
   if t.kind != nnkObjectTy:
@@ -163,7 +169,10 @@ macro getDiscriminants*(a: typedesc): seq[string] =
       newSeq[string]()
 
   let t2 = t[2]
-  doAssert t2.kind == nnkRecList
+  if t2.kind != nnkRecList:
+    return quote do:
+      newSeq[string]()
+
   result = newTree(nnkBracket)
 
   for ti in t2:
@@ -171,8 +180,8 @@ macro getDiscriminants*(a: typedesc): seq[string] =
       let key = ti[0][0]
       let typ = ti[0][1]
       result.add newLit key.strVal
-  
-  result = 
+
+  result =
     if result.len > 0:
       quote do:
         @`result`
@@ -214,3 +223,4 @@ macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
       result.add newTree(nnkExprColonExpr, key, val)
 
 template typeofdesc*[T](b: typedesc[T]): untyped = T
+

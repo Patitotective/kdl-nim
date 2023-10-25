@@ -79,7 +79,7 @@ proc getInt*(val: KdlVal): int64 =
   check val.isInt()
   val.num
 
-proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T =
+proc get*[T: Value](val: KdlVal, x: typedesc[T]): T =
   ## Tries to get and convert val to T, raises an error when it cannot.
   runnableExamples:
     let val = initKFloat(3.14)
@@ -88,6 +88,7 @@ proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T =
     assert val.get(uint) == 3u
     assert val.get(float) == 3.14
     assert val.get(float32) == 3.14f
+    assert val.get(range[0f..4f]) == 3.14f
 
   when T is string:
     result =
@@ -104,7 +105,7 @@ proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T =
         $val.getInt()
       of KEmpty:
         "empty"
-  elif T is SomeNumber:
+  elif T is SomeNumber or T is range:
     check val.isFloat or val.isInt
 
     result =
@@ -116,6 +117,8 @@ proc get*[T: SomeNumber or string or bool](val: KdlVal, x: typedesc[T]): T =
     check val.isBool
 
     result = val.getBool
+  else:
+    {.error: "get is not implemented for " & $typeof(T).}
 
 # ----- Setters -----
 

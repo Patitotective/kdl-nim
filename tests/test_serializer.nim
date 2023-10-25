@@ -22,6 +22,7 @@ type
   MyObj2 = object
     id*: int
     name*: string
+    subrange*: range[0f..1f]
 
   MyObj3 = object
     id*: int
@@ -368,7 +369,7 @@ suite "Decoder":
 
   test "newHook":
     check parseKdl("").decode(DateTime) == dateTime(2000, mMar, 30)
-    check parseKdl("name \"otoboke\"").decode(MyObj2) == MyObj2(id: 5, name: "otoboke")
+    check parseKdl("name \"otoboke\"; subrange 0.6").decode(MyObj2) == MyObj2(id: 5, subrange: 0.6, name: "otoboke")
 
   test "postHook":
     check parseKdl("id 4").decode(MyObj3) == MyObj3(id: 5)

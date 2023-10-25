@@ -1,6 +1,6 @@
 # Package
 
-version       = "1.2.3"
+version       = "1.2.4"
 author        = "Patitotective"
 description   = "KDL document language Nim implementation"
 license       = "MIT"

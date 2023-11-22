@@ -1,4 +1,4 @@
 nimTitle	jik	kdl/jik.html	module src/kdl/jik		0
-nim	toKdl	kdl/jik.html#toKdl,JsonNode	proc toKdl(node: JsonNode): KdlNode		113
-nim	toJson	kdl/jik.html#toJson,KdlNode	proc toJson(node: KdlNode): JsonNode		159
+nim	toKdl	kdl/jik.html#toKdl,JsonNode,string	proc toKdl(node: JsonNode; name = "-"): KdlNode		91
+nim	toJson	kdl/jik.html#toJson,KdlNode	proc toJson(node: KdlNode): JsonNode		130
 heading	JiK	kdl/jik.html#jik	 JiK		0

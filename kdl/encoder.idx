@@ -1,30 +1,31 @@
 nimTitle	encoder	kdl/encoder.html	module src/kdl/encoder		0
-nim	encode	kdl/encoder.html#encode,auto,KdlDoc	proc encode(a: auto; v: var KdlDoc)		79
-nim	encode	kdl/encoder.html#encode,auto,KdlVal	proc encode(a: auto; v: var KdlVal)		80
-nim	encode	kdl/encoder.html#encode,auto,KdlNode,string	proc encode(a: auto; v: var KdlNode; name: string)		81
-nim	encode	kdl/encoder.html#encode,auto	proc encode(a: auto): KdlDoc		82
-nim	encode	kdl/encoder.html#encode,auto,string	proc encode(a: auto; name: string): KdlNode		83
-nim	encode	kdl/encoder.html#encode,auto,typedesc[T]	proc encode[T: KdlSome](a: auto; __1795162147: typedesc[T]): T		84
-nim	encodeHook	kdl/encoder.html#encodeHook,List,KdlDoc	proc encodeHook(a: List; v: var KdlDoc)		86
-nim	encodeHook	kdl/encoder.html#encodeHook,Object,KdlDoc	proc encodeHook(a: Object; v: var KdlDoc)		87
-nim	encodeHook	kdl/encoder.html#encodeHook,ref,KdlDoc	proc encodeHook(a: ref; v: var KdlDoc)		88
-nim	encodeHook	kdl/encoder.html#encodeHook,KdlVal,KdlNode,string	proc encodeHook(a: KdlVal; v: var KdlNode; name: string)		90
-nim	encodeHook	kdl/encoder.html#encodeHook,List,KdlNode,string	proc encodeHook(a: List; v: var KdlNode; name: string)		91
-nim	encodeHook	kdl/encoder.html#encodeHook,Object,KdlNode,string	proc encodeHook(a: Object; v: var KdlNode; name: string)		92
-nim	encodeHook	kdl/encoder.html#encodeHook,ref,KdlNode,string	proc encodeHook(a: ref; v: var KdlNode; name: string)		93
-nim	encodeHook	kdl/encoder.html#encodeHook,auto,KdlNode,string	proc encodeHook(a: auto; v: var KdlNode; name: string)		94
-nim	encodeHook	kdl/encoder.html#encodeHook,Value,KdlVal	proc encodeHook(a: Value; v: var KdlVal)		96
-nim	encodeHook	kdl/encoder.html#encodeHook,cstring,KdlVal	proc encodeHook(a: cstring; v: var KdlVal)		97
-nim	encodeHook	kdl/encoder.html#encodeHook,char,KdlVal	proc encodeHook(a: char; v: var KdlVal)		98
-nim	encodeHook	kdl/encoder.html#encodeHook,KdlVal,KdlVal	proc encodeHook(a: KdlVal; v: var KdlVal)		99
-nim	encodeHook	kdl/encoder.html#encodeHook,,KdlVal	proc encodeHook(a: enum; v: var KdlVal)		100
-nim	encodeHook	kdl/encoder.html#encodeHook,List,KdlVal	proc encodeHook(a: List; v: var KdlVal)		101
-nim	encodeHook	kdl/encoder.html#encodeHook,,KdlDoc	proc encodeHook(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)		208
-nim	encodeHook	kdl/encoder.html#encodeHook,SomeSet[auto],KdlDoc	proc encodeHook(a: SomeSet[auto]; v: var KdlDoc)		209
-nim	encodeHook	kdl/encoder.html#encodeHook,,KdlNode,string	proc encodeHook(a: SomeTable[string, auto] or SomeSet[auto] or StringTableRef;\n           v: var KdlNode; name: string)		211
-nim	encodeHook	kdl/encoder.html#encodeHook,Option[auto],KdlNode,string	proc encodeHook(a: Option[auto]; v: var KdlNode; name: string)		212
-nim	encodeHook	kdl/encoder.html#encodeHook,Option[auto],KdlVal	proc encodeHook(a: Option[auto]; v: var KdlVal)		214
-nimgrp	encodehook	kdl/encoder.html#encodeHook-procs-all	proc		86
-nimgrp	encode	kdl/encoder.html#encode-procs-all	proc		79
+nim	encodeKdlDoc	kdl/encoder.html#encodeKdlDoc,auto	proc encodeKdlDoc(a: auto): KdlDoc		93
+nim	encodeKdlNode	kdl/encoder.html#encodeKdlNode,auto,string	proc encodeKdlNode(a: auto; name: string): KdlNode		94
+nim	encodeKdlVal	kdl/encoder.html#encodeKdlVal,auto	proc encodeKdlVal(a: auto): KdlVal		95
+nim	encodeKdl	kdl/encoder.html#encodeKdl,ref,KdlSome	proc encodeKdl(a: ref; v: var KdlSome)		96
+nim	encodeKdl	kdl/encoder.html#encodeKdl,KdlDoc,KdlDoc	proc encodeKdl(a: KdlDoc; v: var KdlDoc)		98
+nim	encodeKdl	kdl/encoder.html#encodeKdl,List,KdlDoc	proc encodeKdl(a: List; v: var KdlDoc)		99
+nim	encodeKdl	kdl/encoder.html#encodeKdl,,KdlDoc	proc encodeKdl(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)		100
+nim	encodeKdl	kdl/encoder.html#encodeKdl,SomeSet[auto],KdlDoc	proc encodeKdl(a: SomeSet[auto]; v: var KdlDoc)		101
+nim	encodeKdl	kdl/encoder.html#encodeKdl,set[T],KdlDoc	proc encodeKdl[T: Ordinal](a: set[T]; v: var KdlDoc)		102
+nim	encodeKdl	kdl/encoder.html#encodeKdl,Object,KdlDoc	proc encodeKdl(a: Object; v: var KdlDoc)		103
+nim	encodeKdl	kdl/encoder.html#encodeKdl,KdlNode,KdlNode,string	proc encodeKdl(a: KdlNode; v: var KdlNode; name: string)		105
+nim	encodeKdl	kdl/encoder.html#encodeKdl,KdlDoc,KdlNode,string	proc encodeKdl(a: KdlDoc; v: var KdlNode; name: string)		106
+nim	encodeKdl	kdl/encoder.html#encodeKdl,KdlVal,KdlNode,string	proc encodeKdl(a: KdlVal; v: var KdlNode; name: string)		107
+nim	encodeKdl	kdl/encoder.html#encodeKdl,List,KdlNode,string	proc encodeKdl(a: List; v: var KdlNode; name: string)		108
+nim	encodeKdl	kdl/encoder.html#encodeKdl,set[T],KdlNode,string	proc encodeKdl[T: Ordinal](a: set[T]; v: var KdlNode; name: string)		109
+nim	encodeKdl	kdl/encoder.html#encodeKdl,,KdlNode,string	proc encodeKdl(a: SomeTable[string, auto] or SomeSet[auto]; v: var KdlNode;\n          name: string)		110
+nim	encodeKdl	kdl/encoder.html#encodeKdl,StringTableRef,KdlNode,string	proc encodeKdl(a: StringTableRef; v: var KdlNode; name: string)		111
+nim	encodeKdl	kdl/encoder.html#encodeKdl,Option[auto],KdlNode,string	proc encodeKdl(a: Option[auto]; v: var KdlNode; name: string)		112
+nim	encodeKdl	kdl/encoder.html#encodeKdl,Object,KdlNode,string	proc encodeKdl(a: Object; v: var KdlNode; name: string)		113
+nim	encodeKdl	kdl/encoder.html#encodeKdl,auto,KdlNode,string	proc encodeKdl(a: auto; v: var KdlNode; name: string)		114
+nim	encodeKdl	kdl/encoder.html#encodeKdl,KdlVal,KdlVal	proc encodeKdl(a: KdlVal; v: var KdlVal)		116
+nim	encodeKdl	kdl/encoder.html#encodeKdl,Value,KdlVal	proc encodeKdl(a: Value; v: var KdlVal)		117
+nim	encodeKdl	kdl/encoder.html#encodeKdl,cstring,KdlVal	proc encodeKdl(a: cstring; v: var KdlVal)		118
+nim	encodeKdl	kdl/encoder.html#encodeKdl,char,KdlVal	proc encodeKdl(a: char; v: var KdlVal)		119
+nim	encodeKdl	kdl/encoder.html#encodeKdl,,KdlVal	proc encodeKdl(a: enum; v: var KdlVal)		120
+nim	encodeKdl	kdl/encoder.html#encodeKdl,List,KdlVal	proc encodeKdl(a: List; v: var KdlVal)		121
+nim	encodeKdl	kdl/encoder.html#encodeKdl,Option[auto],KdlVal	proc encodeKdl(a: Option[auto]; v: var KdlVal)		122
+nimgrp	encodekdl	kdl/encoder.html#encodeKdl-procs-all	proc		96
 heading	Encoder	kdl/encoder.html#encoder	  Encoder		0
 heading	Custom Encode Hooks	kdl/encoder.html#encoder-custom-encode-hooks	   Custom Encode Hooks		0

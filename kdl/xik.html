@@ -56,11 +56,15 @@
     <summary><a class="reference reference-toplevel" href="#12" id="62">Procs</a></summary>
     <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">toKdl
-  <li><a class="reference" href="#toKdl%2CXmlNode" title="toKdl(node: XmlNode; comments = false): KdlNode">toKdl(node: XmlNode; comments = false): KdlNode</a></li>
+  <li><a class="reference" href="#toKdl%2CXmlNode" title="toKdl(node: XmlNode; addComments = false): KdlNode">toKdl(node: XmlNode; addComments = false): KdlNode</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">toXml
-  <li><a class="reference" href="#toXml%2CKdlNode" title="toXml(node: KdlNode; comments = false): XmlNode">toXml(node: KdlNode; comments = false): XmlNode</a></li>
+  <li><a class="reference" href="#toXml%2CKdlNode" title="toXml(node: KdlNode; addComments = false): XmlNode">toXml(node: KdlNode; addComments = false): XmlNode</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">toXmlSingle
+  <li><a class="reference" href="#toXmlSingle%2CKdlNode" title="toXmlSingle(node: KdlNode): XmlNode">toXmlSingle(node: KdlNode): XmlNode</a></li>
 
 </ul>
 
@@ -133,13 +137,11 @@ breakfast_menu {
   <dl class="item">
     <div id="toKdl-procs-all">
   <div id="toKdl,XmlNode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#toKdl%2CXmlNode"><span class="Identifier">toKdl</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <span class="Identifier">XmlNode</span><span class="Other">;</span> <span class="Identifier">comments</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#toKdl%2CXmlNode"><span class="Identifier">toKdl</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <span class="Identifier">XmlNode</span><span class="Other">;</span> <span class="Identifier">addComments</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Converts node into its KDL representation.<ul class="simple"><li>If <tt class="docutils literal"><span class="pre"><span class="Identifier">comments</span></span></tt> preserves comments.</li>
-</ul>
-
+    Converts node into its KDL representation. Ignores CDATA nodes, i.e.. If <tt class="docutils literal"><span class="pre"><span class="Identifier">addComments</span></span></tt> preserves XML comments as KDL nodes named <tt class="docutils literal"><span class="pre"><span class="Operator">!</span></span></tt>.
     <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/xik.nim#L51" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
 <a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/xik.nim#L51" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
@@ -149,15 +151,36 @@ breakfast_menu {
 </div>
 <div id="toXml-procs-all">
   <div id="toXml,KdlNode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#toXml%2CKdlNode"><span class="Identifier">toXml</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">comments</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">XmlNode</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KdlError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dt><pre><span class="Keyword">proc</span> <a href="#toXml%2CKdlNode"><span class="Identifier">toXml</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">addComments</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">XmlNode</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KdlError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Converts node into its XML representation.<ul class="simple"><li>If <tt class="docutils literal"><span class="pre"><span class="Identifier">comments</span></span></tt> preserves comments.</li>
+    Converts node into its XML representation.<ul class="simple"><li>If <tt class="docutils literal"><span class="pre"><span class="Identifier">addComments</span></span></tt> preserves comments in elements, if node is a comment ('! &quot;something&quot;') it DOES return it.</li>
 </ul>
 
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/xik.nim#L76" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/xik.nim#L76" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+<p><strong class="examples_text">Example:</strong></p>
+<pre class="listing"><span class="Keyword">import</span> <span class="Identifier">std</span><span class="Operator">/</span><span class="Identifier">xmltree</span>
+<span class="Keyword">import</span> <span class="Identifier">kdl</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;! </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">comment</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">toXml</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">kind</span> <span class="Operator">==</span> <span class="Identifier">xnComment</span>
+<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;tag { ! </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">comment</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">; - </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">text</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> }&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">toXml</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">len</span> <span class="Operator">==</span> <span class="DecNumber">1</span> <span class="Comment"># Ignored the comment</span>
+<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;tag { ! </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">comment</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">; - </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">text</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> }&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">toXml</span><span class="Punctuation">(</span><span class="Identifier">addComments</span> <span class="Operator">=</span> <span class="Identifier">true</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">len</span> <span class="Operator">==</span> <span class="DecNumber">2</span> <span class="Comment"># Added the comment</span></pre>
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/xik.nim#L97" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/xik.nim#L97" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="toXmlSingle-procs-all">
+  <div id="toXmlSingle,KdlNode">
+  <dt><pre><span class="Keyword">proc</span> <a href="#toXmlSingle%2CKdlNode"><span class="Identifier">toXmlSingle</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">XmlNode</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KdlError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/xik.nim#L79" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/xik.nim#L79" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -173,7 +196,7 @@ breakfast_menu {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-10-25 02:42:26 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-11-22 21:51:32 UTC</small>
       </div>
     </div>
   </div>

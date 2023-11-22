@@ -56,37 +56,45 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#12" id="62">Procs</a></summary>
     <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">encode
-  <li><a class="reference" href="#encode%2Cauto" title="encode(a: auto): KdlDoc">encode(a: auto): KdlDoc</a></li>
-<li><a class="reference" href="#encode%2Cauto%2Cstring" title="encode(a: auto; name: string): KdlNode">encode(a: auto; name: string): KdlNode</a></li>
-<li><a class="reference" href="#encode%2Cauto%2CKdlDoc" title="encode(a: auto; v: var KdlDoc)">encode(a: auto; v: var KdlDoc)</a></li>
-<li><a class="reference" href="#encode%2Cauto%2CKdlNode%2Cstring" title="encode(a: auto; v: var KdlNode; name: string)">encode(a: auto; v: var KdlNode; name: string)</a></li>
-<li><a class="reference" href="#encode%2Cauto%2CKdlVal" title="encode(a: auto; v: var KdlVal)">encode(a: auto; v: var KdlVal)</a></li>
-<li><a class="reference" href="#encode%2Cauto%2Ctypedesc%5BT%5D" title="encode[T: KdlSome](a: auto; __1795162147: typedesc[T]): T">encode[T: KdlSome](a: auto; __1795162147: typedesc[T]): T</a></li>
+      <ul class="simple nested-toc-section">encodeKdl
+  <li><a class="reference" href="#encodeKdl%2Cauto%2CKdlNode%2Cstring" title="encodeKdl(a: auto; v: var KdlNode; name: string)">encodeKdl(a: auto; v: var KdlNode; name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2Cchar%2CKdlVal" title="encodeKdl(a: char; v: var KdlVal)">encodeKdl(a: char; v: var KdlVal)</a></li>
+<li><a class="reference" href="#encodeKdl%2Ccstring%2CKdlVal" title="encodeKdl(a: cstring; v: var KdlVal)">encodeKdl(a: cstring; v: var KdlVal)</a></li>
+<li><a class="reference" href="#encodeKdl%2C%2CKdlVal" title="encodeKdl(a: enum; v: var KdlVal)">encodeKdl(a: enum; v: var KdlVal)</a></li>
+<li><a class="reference" href="#encodeKdl%2CKdlDoc%2CKdlDoc" title="encodeKdl(a: KdlDoc; v: var KdlDoc)">encodeKdl(a: KdlDoc; v: var KdlDoc)</a></li>
+<li><a class="reference" href="#encodeKdl%2CKdlDoc%2CKdlNode%2Cstring" title="encodeKdl(a: KdlDoc; v: var KdlNode; name: string)">encodeKdl(a: KdlDoc; v: var KdlNode; name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2CKdlNode%2CKdlNode%2Cstring" title="encodeKdl(a: KdlNode; v: var KdlNode; name: string)">encodeKdl(a: KdlNode; v: var KdlNode; name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2CKdlVal%2CKdlNode%2Cstring" title="encodeKdl(a: KdlVal; v: var KdlNode; name: string)">encodeKdl(a: KdlVal; v: var KdlNode; name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2CKdlVal%2CKdlVal" title="encodeKdl(a: KdlVal; v: var KdlVal)">encodeKdl(a: KdlVal; v: var KdlVal)</a></li>
+<li><a class="reference" href="#encodeKdl%2CList%2CKdlDoc" title="encodeKdl(a: List; v: var KdlDoc)">encodeKdl(a: List; v: var KdlDoc)</a></li>
+<li><a class="reference" href="#encodeKdl%2CList%2CKdlNode%2Cstring" title="encodeKdl(a: List; v: var KdlNode; name: string)">encodeKdl(a: List; v: var KdlNode; name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2CList%2CKdlVal" title="encodeKdl(a: List; v: var KdlVal)">encodeKdl(a: List; v: var KdlVal)</a></li>
+<li><a class="reference" href="#encodeKdl%2CObject%2CKdlDoc" title="encodeKdl(a: Object; v: var KdlDoc)">encodeKdl(a: Object; v: var KdlDoc)</a></li>
+<li><a class="reference" href="#encodeKdl%2CObject%2CKdlNode%2Cstring" title="encodeKdl(a: Object; v: var KdlNode; name: string)">encodeKdl(a: Object; v: var KdlNode; name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2COption%5Bauto%5D%2CKdlNode%2Cstring" title="encodeKdl(a: Option[auto]; v: var KdlNode; name: string)">encodeKdl(a: Option[auto]; v: var KdlNode; name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2COption%5Bauto%5D%2CKdlVal" title="encodeKdl(a: Option[auto]; v: var KdlVal)">encodeKdl(a: Option[auto]; v: var KdlVal)</a></li>
+<li><a class="reference" href="#encodeKdl%2Cref%2CKdlSome" title="encodeKdl(a: ref; v: var KdlSome)">encodeKdl(a: ref; v: var KdlSome)</a></li>
+<li><a class="reference" href="#encodeKdl%2CSomeSet%5Bauto%5D%2CKdlDoc" title="encodeKdl(a: SomeSet[auto]; v: var KdlDoc)">encodeKdl(a: SomeSet[auto]; v: var KdlDoc)</a></li>
+<li><a class="reference" href="#encodeKdl%2C%2CKdlNode%2Cstring" title="encodeKdl(a: SomeTable[string, auto] or SomeSet[auto]; v: var KdlNode;
+          name: string)">encodeKdl(a: SomeTable[string, auto] or SomeSet[auto]; v: var KdlNode;
+          name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2C%2CKdlDoc" title="encodeKdl(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)">encodeKdl(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)</a></li>
+<li><a class="reference" href="#encodeKdl%2CStringTableRef%2CKdlNode%2Cstring" title="encodeKdl(a: StringTableRef; v: var KdlNode; name: string)">encodeKdl(a: StringTableRef; v: var KdlNode; name: string)</a></li>
+<li><a class="reference" href="#encodeKdl%2CValue%2CKdlVal" title="encodeKdl(a: Value; v: var KdlVal)">encodeKdl(a: Value; v: var KdlVal)</a></li>
+<li><a class="reference" href="#encodeKdl%2Cset%5BT%5D%2CKdlDoc" title="encodeKdl[T: Ordinal](a: set[T]; v: var KdlDoc)">encodeKdl[T: Ordinal](a: set[T]; v: var KdlDoc)</a></li>
+<li><a class="reference" href="#encodeKdl%2Cset%5BT%5D%2CKdlNode%2Cstring" title="encodeKdl[T: Ordinal](a: set[T]; v: var KdlNode; name: string)">encodeKdl[T: Ordinal](a: set[T]; v: var KdlNode; name: string)</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">encodeHook
-  <li><a class="reference" href="#encodeHook%2Cauto%2CKdlNode%2Cstring" title="encodeHook(a: auto; v: var KdlNode; name: string)">encodeHook(a: auto; v: var KdlNode; name: string)</a></li>
-<li><a class="reference" href="#encodeHook%2Cchar%2CKdlVal" title="encodeHook(a: char; v: var KdlVal)">encodeHook(a: char; v: var KdlVal)</a></li>
-<li><a class="reference" href="#encodeHook%2Ccstring%2CKdlVal" title="encodeHook(a: cstring; v: var KdlVal)">encodeHook(a: cstring; v: var KdlVal)</a></li>
-<li><a class="reference" href="#encodeHook%2C%2CKdlVal" title="encodeHook(a: enum; v: var KdlVal)">encodeHook(a: enum; v: var KdlVal)</a></li>
-<li><a class="reference" href="#encodeHook%2CKdlVal%2CKdlNode%2Cstring" title="encodeHook(a: KdlVal; v: var KdlNode; name: string)">encodeHook(a: KdlVal; v: var KdlNode; name: string)</a></li>
-<li><a class="reference" href="#encodeHook%2CKdlVal%2CKdlVal" title="encodeHook(a: KdlVal; v: var KdlVal)">encodeHook(a: KdlVal; v: var KdlVal)</a></li>
-<li><a class="reference" href="#encodeHook%2CList%2CKdlDoc" title="encodeHook(a: List; v: var KdlDoc)">encodeHook(a: List; v: var KdlDoc)</a></li>
-<li><a class="reference" href="#encodeHook%2CList%2CKdlNode%2Cstring" title="encodeHook(a: List; v: var KdlNode; name: string)">encodeHook(a: List; v: var KdlNode; name: string)</a></li>
-<li><a class="reference" href="#encodeHook%2CList%2CKdlVal" title="encodeHook(a: List; v: var KdlVal)">encodeHook(a: List; v: var KdlVal)</a></li>
-<li><a class="reference" href="#encodeHook%2CObject%2CKdlDoc" title="encodeHook(a: Object; v: var KdlDoc)">encodeHook(a: Object; v: var KdlDoc)</a></li>
-<li><a class="reference" href="#encodeHook%2CObject%2CKdlNode%2Cstring" title="encodeHook(a: Object; v: var KdlNode; name: string)">encodeHook(a: Object; v: var KdlNode; name: string)</a></li>
-<li><a class="reference" href="#encodeHook%2COption%5Bauto%5D%2CKdlNode%2Cstring" title="encodeHook(a: Option[auto]; v: var KdlNode; name: string)">encodeHook(a: Option[auto]; v: var KdlNode; name: string)</a></li>
-<li><a class="reference" href="#encodeHook%2COption%5Bauto%5D%2CKdlVal" title="encodeHook(a: Option[auto]; v: var KdlVal)">encodeHook(a: Option[auto]; v: var KdlVal)</a></li>
-<li><a class="reference" href="#encodeHook%2Cref%2CKdlDoc" title="encodeHook(a: ref; v: var KdlDoc)">encodeHook(a: ref; v: var KdlDoc)</a></li>
-<li><a class="reference" href="#encodeHook%2Cref%2CKdlNode%2Cstring" title="encodeHook(a: ref; v: var KdlNode; name: string)">encodeHook(a: ref; v: var KdlNode; name: string)</a></li>
-<li><a class="reference" href="#encodeHook%2CSomeSet%5Bauto%5D%2CKdlDoc" title="encodeHook(a: SomeSet[auto]; v: var KdlDoc)">encodeHook(a: SomeSet[auto]; v: var KdlDoc)</a></li>
-<li><a class="reference" href="#encodeHook%2C%2CKdlNode%2Cstring" title="encodeHook(a: SomeTable[string, auto] or SomeSet[auto] or StringTableRef;
-           v: var KdlNode; name: string)">encodeHook(a: SomeTable[string, auto] or SomeSet[auto] or StringTableRef;
-           v: var KdlNode; name: string)</a></li>
-<li><a class="reference" href="#encodeHook%2C%2CKdlDoc" title="encodeHook(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)">encodeHook(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)</a></li>
-<li><a class="reference" href="#encodeHook%2CValue%2CKdlVal" title="encodeHook(a: Value; v: var KdlVal)">encodeHook(a: Value; v: var KdlVal)</a></li>
+<ul class="simple nested-toc-section">encodeKdlDoc
+  <li><a class="reference" href="#encodeKdlDoc%2Cauto" title="encodeKdlDoc(a: auto): KdlDoc">encodeKdlDoc(a: auto): KdlDoc</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">encodeKdlNode
+  <li><a class="reference" href="#encodeKdlNode%2Cauto%2Cstring" title="encodeKdlNode(a: auto; name: string): KdlNode">encodeKdlNode(a: auto; name: string): KdlNode</a></li>
+
+</ul>
+<ul class="simple nested-toc-section">encodeKdlVal
+  <li><a class="reference" href="#encodeKdlVal%2Cauto" title="encodeKdlVal(a: auto): KdlVal">encodeKdlVal(a: auto): KdlVal</a></li>
 
 </ul>
 
@@ -114,11 +122,12 @@
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">string</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">cstring</span></span></tt></li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt> (object variant)</li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">seq</span><span class="Punctuation">[</span><span class="Identifier">T</span><span class="Punctuation">]</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">array</span><span class="Punctuation">[</span><span class="Identifier">I</span><span class="Punctuation">,</span> <span class="Identifier">T</span><span class="Punctuation">]</span></span></tt></li>
-<li><tt class="docutils literal"><span class="pre"><span class="Identifier">HashSet</span><span class="Punctuation">[</span><span class="Identifier">A</span><span class="Punctuation">]</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">OrderedSet</span><span class="Punctuation">[</span><span class="Identifier">A</span><span class="Punctuation">]</span></span></tt></li>
+<li><tt class="docutils literal"><span class="pre"><span class="Identifier">set</span><span class="Punctuation">[</span><span class="Identifier">Ordinal</span><span class="Punctuation">]</span><span class="Punctuation">,</span></span></tt> <tt class="docutils literal"><span class="pre"><span class="Identifier">HashSet</span><span class="Punctuation">[</span><span class="Identifier">A</span><span class="Punctuation">]</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">OrderedSet</span><span class="Punctuation">[</span><span class="Identifier">A</span><span class="Punctuation">]</span></span></tt></li>
 <li><tt class="docutils literal"><span class="pre"><span class="Identifier">Table</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">,</span> <span class="Identifier">T</span><span class="Punctuation">]</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">OrderedTable</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">,</span> <span class="Identifier">T</span><span class="Punctuation">]</span></span></tt></li>
 <li><tt class="docutils literal"><span class="pre"><span class="Keyword">object</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Keyword">ref</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Keyword">tuple</span></span></tt> (including object variants)</li>
 <li>Plus any type you implement.</li>
 </ul>
+<p>Use <tt class="docutils literal"><span class="pre"><span class="Identifier">encodeKdlDoc</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">encodeKdlNode</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">encodeKdlVal</span></span></tt> correspondingly.</p>
 
 <p><strong class="examples_text">Example:</strong></p>
 <pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span><span class="Operator">/</span><span class="Identifier">encoder</span>
@@ -132,36 +141,45 @@
     <span class="Identifier">description</span><span class="Operator">*</span><span class="Punctuation">,</span> <span class="Identifier">licenseFile</span><span class="Operator">*</span><span class="Punctuation">,</span> <span class="Identifier">edition</span><span class="Operator">*:</span> <span class="Identifier">Option</span><span class="Punctuation">[</span><span class="Identifier">string</span><span class="Punctuation">]</span>
 
 <span class="Keyword">const</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="LongStringLit">&quot;&quot;&quot;
-&quot;name&quot; &quot;kdl&quot;
-&quot;version&quot; &quot;0.0.0&quot;
-&quot;authors&quot; {
-  &quot;-&quot; &quot;Kat Marchán &lt;kzm@zkat.tech&gt;&quot;
+name &quot;kdl&quot;
+version &quot;0.0.0&quot;
+authors {
+- &quot;Kat Marchán &lt;kzm@zkat.tech&gt;&quot;
 }
-&quot;description&quot; &quot;kat's document language&quot;
-&quot;licenseFile&quot; &quot;LICENSE.md&quot;
-&quot;edition&quot; &quot;2018&quot;
-    &quot;&quot;&quot;</span><span class="Punctuation">)</span>
+description &quot;kats document language&quot;
+licenseFile &quot;LICENSE.md&quot;
+edition &quot;2018&quot;
+  &quot;&quot;&quot;</span><span class="Punctuation">)</span>
 
-<span class="Identifier">assert</span> <span class="Identifier">Package</span><span class="Punctuation">(</span><span class="Identifier">name</span><span class="Punctuation">:</span> <span class="StringLit">&quot;kdl&quot;</span><span class="Punctuation">,</span> <span class="Identifier">version</span><span class="Punctuation">:</span> <span class="StringLit">&quot;0.0.0&quot;</span><span class="Punctuation">,</span> <span class="Identifier">authors</span><span class="Punctuation">:</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="StringLit">&quot;Kat Marchán &lt;kzm@zkat.tech&gt;&quot;</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">,</span> <span class="Identifier">description</span><span class="Punctuation">:</span> <span class="StringLit">&quot;kat's document language&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">,</span> <span class="Identifier">licenseFile</span><span class="Punctuation">:</span> <span class="StringLit">&quot;LICENSE.md&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">,</span> <span class="Identifier">edition</span><span class="Punctuation">:</span> <span class="StringLit">&quot;2018&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">doc</span></pre>
-<h3><a class="toc-backref" id="encoder-custom-encode-hooks" href="#encoder-custom-encode-hooks">Custom Encode Hooks</a></h3><p>If you need to encode a specific type in a specific way you may use custom encode hooks.</p>
-<p>To do so, you'll have to overload the <tt class="docutils literal"><span class="pre"><span class="Identifier">encodeHook</span></span></tt> procedure with the following signatura:</p>
+<span class="Keyword">const</span> <span class="Identifier">obj</span> <span class="Operator">=</span> <span class="Identifier">Package</span><span class="Punctuation">(</span>
+  <span class="Identifier">name</span><span class="Punctuation">:</span> <span class="StringLit">&quot;kdl&quot;</span><span class="Punctuation">,</span>
+  <span class="Identifier">version</span><span class="Punctuation">:</span> <span class="StringLit">&quot;0.0.0&quot;</span><span class="Punctuation">,</span>
+  <span class="Identifier">authors</span><span class="Punctuation">:</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="StringLit">&quot;Kat Marchán &lt;kzm@zkat.tech&gt;&quot;</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">,</span>
+  <span class="Identifier">description</span><span class="Punctuation">:</span> <span class="StringLit">&quot;kats document language&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">,</span>
+  <span class="Identifier">licenseFile</span><span class="Punctuation">:</span> <span class="StringLit">&quot;LICENSE.md&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">,</span>
+  <span class="Identifier">edition</span><span class="Punctuation">:</span> <span class="StringLit">&quot;2018&quot;</span><span class="Operator">.</span><span class="Identifier">some</span>
+<span class="Punctuation">)</span>
+
+<span class="Identifier">assert</span> <span class="Identifier">obj</span><span class="Operator">.</span><span class="Identifier">encodeKdlDoc</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">doc</span></pre>
+<h3><a class="toc-backref" id="encoder-custom-encode-hooks" href="#encoder-custom-encode-hooks">Custom Encode Hooks</a></h3><p>If you need to encode a specific type in a specific way you may create a custom encode hooks.</p>
+<p>To do so, you'll have to overload the <tt class="docutils literal"><span class="pre"><span class="Identifier">encodeKdl</span></span></tt> procedure with the following signature:</p>
 <p><pre class="listing">
-<span class="Keyword">proc</span> <span class="Identifier">encodeHook</span><span class="Operator">*</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">MyType</span><span class="Punctuation">,</span> <span class="Identifier">v</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">KdlSome</span><span class="Punctuation">)</span></pre> Where <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlSome</span></span></tt> is one of <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlDoc</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlNode</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt>.</p>
+<span class="Keyword">proc</span> <span class="Identifier">encodeKdl</span><span class="Operator">*</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">MyType</span><span class="Punctuation">,</span> <span class="Identifier">v</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">KdlSome</span><span class="Punctuation">)</span></pre> Where <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlSome</span></span></tt> is one of <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlDoc</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlNode</span></span></tt> or <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt>. <em>Note: to understand it better think about it like encoding `a` into `v`, where `v` can be a KDL document, node or value.</em></p>
 
 <p><strong class="examples_text">Example:</strong></p>
 <pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span><span class="Operator">/</span><span class="Identifier">encoder</span>
 <span class="Keyword">import</span> <span class="Identifier">std</span><span class="Operator">/</span><span class="Identifier">times</span>
 <span class="Keyword">import</span> <span class="Identifier">kdl</span>
 
-<span class="Keyword">proc</span> <span class="Identifier">encodeHook</span><span class="Operator">*</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">DateTime</span><span class="Punctuation">,</span> <span class="Identifier">v</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">KdlDoc</span><span class="Punctuation">)</span> <span class="Operator">=</span> 
+<span class="Keyword">proc</span> <span class="Identifier">encodeKdl</span><span class="Operator">*</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">DateTime</span><span class="Punctuation">,</span> <span class="Identifier">v</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">KdlDoc</span><span class="Punctuation">)</span> <span class="Operator">=</span>
   <span class="Identifier">v</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span>
-    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;year&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">year</span><span class="Punctuation">,</span> <span class="Identifier">KdlVal</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span> 
-    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;month&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">month</span><span class="Punctuation">,</span> <span class="Identifier">KdlVal</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span> 
-    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;day&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">monthday</span><span class="Punctuation">,</span> <span class="Identifier">KdlVal</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span> 
-    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;hour&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">hour</span><span class="Punctuation">,</span> <span class="Identifier">KdlVal</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span> 
-    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;minute&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">minute</span><span class="Punctuation">,</span> <span class="Identifier">KdlVal</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span> 
-    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;second&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">second</span><span class="Punctuation">,</span> <span class="Identifier">KdlVal</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span> 
-    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;nanosecond&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">nanosecond</span><span class="Punctuation">,</span> <span class="Identifier">KdlVal</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span> 
+    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;year&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encodeKdlVal</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">year</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span>
+    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;month&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encodeKdlVal</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">month</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span>
+    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;day&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encodeKdlVal</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">monthday</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span>
+    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;hour&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encodeKdlVal</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">hour</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span>
+    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;minute&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encodeKdlVal</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">minute</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span>
+    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;second&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encodeKdlVal</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">second</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span>
+    <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;nanosecond&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">encodeKdlVal</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Operator">.</span><span class="Identifier">nanosecond</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">,</span>
   <span class="Punctuation">]</span>
 
 <span class="Keyword">const</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="LongStringLit">&quot;&quot;&quot;
@@ -174,7 +192,7 @@
 &quot;nanosecond&quot; 0
   &quot;&quot;&quot;</span><span class="Punctuation">)</span>
 
-<span class="Identifier">assert</span> <span class="Identifier">dateTime</span><span class="Punctuation">(</span><span class="DecNumber">2022</span><span class="Punctuation">,</span> <span class="Identifier">mOct</span><span class="Punctuation">,</span> <span class="DecNumber">15</span><span class="Punctuation">,</span> <span class="DecNumber">12</span><span class="Punctuation">,</span> <span class="DecNumber">04</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">encode</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">doc</span></pre></p>
+<span class="Identifier">assert</span> <span class="Identifier">dateTime</span><span class="Punctuation">(</span><span class="DecNumber">2022</span><span class="Punctuation">,</span> <span class="Identifier">mOct</span><span class="Punctuation">,</span> <span class="DecNumber">15</span><span class="Punctuation">,</span> <span class="DecNumber">12</span><span class="Punctuation">,</span> <span class="DecNumber">04</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">encodeKdlDoc</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">doc</span></pre></p>
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
@@ -184,82 +202,49 @@
 <div class="section" id="12">
   <h1><a class="toc-backref" href="#12">Procs</a></h1>
   <dl class="item">
-    <div id="encode-procs-all">
-  <div id="encode,auto">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encode%2Cauto"><span class="Identifier">encode</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a></pre></dt>
+    <div id="encodeKdl-procs-all">
+  <div id="encodeKdl,auto,KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2Cauto%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L82" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L82" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L114" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L114" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encode,auto,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encode%2Cauto%2Cstring"><span class="Identifier">encode</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a></pre></dt>
+<div id="encodeKdl,char,KdlVal">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2Cchar%2CKdlVal"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">char</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L83" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L83" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L119" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L119" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encode,auto,KdlDoc">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encode%2Cauto%2CKdlDoc"><span class="Identifier">encode</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,cstring,KdlVal">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2Ccstring%2CKdlVal"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L79" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L79" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L118" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L118" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encode,auto,KdlNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encode%2Cauto%2CKdlNode%2Cstring"><span class="Identifier">encode</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,,KdlVal">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2C%2CKdlVal"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Keyword">enum</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L81" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L81" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L120" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L120" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encode,auto,KdlVal">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encode%2Cauto%2CKdlVal"><span class="Identifier">encode</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L80" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L80" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="encode,auto,typedesc[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encode%2Cauto%2Ctypedesc%5BT%5D"><span class="Identifier">encode</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <a href="utils.html#KdlSome"><span class="Identifier">KdlSome</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">;</span> <span class="Operator">__1795162147</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L84" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L84" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-
-</div>
-<div id="encodeHook-procs-all">
-  <div id="encodeHook,auto,KdlNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2Cauto%2CKdlNode%2Cstring"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L94" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L94" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="encodeHook,char,KdlVal">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2Cchar%2CKdlVal"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">char</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="encodeKdl,KdlDoc,KdlDoc">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CKdlDoc%2CKdlDoc"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -268,39 +253,51 @@
 
   </dd>
 </div>
-<div id="encodeHook,cstring,KdlVal">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2Ccstring%2CKdlVal"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L97" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L97" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="encodeHook,,KdlVal">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2C%2CKdlVal"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Keyword">enum</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L100" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L100" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="encodeHook,KdlVal,KdlNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CKdlVal%2CKdlNode%2Cstring"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<div id="encodeKdl,KdlDoc,KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CKdlDoc%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L90" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L90" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L106" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L106" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,KdlVal,KdlVal">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CKdlVal%2CKdlVal"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="encodeKdl,KdlNode,KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CKdlNode%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L105" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L105" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="encodeKdl,KdlVal,KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CKdlVal%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L107" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L107" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="encodeKdl,KdlVal,KdlVal">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CKdlVal%2CKdlVal"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L116" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L116" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="encodeKdl,List,KdlDoc">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CList%2CKdlDoc"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#List"><span class="Identifier">List</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -309,28 +306,78 @@
 
   </dd>
 </div>
-<div id="encodeHook,List,KdlDoc">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CList%2CKdlDoc"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#List"><span class="Identifier">List</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,List,KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CList%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#List"><span class="Identifier">List</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L86" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L86" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L108" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L108" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,List,KdlNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CList%2CKdlNode%2Cstring"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#List"><span class="Identifier">List</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,List,KdlVal">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CList%2CKdlVal"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#List"><span class="Identifier">List</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L91" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L91" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L121" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L121" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,List,KdlVal">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CList%2CKdlVal"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#List"><span class="Identifier">List</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,Object,KdlDoc">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CObject%2CKdlDoc"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#Object"><span class="Identifier">Object</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L103" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L103" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="encodeKdl,Object,KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CObject%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#Object"><span class="Identifier">Object</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L113" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L113" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="encodeKdl,Option[auto],KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2COption%5Bauto%5D%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">auto</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L112" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L112" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="encodeKdl,Option[auto],KdlVal">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2COption%5Bauto%5D%2CKdlVal"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">auto</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L122" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L122" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="encodeKdl,ref,KdlSome">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2Cref%2CKdlSome"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Keyword">ref</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="utils.html#KdlSome"><span class="Identifier">KdlSome</span></a><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L96" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L96" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="encodeKdl,SomeSet[auto],KdlDoc">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CSomeSet%5Bauto%5D%2CKdlDoc"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">SomeSet</span><span class="Other">[</span><span class="Identifier">auto</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -339,58 +386,73 @@
 
   </dd>
 </div>
-<div id="encodeHook,Object,KdlDoc">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CObject%2CKdlDoc"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#Object"><span class="Identifier">Object</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,,KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2C%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">auto</span><span class="Other">]</span> <span class="Keyword">or</span> <span class="Identifier">SomeSet</span><span class="Other">[</span><span class="Identifier">auto</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span>
+               <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L87" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L87" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L110" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L110" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,Object,KdlNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CObject%2CKdlNode%2Cstring"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#Object"><span class="Identifier">Object</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,,KdlDoc">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2C%2CKdlDoc"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">auto</span><span class="Other">]</span> <span class="Keyword">or</span> <span class="Identifier">StringTableRef</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L92" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L92" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L100" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L100" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,Option[auto],KdlNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2COption%5Bauto%5D%2CKdlNode%2Cstring"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">auto</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,StringTableRef,KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CStringTableRef%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">StringTableRef</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L212" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L212" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L111" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L111" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,Option[auto],KdlVal">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2COption%5Bauto%5D%2CKdlVal"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">auto</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,Value,KdlVal">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2CValue%2CKdlVal"><span class="Identifier">encodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#Value"><span class="Identifier">Value</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L214" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L214" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L117" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L117" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,ref,KdlDoc">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2Cref%2CKdlDoc"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Keyword">ref</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,set[T],KdlDoc">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2Cset%5BT%5D%2CKdlDoc"><span class="Identifier">encodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">Ordinal</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L88" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L88" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L102" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L102" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,ref,KdlNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2Cref%2CKdlNode%2Cstring"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Keyword">ref</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+<div id="encodeKdl,set[T],KdlNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdl%2Cset%5BT%5D%2CKdlNode%2Cstring"><span class="Identifier">encodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">Ordinal</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L109" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L109" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+
+</div>
+<div id="encodeKdlDoc-procs-all">
+  <div id="encodeKdlDoc,auto">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdlDoc%2Cauto"><span class="Identifier">encodeKdlDoc</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a></pre></dt>
   <dd>
     
     
@@ -399,44 +461,29 @@
 
   </dd>
 </div>
-<div id="encodeHook,SomeSet[auto],KdlDoc">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CSomeSet%5Bauto%5D%2CKdlDoc"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">SomeSet</span><span class="Other">[</span><span class="Identifier">auto</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
+
+</div>
+<div id="encodeKdlNode-procs-all">
+  <div id="encodeKdlNode,auto,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdlNode%2Cauto%2Cstring"><span class="Identifier">encodeKdlNode</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L209" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L209" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L94" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L94" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="encodeHook,,KdlNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2C%2CKdlNode%2Cstring"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">auto</span><span class="Other">]</span> <span class="Keyword">or</span> <span class="Identifier">SomeSet</span><span class="Other">[</span><span class="Identifier">auto</span><span class="Other">]</span> <span class="Keyword">or</span> <span class="Identifier">StringTableRef</span><span class="Other">;</span>
-                <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L211" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L211" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
-  </dd>
 </div>
-<div id="encodeHook,,KdlDoc">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2C%2CKdlDoc"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">auto</span><span class="Other">]</span> <span class="Keyword">or</span> <span class="Identifier">StringTableRef</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">)</span></pre></dt>
+<div id="encodeKdlVal-procs-all">
+  <div id="encodeKdlVal,auto">
+  <dt><pre><span class="Keyword">proc</span> <a href="#encodeKdlVal%2Cauto"><span class="Identifier">encodeKdlVal</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">auto</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L208" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L208" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="encodeHook,Value,KdlVal">
-  <dt><pre><span class="Keyword">proc</span> <a href="#encodeHook%2CValue%2CKdlVal"><span class="Identifier">encodeHook</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="utils.html#Value"><span class="Identifier">Value</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L96" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L96" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/encoder.nim#L95" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/encoder.nim#L95" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -452,7 +499,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-10-25 02:42:24 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-11-22 21:51:30 UTC</small>
       </div>
     </div>
   </div>

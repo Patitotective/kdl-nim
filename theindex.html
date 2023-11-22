@@ -38,7 +38,7 @@
           <li><a class="reference external"
           data-doc-search-tag="nodes: proc `==`(val1, val2: KdlVal): bool" href="kdl/nodes.html#%3D%3D%2CKdlVal%2CKdlVal">nodes: proc `==`(val1, val2: KdlVal): bool</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="nodes: proc `==`[T: SomeNumber or string or bool](val: KdlVal; x: T): bool" href="kdl/nodes.html#%3D%3D%2CKdlVal%2CT">nodes: proc `==`[T: SomeNumber or string or bool](val: KdlVal; x: T): bool</a></li>
+          data-doc-search-tag="nodes: proc `==`[T: Value](val: KdlVal; x: T): bool" href="kdl/nodes.html#%3D%3D%2CKdlVal%2CT">nodes: proc `==`[T: Value](val: KdlVal; x: T): bool</a></li>
           </ul></dd>
 <dt><a name="%60%5B%5D%3D%60" href="#%60%5B%5D%3D%60"><span>`[]=`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -82,135 +82,159 @@
 <li><a class="reference external"
           data-doc-search-tag="utils: object Coord" href="kdl/utils.html#Coord">utils: object Coord</a></li>
           </ul></dd>
-<dt><a name="decode" href="#decode"><span>decode:</span></a></dt><dd><ul class="simple">
+<dt><a name="decodeEnumKdl" href="#decodeEnumKdl"><span>decodeEnumKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decode(a: KdlDoc; v: var auto; name: string)" href="kdl/decoder.html#decode%2CKdlDoc%2Cauto%2Cstring">decoder: proc decode(a: KdlDoc; v: var auto; name: string)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decode[T](a: KdlDoc; __1610612888: typedesc[T]; name: string): T" href="kdl/decoder.html#decode%2CKdlDoc%2Ctypedesc%5BT%5D%2Cstring">decoder: proc decode[T](a: KdlDoc; __1610612888: typedesc[T]; name: string): T</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decode(a: KdlSome; v: var auto)" href="kdl/decoder.html#decode%2CKdlSome%2Cauto">decoder: proc decode(a: KdlSome; v: var auto)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decode[T](a: KdlSome; __1610612869: typedesc[T]): T" href="kdl/decoder.html#decode%2CKdlSome%2Ctypedesc%5BT%5D">decoder: proc decode[T](a: KdlSome; __1610612869: typedesc[T]): T</a></li>
+          data-doc-search-tag="decoder: proc decodeEnumKdl[T: enum](a: auto; v: var T)" href="kdl/decoder.html#decodeEnumKdl%2Cauto%2CT">decoder: proc decodeEnumKdl[T: enum](a: auto; v: var T)</a></li>
           </ul></dd>
-<dt><a name="decodeHook" href="#decodeHook"><span>decodeHook:</span></a></dt><dd><ul class="simple">
+<dt><a name="decodeInitKdl" href="#decodeInitKdl"><span>decodeInitKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlDoc; v: var List)" href="kdl/decoder.html#decodeHook%2CKdlDoc%2CList">decoder: proc decodeHook(a: KdlDoc; v: var List)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlDoc; v: var Object)" href="kdl/decoder.html#decodeHook%2CKdlDoc%2CObject">decoder: proc decodeHook(a: KdlDoc; v: var Object)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlDoc; v: var ref)" href="kdl/decoder.html#decodeHook%2CKdlDoc%2Cref">decoder: proc decodeHook(a: KdlDoc; v: var ref)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T](a: KdlDoc; v: var SomeSet[T])" href="kdl/decoder.html#decodeHook%2CKdlDoc%2CSomeSet%5BT%5D">decoder: proc decodeHook[T](a: KdlDoc; v: var SomeSet[T])</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T](a: KdlDoc; v: var SomeTable[string, T])" href="kdl/decoder.html#decodeHook%2CKdlDoc%2CSomeTable%5Bstring%2CT%5D">decoder: proc decodeHook[T](a: KdlDoc; v: var SomeTable[string, T])</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlNode; v: var auto)" href="kdl/decoder.html#decodeHook%2CKdlNode%2Cauto">decoder: proc decodeHook(a: KdlNode; v: var auto)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlNode; v: var List)" href="kdl/decoder.html#decodeHook%2CKdlNode%2CList">decoder: proc decodeHook(a: KdlNode; v: var List)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlNode; v: var Object)" href="kdl/decoder.html#decodeHook%2CKdlNode%2CObject">decoder: proc decodeHook(a: KdlNode; v: var Object)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T](a: KdlNode; v: var Option[T])" href="kdl/decoder.html#decodeHook%2CKdlNode%2COption%5BT%5D">decoder: proc decodeHook[T](a: KdlNode; v: var Option[T])</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlNode; v: var ref)" href="kdl/decoder.html#decodeHook%2CKdlNode%2Cref">decoder: proc decodeHook(a: KdlNode; v: var ref)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T](a: KdlNode; v: var SomeSet[T])" href="kdl/decoder.html#decodeHook%2CKdlNode%2CSomeSet%5BT%5D">decoder: proc decodeHook[T](a: KdlNode; v: var SomeSet[T])</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T](a: KdlNode; v: var SomeTable[string, T])" href="kdl/decoder.html#decodeHook%2CKdlNode%2CSomeTable%5Bstring%2CT%5D">decoder: proc decodeHook[T](a: KdlNode; v: var SomeTable[string, T])</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlNode; v: var StringTableRef)" href="kdl/decoder.html#decodeHook%2CKdlNode%2CStringTableRef">decoder: proc decodeHook(a: KdlNode; v: var StringTableRef)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlSome; v: var proc)" href="kdl/decoder.html#decodeHook%2CKdlSome%2Cproc">decoder: proc decodeHook(a: KdlSome; v: var proc)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlVal; v: var (SomeTable[string, auto] or StringTableRef))" href="kdl/decoder.html#decodeHook%2CKdlVal%2C">decoder: proc decodeHook(a: KdlVal; v: var (SomeTable[string, auto] or StringTableRef))</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlVal; v: var char)" href="kdl/decoder.html#decodeHook%2CKdlVal%2Cchar">decoder: proc decodeHook(a: KdlVal; v: var char)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlVal; v: var Object)" href="kdl/decoder.html#decodeHook%2CKdlVal%2CObject">decoder: proc decodeHook(a: KdlVal; v: var Object)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T](a: KdlVal; v: var Option[T])" href="kdl/decoder.html#decodeHook%2CKdlVal%2COption%5BT%5D">decoder: proc decodeHook[T](a: KdlVal; v: var Option[T])</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlVal; v: var ref)" href="kdl/decoder.html#decodeHook%2CKdlVal%2Cref">decoder: proc decodeHook(a: KdlVal; v: var ref)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook(a: KdlVal; v: var seq)" href="kdl/decoder.html#decodeHook%2CKdlVal%2Cseq">decoder: proc decodeHook(a: KdlVal; v: var seq)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T](a: KdlVal; v: var SomeSet[T])" href="kdl/decoder.html#decodeHook%2CKdlVal%2CSomeSet%5BT%5D">decoder: proc decodeHook[T](a: KdlVal; v: var SomeSet[T])</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T: Value](a: KdlVal; v: var T)" href="kdl/decoder.html#decodeHook%2CKdlVal%2CT">decoder: proc decodeHook[T: Value](a: KdlVal; v: var T)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T: enum](a: KdlVal; v: var T)" href="kdl/decoder.html#decodeHook%2CKdlVal%2CT_2">decoder: proc decodeHook[T: enum](a: KdlVal; v: var T)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T: array](a: KdlVal; v: var T)" href="kdl/decoder.html#decodeHook%2CKdlVal%2CT_3">decoder: proc decodeHook[T: array](a: KdlVal; v: var T)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc decodeHook[T: KdlSome](a: T; v: var T)" href="kdl/decoder.html#decodeHook%2CT%2CT">decoder: proc decodeHook[T: KdlSome](a: T; v: var T)</a></li>
+          data-doc-search-tag="decoder: proc decodeInitKdl(v: var auto)" href="kdl/decoder.html#decodeInitKdl%2Cauto">decoder: proc decodeInitKdl(v: var auto)</a></li>
           </ul></dd>
-<dt><a name="encode" href="#encode"><span>encode:</span></a></dt><dd><ul class="simple">
+<dt><a name="decodeKdl" href="#decodeKdl"><span>decodeKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encode(a: auto): KdlDoc" href="kdl/encoder.html#encode%2Cauto">encoder: proc encode(a: auto): KdlDoc</a></li>
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlDoc; v: var auto; name: string)" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2Cauto%2Cstring">decoder: proc decodeKdl(a: KdlDoc; v: var auto; name: string)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encode(a: auto; v: var KdlDoc)" href="kdl/encoder.html#encode%2Cauto%2CKdlDoc">encoder: proc encode(a: auto; v: var KdlDoc)</a></li>
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlDoc; v: var List)" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2CList">decoder: proc decodeKdl(a: KdlDoc; v: var List)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encode(a: auto; v: var KdlNode; name: string)" href="kdl/encoder.html#encode%2Cauto%2CKdlNode%2Cstring">encoder: proc encode(a: auto; v: var KdlNode; name: string)</a></li>
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlDoc; v: var Object)" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2CObject">decoder: proc decodeKdl(a: KdlDoc; v: var Object)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encode(a: auto; v: var KdlVal)" href="kdl/encoder.html#encode%2Cauto%2CKdlVal">encoder: proc encode(a: auto; v: var KdlVal)</a></li>
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlDoc; v: var ref T)" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2Cref.T">decoder: proc decodeKdl[T](a: KdlDoc; v: var ref T)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encode(a: auto; name: string): KdlNode" href="kdl/encoder.html#encode%2Cauto%2Cstring">encoder: proc encode(a: auto; name: string): KdlNode</a></li>
+          data-doc-search-tag="decoder: proc decodeKdl[T: Ordinal](a: KdlDoc; v: var set[T])" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2Cset%5BT%5D">decoder: proc decodeKdl[T: Ordinal](a: KdlDoc; v: var set[T])</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encode[T: KdlSome](a: auto; __1795162147: typedesc[T]): T" href="kdl/encoder.html#encode%2Cauto%2Ctypedesc%5BT%5D">encoder: proc encode[T: KdlSome](a: auto; __1795162147: typedesc[T]): T</a></li>
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlDoc; v: var SomeSet[T])" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2CSomeSet%5BT%5D">decoder: proc decodeKdl[T](a: KdlDoc; v: var SomeSet[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlDoc; v: var SomeTable[string, T])" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2CSomeTable%5Bstring%2CT%5D">decoder: proc decodeKdl[T](a: KdlDoc; v: var SomeTable[string, T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlDoc; v: var StringTableRef)" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2CStringTableRef">decoder: proc decodeKdl(a: KdlDoc; v: var StringTableRef)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlDoc; __1610612832: typedesc[T]; name: string): T" href="kdl/decoder.html#decodeKdl%2CKdlDoc%2Ctypedesc%5BT%5D%2Cstring">decoder: proc decodeKdl[T](a: KdlDoc; __1610612832: typedesc[T]; name: string): T</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlNode; v: var auto)" href="kdl/decoder.html#decodeKdl%2CKdlNode%2Cauto">decoder: proc decodeKdl(a: KdlNode; v: var auto)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlNode; v: var KdlNode)" href="kdl/decoder.html#decodeKdl%2CKdlNode%2CKdlNode">decoder: proc decodeKdl(a: KdlNode; v: var KdlNode)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlNode; v: var List)" href="kdl/decoder.html#decodeKdl%2CKdlNode%2CList">decoder: proc decodeKdl(a: KdlNode; v: var List)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlNode; v: var Object)" href="kdl/decoder.html#decodeKdl%2CKdlNode%2CObject">decoder: proc decodeKdl(a: KdlNode; v: var Object)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlNode; v: var Option[T])" href="kdl/decoder.html#decodeKdl%2CKdlNode%2COption%5BT%5D">decoder: proc decodeKdl[T](a: KdlNode; v: var Option[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlNode; v: var ref T)" href="kdl/decoder.html#decodeKdl%2CKdlNode%2Cref.T">decoder: proc decodeKdl[T](a: KdlNode; v: var ref T)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T: Ordinal](a: KdlNode; v: var set[T])" href="kdl/decoder.html#decodeKdl%2CKdlNode%2Cset%5BT%5D">decoder: proc decodeKdl[T: Ordinal](a: KdlNode; v: var set[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlNode; v: var SomeSet[T])" href="kdl/decoder.html#decodeKdl%2CKdlNode%2CSomeSet%5BT%5D">decoder: proc decodeKdl[T](a: KdlNode; v: var SomeSet[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlNode; v: var SomeTable[string, T])" href="kdl/decoder.html#decodeKdl%2CKdlNode%2CSomeTable%5Bstring%2CT%5D">decoder: proc decodeKdl[T](a: KdlNode; v: var SomeTable[string, T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlNode; v: var StringTableRef)" href="kdl/decoder.html#decodeKdl%2CKdlNode%2CStringTableRef">decoder: proc decodeKdl(a: KdlNode; v: var StringTableRef)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlSome; __1610612818: typedesc[T]): T" href="kdl/decoder.html#decodeKdl%2CKdlSome%2Ctypedesc%5BT%5D">decoder: proc decodeKdl[T](a: KdlSome; __1610612818: typedesc[T]): T</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlVal; v: var char)" href="kdl/decoder.html#decodeKdl%2CKdlVal%2Cchar">decoder: proc decodeKdl(a: KdlVal; v: var char)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl(a: KdlVal; v: var Object)" href="kdl/decoder.html#decodeKdl%2CKdlVal%2CObject">decoder: proc decodeKdl(a: KdlVal; v: var Object)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlVal; v: var Option[T])" href="kdl/decoder.html#decodeKdl%2CKdlVal%2COption%5BT%5D">decoder: proc decodeKdl[T](a: KdlVal; v: var Option[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlVal; v: var ref T)" href="kdl/decoder.html#decodeKdl%2CKdlVal%2Cref.T">decoder: proc decodeKdl[T](a: KdlVal; v: var ref T)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T: not KdlNode](a: KdlVal; v: var seq[T])" href="kdl/decoder.html#decodeKdl%2CKdlVal%2Cseq%5BT%5D">decoder: proc decodeKdl[T: not KdlNode](a: KdlVal; v: var seq[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T: Ordinal](a: KdlVal; v: var set[T])" href="kdl/decoder.html#decodeKdl%2CKdlVal%2Cset%5BT%5D">decoder: proc decodeKdl[T: Ordinal](a: KdlVal; v: var set[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T](a: KdlVal; v: var SomeSet[T])" href="kdl/decoder.html#decodeKdl%2CKdlVal%2CSomeSet%5BT%5D">decoder: proc decodeKdl[T](a: KdlVal; v: var SomeSet[T])</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T: Value](a: KdlVal; v: var T)" href="kdl/decoder.html#decodeKdl%2CKdlVal%2CT">decoder: proc decodeKdl[T: Value](a: KdlVal; v: var T)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T: enum](a: KdlVal; v: var T)" href="kdl/decoder.html#decodeKdl%2CKdlVal%2CT_2">decoder: proc decodeKdl[T: enum](a: KdlVal; v: var T)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T: array](a: KdlVal; v: var T)" href="kdl/decoder.html#decodeKdl%2CKdlVal%2CT_3">decoder: proc decodeKdl[T: array](a: KdlVal; v: var T)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T: KdlNode or KdlDoc](a: KdlVal; v: var T)" href="kdl/decoder.html#decodeKdl%2CKdlVal%2CT_4">decoder: proc decodeKdl[T: KdlNode or KdlDoc](a: KdlVal; v: var T)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc decodeKdl[T: KdlSome](a: T; v: var T)" href="kdl/decoder.html#decodeKdl%2CT%2CT">decoder: proc decodeKdl[T: KdlSome](a: T; v: var T)</a></li>
           </ul></dd>
-<dt><a name="encodeHook" href="#encodeHook"><span>encodeHook:</span></a></dt><dd><ul class="simple">
+<dt><a name="decodePostKdl" href="#decodePostKdl"><span>decodePostKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)" href="kdl/encoder.html#encodeHook%2C%2CKdlDoc">encoder: proc encodeHook(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: SomeTable[string, auto] or SomeSet[auto] or StringTableRef;
-           v: var KdlNode; name: string)" href="kdl/encoder.html#encodeHook%2C%2CKdlNode%2Cstring">encoder: proc encodeHook(a: SomeTable[string, auto] or SomeSet[auto] or StringTableRef;
-           v: var KdlNode; name: string)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: enum; v: var KdlVal)" href="kdl/encoder.html#encodeHook%2C%2CKdlVal">encoder: proc encodeHook(a: enum; v: var KdlVal)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: auto; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeHook%2Cauto%2CKdlNode%2Cstring">encoder: proc encodeHook(a: auto; v: var KdlNode; name: string)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: char; v: var KdlVal)" href="kdl/encoder.html#encodeHook%2Cchar%2CKdlVal">encoder: proc encodeHook(a: char; v: var KdlVal)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: cstring; v: var KdlVal)" href="kdl/encoder.html#encodeHook%2Ccstring%2CKdlVal">encoder: proc encodeHook(a: cstring; v: var KdlVal)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: KdlVal; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeHook%2CKdlVal%2CKdlNode%2Cstring">encoder: proc encodeHook(a: KdlVal; v: var KdlNode; name: string)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: KdlVal; v: var KdlVal)" href="kdl/encoder.html#encodeHook%2CKdlVal%2CKdlVal">encoder: proc encodeHook(a: KdlVal; v: var KdlVal)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: List; v: var KdlDoc)" href="kdl/encoder.html#encodeHook%2CList%2CKdlDoc">encoder: proc encodeHook(a: List; v: var KdlDoc)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: List; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeHook%2CList%2CKdlNode%2Cstring">encoder: proc encodeHook(a: List; v: var KdlNode; name: string)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: List; v: var KdlVal)" href="kdl/encoder.html#encodeHook%2CList%2CKdlVal">encoder: proc encodeHook(a: List; v: var KdlVal)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: Object; v: var KdlDoc)" href="kdl/encoder.html#encodeHook%2CObject%2CKdlDoc">encoder: proc encodeHook(a: Object; v: var KdlDoc)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: Object; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeHook%2CObject%2CKdlNode%2Cstring">encoder: proc encodeHook(a: Object; v: var KdlNode; name: string)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: Option[auto]; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeHook%2COption%5Bauto%5D%2CKdlNode%2Cstring">encoder: proc encodeHook(a: Option[auto]; v: var KdlNode; name: string)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: Option[auto]; v: var KdlVal)" href="kdl/encoder.html#encodeHook%2COption%5Bauto%5D%2CKdlVal">encoder: proc encodeHook(a: Option[auto]; v: var KdlVal)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: ref; v: var KdlDoc)" href="kdl/encoder.html#encodeHook%2Cref%2CKdlDoc">encoder: proc encodeHook(a: ref; v: var KdlDoc)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: ref; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeHook%2Cref%2CKdlNode%2Cstring">encoder: proc encodeHook(a: ref; v: var KdlNode; name: string)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: SomeSet[auto]; v: var KdlDoc)" href="kdl/encoder.html#encodeHook%2CSomeSet%5Bauto%5D%2CKdlDoc">encoder: proc encodeHook(a: SomeSet[auto]; v: var KdlDoc)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="encoder: proc encodeHook(a: Value; v: var KdlVal)" href="kdl/encoder.html#encodeHook%2CValue%2CKdlVal">encoder: proc encodeHook(a: Value; v: var KdlVal)</a></li>
+          data-doc-search-tag="decoder: proc decodePostKdl(v: var auto)" href="kdl/decoder.html#decodePostKdl%2Cauto">decoder: proc decodePostKdl(v: var auto)</a></li>
           </ul></dd>
-<dt><a name="enumHook" href="#enumHook"><span>enumHook:</span></a></dt><dd><ul class="simple">
+<dt><a name="decodeRenameKdl" href="#decodeRenameKdl"><span>decodeRenameKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="decoder: proc enumHook[T: enum](a: int; v: var T)" href="kdl/decoder.html#enumHook%2Cint%2CT">decoder: proc enumHook[T: enum](a: int; v: var T)</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="decoder: proc enumHook[T: enum](a: string; v: var T)" href="kdl/decoder.html#enumHook%2Cstring%2CT">decoder: proc enumHook[T: enum](a: string; v: var T)</a></li>
+          data-doc-search-tag="decoder: proc decodeRenameKdl(a: typedesc; fieldName: string): string" href="kdl/decoder.html#decodeRenameKdl%2Ctypedesc%2Cstring">decoder: proc decodeRenameKdl(a: typedesc; fieldName: string): string</a></li>
           </ul></dd>
-<dt><a name="enumHookable" href="#enumHookable"><span>enumHookable:</span></a></dt><dd><ul class="simple">
+<dt><a name="encodeKdl" href="#encodeKdl"><span>encodeKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="decoder: proc enumHookable[T: enum](a: string or int; v: var T)" href="kdl/decoder.html#enumHookable%2C%2CT">decoder: proc enumHookable[T: enum](a: string or int; v: var T)</a></li>
+          data-doc-search-tag="encoder: proc encodeKdl(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)" href="kdl/encoder.html#encodeKdl%2C%2CKdlDoc">encoder: proc encodeKdl(a: SomeTable[string, auto] or StringTableRef; v: var KdlDoc)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="decoder: proc enumHookable[T: enum](__1610612977: typedesc[T]; a: string or int): T" href="kdl/decoder.html#enumHookable%2Ctypedesc%5BT%5D%2C">decoder: proc enumHookable[T: enum](__1610612977: typedesc[T]; a: string or int): T</a></li>
+          data-doc-search-tag="encoder: proc encodeKdl(a: SomeTable[string, auto] or SomeSet[auto]; v: var KdlNode;
+          name: string)" href="kdl/encoder.html#encodeKdl%2C%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: SomeTable[string, auto] or SomeSet[auto]; v: var KdlNode;
+          name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: enum; v: var KdlVal)" href="kdl/encoder.html#encodeKdl%2C%2CKdlVal">encoder: proc encodeKdl(a: enum; v: var KdlVal)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: auto; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2Cauto%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: auto; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: char; v: var KdlVal)" href="kdl/encoder.html#encodeKdl%2Cchar%2CKdlVal">encoder: proc encodeKdl(a: char; v: var KdlVal)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: cstring; v: var KdlVal)" href="kdl/encoder.html#encodeKdl%2Ccstring%2CKdlVal">encoder: proc encodeKdl(a: cstring; v: var KdlVal)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: KdlDoc; v: var KdlDoc)" href="kdl/encoder.html#encodeKdl%2CKdlDoc%2CKdlDoc">encoder: proc encodeKdl(a: KdlDoc; v: var KdlDoc)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: KdlDoc; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2CKdlDoc%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: KdlDoc; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: KdlNode; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2CKdlNode%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: KdlNode; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: KdlVal; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2CKdlVal%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: KdlVal; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: KdlVal; v: var KdlVal)" href="kdl/encoder.html#encodeKdl%2CKdlVal%2CKdlVal">encoder: proc encodeKdl(a: KdlVal; v: var KdlVal)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: List; v: var KdlDoc)" href="kdl/encoder.html#encodeKdl%2CList%2CKdlDoc">encoder: proc encodeKdl(a: List; v: var KdlDoc)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: List; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2CList%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: List; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: List; v: var KdlVal)" href="kdl/encoder.html#encodeKdl%2CList%2CKdlVal">encoder: proc encodeKdl(a: List; v: var KdlVal)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: Object; v: var KdlDoc)" href="kdl/encoder.html#encodeKdl%2CObject%2CKdlDoc">encoder: proc encodeKdl(a: Object; v: var KdlDoc)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: Object; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2CObject%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: Object; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: Option[auto]; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2COption%5Bauto%5D%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: Option[auto]; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: Option[auto]; v: var KdlVal)" href="kdl/encoder.html#encodeKdl%2COption%5Bauto%5D%2CKdlVal">encoder: proc encodeKdl(a: Option[auto]; v: var KdlVal)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: ref; v: var KdlSome)" href="kdl/encoder.html#encodeKdl%2Cref%2CKdlSome">encoder: proc encodeKdl(a: ref; v: var KdlSome)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl[T: Ordinal](a: set[T]; v: var KdlDoc)" href="kdl/encoder.html#encodeKdl%2Cset%5BT%5D%2CKdlDoc">encoder: proc encodeKdl[T: Ordinal](a: set[T]; v: var KdlDoc)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl[T: Ordinal](a: set[T]; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2Cset%5BT%5D%2CKdlNode%2Cstring">encoder: proc encodeKdl[T: Ordinal](a: set[T]; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: SomeSet[auto]; v: var KdlDoc)" href="kdl/encoder.html#encodeKdl%2CSomeSet%5Bauto%5D%2CKdlDoc">encoder: proc encodeKdl(a: SomeSet[auto]; v: var KdlDoc)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: StringTableRef; v: var KdlNode; name: string)" href="kdl/encoder.html#encodeKdl%2CStringTableRef%2CKdlNode%2Cstring">encoder: proc encodeKdl(a: StringTableRef; v: var KdlNode; name: string)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdl(a: Value; v: var KdlVal)" href="kdl/encoder.html#encodeKdl%2CValue%2CKdlVal">encoder: proc encodeKdl(a: Value; v: var KdlVal)</a></li>
+          </ul></dd>
+<dt><a name="encodeKdlDoc" href="#encodeKdlDoc"><span>encodeKdlDoc:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdlDoc(a: auto): KdlDoc" href="kdl/encoder.html#encodeKdlDoc%2Cauto">encoder: proc encodeKdlDoc(a: auto): KdlDoc</a></li>
+          </ul></dd>
+<dt><a name="encodeKdlNode" href="#encodeKdlNode"><span>encodeKdlNode:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdlNode(a: auto; name: string): KdlNode" href="kdl/encoder.html#encodeKdlNode%2Cauto%2Cstring">encoder: proc encodeKdlNode(a: auto; name: string): KdlNode</a></li>
+          </ul></dd>
+<dt><a name="encodeKdlVal" href="#encodeKdlVal"><span>encodeKdlVal:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="encoder: proc encodeKdlVal(a: auto): KdlVal" href="kdl/encoder.html#encodeKdlVal%2Cauto">encoder: proc encodeKdlVal(a: auto): KdlVal</a></li>
+          </ul></dd>
+<dt><a name="enumHookKdl" href="#enumHookKdl"><span>enumHookKdl:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="decoder: proc enumHookKdl[T: enum](a: int; v: var T)" href="kdl/decoder.html#enumHookKdl%2Cint%2CT">decoder: proc enumHookKdl[T: enum](a: int; v: var T)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc enumHookKdl(a: KdlVal; v: var enum)" href="kdl/decoder.html#enumHookKdl%2CKdlVal%2C">decoder: proc enumHookKdl(a: KdlVal; v: var enum)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc enumHookKdl[T: enum](a: string; v: var T)" href="kdl/decoder.html#enumHookKdl%2Cstring%2CT">decoder: proc enumHookKdl[T: enum](a: string; v: var T)</a></li>
           </ul></dd>
 <dt><a name="eqIdent" href="#eqIdent"><span>eqIdent:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -236,11 +260,11 @@
           </ul></dd>
 <dt><a name="findFirst" href="#findFirst"><span>findFirst:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="nodes: proc findFirst(doc: KdlDoc; name: string): KdlNode" href="kdl/nodes.html#findFirst%2CKdlDoc%2Cstring">nodes: proc findFirst(doc: KdlDoc; name: string): KdlNode</a></li>
+          data-doc-search-tag="nodes: proc findFirst(doc: KdlDoc; name: string): int" href="kdl/nodes.html#findFirst%2CKdlDoc%2Cstring">nodes: proc findFirst(doc: KdlDoc; name: string): int</a></li>
           </ul></dd>
 <dt><a name="findLast" href="#findLast"><span>findLast:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="nodes: proc findLast(doc: KdlDoc; name: string): KdlNode" href="kdl/nodes.html#findLast%2CKdlDoc%2Cstring">nodes: proc findLast(doc: KdlDoc; name: string): KdlNode</a></li>
+          data-doc-search-tag="nodes: proc findLast(doc: KdlDoc; name: string): int" href="kdl/nodes.html#findLast%2CKdlDoc%2Cstring">nodes: proc findLast(doc: KdlDoc; name: string): int</a></li>
           </ul></dd>
 <dt><a name="get" href="#get"><span>get:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -279,6 +303,12 @@
 <dt><a name="initCaseObject" href="#initCaseObject"><span>initCaseObject:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="utils: macro initCaseObject(T: typedesc; discriminatorSetter): untyped" href="kdl/utils.html#initCaseObject.m%2Ctypedesc%2C">utils: macro initCaseObject(T: typedesc; discriminatorSetter): untyped</a></li>
+          </ul></dd>
+<dt><a name="initHookKdl" href="#initHookKdl"><span>initHookKdl:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="decoder: proc initHookKdl[T](v: var ref T)" href="kdl/decoder.html#initHookKdl%2Cref.T">decoder: proc initHookKdl[T](v: var ref T)</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="decoder: proc initHookKdl[T](v: var T)" href="kdl/decoder.html#initHookKdl%2CT">decoder: proc initHookKdl[T](v: var T)</a></li>
           </ul></dd>
 <dt><a name="initKBool" href="#initKBool"><span>initKBool:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -325,6 +355,12 @@
           data-doc-search-tag="nodes: proc initKVal(val: SomeInteger; tag = string.none): KdlVal" href="kdl/nodes.html#initKVal%2CSomeInteger">nodes: proc initKVal(val: SomeInteger; tag = string.none): KdlVal</a></li>
           <li><a class="reference external"
           data-doc-search-tag="nodes: proc initKVal(val: string; tag = string.none): KdlVal" href="kdl/nodes.html#initKVal%2Cstring">nodes: proc initKVal(val: string; tag = string.none): KdlVal</a></li>
+          </ul></dd>
+<dt><a name="inline" href="#inline"><span>inline:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="nodes: proc inline(doc: KdlDoc): string" href="kdl/nodes.html#inline%2CKdlDoc">nodes: proc inline(doc: KdlDoc): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="nodes: proc inline(node: KdlNode): string" href="kdl/nodes.html#inline%2CKdlNode">nodes: proc inline(node: KdlNode): string</a></li>
           </ul></dd>
 <dt><a name="isBool" href="#isBool"><span>isBool:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -426,14 +462,6 @@
 <li><a class="reference external"
           data-doc-search-tag="utils: type List" href="kdl/utils.html#List">utils: type List</a></li>
           </ul></dd>
-<dt><a name="newHook" href="#newHook"><span>newHook:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="decoder: proc newHook[T](v: var T)" href="kdl/decoder.html#newHook%2CT">decoder: proc newHook[T](v: var T)</a></li>
-          </ul></dd>
-<dt><a name="newHookable" href="#newHookable"><span>newHookable:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="decoder: proc newHookable(v: var auto)" href="kdl/decoder.html#newHookable%2Cauto">decoder: proc newHookable(v: var auto)</a></li>
-          </ul></dd>
 <dt><a name="Object" href="#Object"><span>Object:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="utils: type Object" href="kdl/utils.html#Object">utils: type Object</a></li>
@@ -472,13 +500,9 @@
 <li><a class="reference external"
           data-doc-search-tag="utils: proc peekRune(s: Stream): Rune" href="kdl/utils.html#peekRune%2CStream">utils: proc peekRune(s: Stream): Rune</a></li>
           </ul></dd>
-<dt><a name="postHook" href="#postHook"><span>postHook:</span></a></dt><dd><ul class="simple">
+<dt><a name="postHookKdl" href="#postHookKdl"><span>postHookKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="decoder: proc postHook(v: var auto)" href="kdl/decoder.html#postHook%2Cauto">decoder: proc postHook(v: var auto)</a></li>
-          </ul></dd>
-<dt><a name="postHookable" href="#postHookable"><span>postHookable:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="decoder: proc postHookable(v: var auto)" href="kdl/decoder.html#postHookable%2Cauto">decoder: proc postHookable(v: var auto)</a></li>
+          data-doc-search-tag="decoder: proc postHookKdl(v: var auto)" href="kdl/decoder.html#postHookKdl%2Cauto">decoder: proc postHookKdl(v: var auto)</a></li>
           </ul></dd>
 <dt><a name="pretty" href="#pretty"><span>pretty:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -500,13 +524,9 @@
 <li><a class="reference external"
           data-doc-search-tag="prefs: proc removeFile(prefs: KdlPrefs[auto])" href="prefs.html#removeFile%2CKdlPrefs%5Bauto%5D">prefs: proc removeFile(prefs: KdlPrefs[auto])</a></li>
           </ul></dd>
-<dt><a name="renameHook" href="#renameHook"><span>renameHook:</span></a></dt><dd><ul class="simple">
+<dt><a name="renameHookKdl" href="#renameHookKdl"><span>renameHookKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="decoder: proc renameHook(__1610612961: typedesc; fieldName: var string)" href="kdl/decoder.html#renameHook%2Ctypedesc%2Cstring">decoder: proc renameHook(__1610612961: typedesc; fieldName: var string)</a></li>
-          </ul></dd>
-<dt><a name="renameHookable" href="#renameHookable"><span>renameHookable:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="decoder: proc renameHookable(fieldName: string; a: typedesc): string" href="kdl/decoder.html#renameHookable%2Cstring%2Ctypedesc">decoder: proc renameHookable(fieldName: string; a: typedesc): string</a></li>
+          data-doc-search-tag="decoder: proc renameHookKdl(a: typedesc; fieldName: var string)" href="kdl/decoder.html#renameHookKdl%2Ctypedesc%2Cstring">decoder: proc renameHookKdl(a: typedesc; fieldName: var string)</a></li>
           </ul></dd>
 <dt><a name="save" href="#save"><span>save:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -552,7 +572,7 @@
           </ul></dd>
 <dt><a name="setTo" href="#setTo"><span>setTo:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="nodes: proc setTo[T: SomeNumber or string or bool](val: var KdlVal; x: T)" href="kdl/nodes.html#setTo%2CKdlVal%2CT">nodes: proc setTo[T: SomeNumber or string or bool](val: var KdlVal; x: T)</a></li>
+          data-doc-search-tag="nodes: proc setTo[T: Value](val: var KdlVal; x: T)" href="kdl/nodes.html#setTo%2CKdlVal%2CT">nodes: proc setTo[T: Value](val: var KdlVal; x: T)</a></li>
           </ul></dd>
 <dt><a name="skipWhitespaces" href="#skipWhitespaces"><span>skipWhitespaces:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -696,15 +716,17 @@
           </ul></dd>
 <dt><a name="toKdl" href="#toKdl"><span>toKdl:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="jik: proc toKdl(node: JsonNode): KdlNode" href="kdl/jik.html#toKdl%2CJsonNode">jik: proc toKdl(node: JsonNode): KdlNode</a></li>
+          data-doc-search-tag="jik: proc toKdl(node: JsonNode; name = &quot;-&quot;): KdlNode" href="kdl/jik.html#toKdl%2CJsonNode%2Cstring">jik: proc toKdl(node: JsonNode; name = &quot;-&quot;): KdlNode</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="nodes: macro toKdl(body: untyped): KdlDoc" href="kdl/nodes.html#toKdl.m%2Cuntyped">nodes: macro toKdl(body: untyped): KdlDoc</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="xik: proc toKdl(node: XmlNode; comments = false): KdlNode" href="kdl/xik.html#toKdl%2CXmlNode">xik: proc toKdl(node: XmlNode; comments = false): KdlNode</a></li>
+          data-doc-search-tag="xik: proc toKdl(node: XmlNode; addComments = false): KdlNode" href="kdl/xik.html#toKdl%2CXmlNode">xik: proc toKdl(node: XmlNode; addComments = false): KdlNode</a></li>
           </ul></dd>
 <dt><a name="toKdlArgs" href="#toKdlArgs"><span>toKdlArgs:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="nodes: macro toKdlArgs(args: varargs[typed]): untyped" href="kdl/nodes.html#toKdlArgs.m%2Cvarargs%5Btyped%5D">nodes: macro toKdlArgs(args: varargs[typed]): untyped</a></li>
+          data-doc-search-tag="nodes: macro toKdlArgs(args: varargs[untyped]): untyped" href="kdl/nodes.html#toKdlArgs.m%2Cvarargs%5Buntyped%5D">nodes: macro toKdlArgs(args: varargs[untyped]): untyped</a></li>
+          </ul></dd>
+<dt><a name="toKdlDoc" href="#toKdlDoc"><span>toKdlDoc:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="nodes: macro toKdlDoc(body: untyped): KdlDoc" href="kdl/nodes.html#toKdlDoc.m%2Cuntyped">nodes: macro toKdlDoc(body: untyped): KdlDoc</a></li>
           </ul></dd>
 <dt><a name="toKdlNode" href="#toKdlNode"><span>toKdlNode:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -780,7 +802,11 @@
           </ul></dd>
 <dt><a name="toXml" href="#toXml"><span>toXml:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="xik: proc toXml(node: KdlNode; comments = false): XmlNode" href="kdl/xik.html#toXml%2CKdlNode">xik: proc toXml(node: KdlNode; comments = false): XmlNode</a></li>
+          data-doc-search-tag="xik: proc toXml(node: KdlNode; addComments = false): XmlNode" href="kdl/xik.html#toXml%2CKdlNode">xik: proc toXml(node: KdlNode; addComments = false): XmlNode</a></li>
+          </ul></dd>
+<dt><a name="toXmlSingle" href="#toXmlSingle"><span>toXmlSingle:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="xik: proc toXmlSingle(node: KdlNode): XmlNode" href="kdl/xik.html#toXmlSingle%2CKdlNode">xik: proc toXmlSingle(node: KdlNode): XmlNode</a></li>
           </ul></dd>
 <dt><a name="typeofdesc" href="#typeofdesc"><span>typeofdesc:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -804,7 +830,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-10-25 02:42:30 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-11-22 21:51:34 UTC</small>
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
 nimTitle	xik	kdl/xik.html	module src/kdl/xik		0
-nim	toKdl	kdl/xik.html#toKdl,XmlNode	proc toKdl(node: XmlNode; comments = false): KdlNode		51
-nim	toXml	kdl/xik.html#toXml,KdlNode	proc toXml(node: KdlNode; comments = false): XmlNode		76
+nim	toKdl	kdl/xik.html#toKdl,XmlNode	proc toKdl(node: XmlNode; addComments = false): KdlNode		51
+nim	toXmlSingle	kdl/xik.html#toXmlSingle,KdlNode	proc toXmlSingle(node: KdlNode): XmlNode		79
+nim	toXml	kdl/xik.html#toXml,KdlNode	proc toXml(node: KdlNode; addComments = false): XmlNode		97
 heading	XiK	kdl/xik.html#xik	 XiK		0

@@ -60,7 +60,7 @@
 
 </ul>
 <ul class="simple nested-toc-section">toKdl
-  <li><a class="reference" href="#toKdl%2CJsonNode" title="toKdl(node: JsonNode): KdlNode">toKdl(node: JsonNode): KdlNode</a></li>
+  <li><a class="reference" href="#toKdl%2CJsonNode%2Cstring" title="toKdl(node: JsonNode; name = &quot;-&quot;): KdlNode">toKdl(node: JsonNode; name = &quot;-&quot;): KdlNode</a></li>
 
 </ul>
 
@@ -86,7 +86,7 @@
 <span class="Keyword">import</span> <span class="Identifier">std</span><span class="Operator">/</span><span class="Identifier">json</span>
 <span class="Keyword">import</span> <span class="Identifier">kdl</span>
 
-<span class="Keyword">const</span> <span class="Identifier">data</span> <span class="Operator">=</span> <span class="LongStringLit">&quot;&quot;&quot;
+<span class="Keyword">let</span> <span class="Identifier">data</span> <span class="Operator">=</span> <span class="LongStringLit">&quot;&quot;&quot;
 {&quot;widget&quot;: {
     &quot;debug&quot;: &quot;on&quot;,
     &quot;window&quot;: {
@@ -95,7 +95,7 @@
         &quot;width&quot;: 500,
         &quot;height&quot;: 500
     },
-    &quot;image&quot;: { 
+    &quot;image&quot;: {
         &quot;src&quot;: &quot;Images/Sun.png&quot;,
         &quot;name&quot;: &quot;sun1&quot;,
         &quot;hOffset&quot;: 250,
@@ -112,8 +112,8 @@
         &quot;alignment&quot;: &quot;center&quot;,
         &quot;onMouseUp&quot;: &quot;sun1.opacity = (sun1.opacity / 100) * 90;&quot;
     }
-}}&quot;&quot;&quot;</span>
-<span class="Identifier">assert</span> <span class="Identifier">data</span><span class="Operator">.</span><span class="Identifier">parseJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">toKdl</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="LongStringLit">&quot;&quot;&quot;
+}}&quot;&quot;&quot;</span><span class="Operator">.</span><span class="Identifier">parseJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">data</span><span class="Operator">.</span><span class="Identifier">toKdl</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="LongStringLit">&quot;&quot;&quot;
 (object)- {
     (object)widget {
         debug &quot;on&quot;
@@ -123,7 +123,7 @@
             width 500
             height 500
         }
-        (object)image { 
+        (object)image {
             src &quot;Images/Sun.png&quot;
             name &quot;sun1&quot;
             hOffset 250
@@ -143,7 +143,7 @@
     }
 }&quot;&quot;&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span>
 
-<span class="Identifier">assert</span> <span class="Identifier">data</span><span class="Operator">.</span><span class="Identifier">parseJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">data</span><span class="Operator">.</span><span class="Identifier">parseJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">toKdl</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">toJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span></pre></p>
+<span class="Identifier">assert</span> <span class="Identifier">data</span> <span class="Operator">==</span> <span class="Identifier">data</span><span class="Operator">.</span><span class="Identifier">toKdl</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">toJson</span><span class="Punctuation">(</span><span class="Punctuation">)</span></pre></p>
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
@@ -155,27 +155,27 @@
   <dl class="item">
     <div id="toJson-procs-all">
   <div id="toJson,KdlNode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#toJson%2CKdlNode"><span class="Identifier">toJson</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KdlError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+  <dt><pre><span class="Keyword">proc</span> <a href="#toJson%2CKdlNode"><span class="Identifier">toJson</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KdlError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
                                        <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/jik.nim#L159" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/jik.nim#L159" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/jik.nim#L130" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/jik.nim#L130" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 
 </div>
 <div id="toKdl-procs-all">
-  <div id="toKdl,JsonNode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#toKdl%2CJsonNode"><span class="Identifier">toKdl</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span>
-                                      <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="toKdl,JsonNode,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#toKdl%2CJsonNode%2Cstring"><span class="Identifier">toKdl</span></a><span class="Other">(</span><span class="Identifier">node</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">;</span> <span class="Identifier">name</span> <span class="Other">=</span> <span class="StringLit">&quot;-&quot;</span><span class="Other">)</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    Converts node into its KDL representation.
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/jik.nim#L113" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/jik.nim#L113" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/jik.nim#L91" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/jik.nim#L91" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -191,7 +191,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-10-25 02:42:28 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-11-22 21:51:33 UTC</small>
       </div>
     </div>
   </div>

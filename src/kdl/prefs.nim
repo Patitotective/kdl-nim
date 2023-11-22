@@ -1,5 +1,5 @@
 ## ## Prefs
-## This modules implements some simple procedures to save user preferences in a KDL file.
+## This modules implements some simple procedures to save an object (generally representing preferences or user-settings) in a KDL file.
 ##
 ## To do so you'll use the `KdlPrefs` object:
 ## ```nim
@@ -9,10 +9,10 @@
 ##   content*: T
 ## ```
 ## As you can see it consists of:
-## - The path to store the preferences file in.
+## - The path to the preferences file.
 ## - The default preferences.
 ## - The current preferences.
-## The `default` and `content` fields are generics because you're supposed to create an object with the preferences as fields, though if you want to use `KdlDoc` you still can:
+## The `default` and `content` fields are generics because you're supposed to create an object as the prefs, though if you want to use `KdlDoc` you still can:
 ## ```nim
 ## import kdl, kdl/prefs
 ##
@@ -33,15 +33,15 @@
 ##
 ## assert p.content == Prefs(theme: tLight, lang: lEn, age: Natural.none, name: string.none) # Default value
 ##
-## p[lang] = lEs ## p[lang]= is a shortcut for p.content.lang=
+## p[lang] = lEs ## p[lang] is a shortcut for p.content.lang
 ##
-## assert p[lang] == lEs # p[lang] is a shortcut for p.content.lang
+## assert p[lang] == lEs
 ##
 ## p.save() # Write the changes to the file
 ## ```
 ## If you run the code above once it will run without complains, but if you run it twice the first `assert` will fail since now `lang` is not `lEn` but `lEs`.
 ##
-## If we want to reset `lang` to its default value, we can do as the following:
+## If you want to reset `lang` to its default value, you can do it like this:
 ## ```nim
 ## import kdl, kdl/prefs
 ##
@@ -64,11 +64,12 @@
 ##
 ## assert p.content == Prefs(theme: tLight, lang: lEn, age: Natural.none, name: string.none) # Default value
 ##
-## p[lang] = lEs ## p.content.lang = lEs
-##
-## assert p[lang] == lEs # assert p.content.lang == les
-##
 ## p.save() # Write the changes to the file
+## ```
+## Or if you want to reset the whole preferences just do:
+## ```nim
+## var p = initKPrefs(path = "prefs.kdl", default = Prefs(theme: tLight, lang: lEn))
+## p.content = p.default
 ## ```
 {.used.}
 

@@ -1,5 +1,5 @@
 ## # kdl-nim
-## kdl-nim is an implementation of the [KDL document language](https://kdl.dev) in the Nim programming language.
+## kdl-nim is an implementation of the [KDL document language](https://kdl.dev) v1.0.0 in the Nim programming language.
 ##
 ## ## Installation
 ## ```
@@ -8,18 +8,19 @@
 ##
 ## ## Overview
 ## ### Parsing KDL
-## kdl-nim parses strings (or files) into a `KdlDoc` which is a sequence of `KdlNode`s.
+## kdl-nim parses strings, files or streams into a `KdlDoc` which is a sequence of `KdlNode`s.
 ##
 ## Each `KdlNode` holds a name, an optional type annotation (tag), zero ore more arguments, zero or more properties and optionally children nodes.
-##
-## Arguments and properties' values are represented by an object variant `KdlVal`. `KdlVal` can be any of `KString`, `KFloat`, `KBool`, `KNull` or `KInt`.
+## Arguments are a sequence of values, while properties are an unordered table of string and values.
+## Arguments and properties' values are represented by the object variant `KdlVal`. `KdlVal` can be of any kind `KString`, `KFloat`, `KBool`, `KNull` or `KInt`.
 runnableExamples:
-  let doc = parseKdl("node 1 null {child \"abc\" true}") # You can also read files using parseKdlFile("file.kdl")
-
-  assert doc[0].args[0].isInt() # 1
-  assert doc[0].args[1].isNull() # null
-  assert doc[0].children[0].args[0].isString() # "abc"
-  assert doc[0].children[0].args[1].isBool() # true
+  let doc = parseKdl("node (i8)1 null key=\"val\" {child \"abc\" true}") # You can also read files using parseKdlFile("file.kdl")
+  assert doc == @[
+    initKNode("node",
+      args = @[initKVal(1, "i8".some), initKNull()],
+      props = {"key": initKVal("val")}.toTable,
+      children = @[initKNode("child", args = @[initKVal("abc"), initKVal(true)])])
+    ]
 
 ## ### Reading nodes
 runnableExamples:
@@ -51,9 +52,8 @@ runnableExamples:
   assert doc[0].args[0].get(float32) == 1f
   assert doc[0].args[1].get(int) == 3
   assert doc[0].args[2].get(uint8) == 255u8
+  assert doc[0].args[0].get(string) == "1"
 
-## It only converts between numbers, you can't `val.get(string)` if `val.isBool()`.
-##
 ## ### Setting values
 runnableExamples:
   var doc = parseKdl("node 1 3.14 {child \"abc\" true}")
@@ -72,9 +72,9 @@ runnableExamples:
   assert doc[0].children[0].args[0] == "def"
 
 ## ### Creating KDL
-## To create KDL documents, nodes or values without parsing you can also use the `toKdl`, `toKdlNode` and `toKdlVal` macros which have a similar syntax to KDL:
+## To create KDL documents, nodes or values without parsing or object constructors you can use the `toKdlDoc`, `toKdlNode` and`toKdlVal` macros which have a similar syntax to KDL:
 runnableExamples:
-  let doc = toKdl:
+  let doc = toKdlDoc:
     node[tag](1, true, nil, key="val"):
       child(3.14[pi])
 
@@ -85,15 +85,24 @@ runnableExamples:
   let node = toKdlNode: numbers(1, 2.13, 3.1e-10)
   assert node == parseKdl("numbers 1 2.13 3.1e-10")[0]
 
-  assert toKdlVal("abc") == parseKdl("node \"abc\"")[0].args[0]
+  assert toKdlVal("abc"[tag]) == parseKdl("node (tag)\"abc\"")[0].args[0]
+
+## Furthermore there are the `toKdlArgs` and `toKdlProps` macros, they provide shortcuts for creating a sequence and a table of `KdlVal`:
+runnableExamples:
+  assert toKdlArgs(1, 2[tag], "a") == [1.initKVal, 2.initKVal("tag".some), "a".initKVal]
+  assert toKdlProps({"a": 1[tag], "b": 2}) == {"a": 1.initKVal("tag".some), "b": 2.initKVal}.toTable
+
+## ## Compile flags
+## `-d:kdlDecoderAllowHoleyEnums`: to allow converting integers into holey enums.
+## `-d:kdlDecoderNoCaseTransitionError`: to not get a compile error when trying to change a discriminator field from an object variant in an init hook.
 
 ## ## More
-## Checkout these other useful modules as well:
-## - [kdl/decoder](kdl/decoder.html) for KDL deserializing
-## - [kdl/encoder](kdl/encoder.html) for KDL serializing
+## Checkout these other useful modules:
+## - [kdl/encoder](kdl/encoder.html) for KDL serializing (Nim objects to KDL)
+## - [kdl/decoder](kdl/decoder.html) for KDL deserializing (KDL to Nim objects)
 ## - [kdl/xix](kdl/xik.html) for [XML-in-KDL](https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md)
 ## - [kdl/jix](kdl/jix.html) for [JSON-in-KDL](https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md)
-## - [kdl/prefs](kdl/prefs.html) for simple preferences sytem.
+## - [kdl/prefs](kdl/prefs.html) for a simple preferences sytem.
 
 import std/[algorithm, enumerate, strformat, strutils, sequtils, options, tables]
 
@@ -183,3 +192,4 @@ proc writeFile*(path: string, doc: KdlDoc, pretty = false) =
     writeFile(path, doc.pretty())
   else:
     writeFile(path, $doc & '\n')
+

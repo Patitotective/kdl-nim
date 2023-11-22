@@ -1,6 +1,6 @@
 ## # XiK
 ## This modules implements the XML-in-KDL (XiK) specification to encode and decode XML in KDL.
-## 
+##
 ## Checkout the official specification: https://github.com/kdl-org/kdl/blob/main/XML-IN-KDL.md.
 runnableExamples:
   import std/[xmlparser, xmltree]
@@ -48,19 +48,22 @@ breakfast_menu {
 import std/[strtabs, xmltree]
 import nodes, types
 
-proc toKdl*(node: XmlNode, comments = false): KdlNode = 
+proc toKdl*(node: XmlNode, addComments = false): KdlNode =
   ## Converts node into its KDL representation.
-  ## - If `comments` preserves comments.
+  ## Ignores CDATA nodes, i.e..
+  ## If `addComments` preserves XML comments as KDL nodes named `!`.
 
   case node.kind
-  of xnText, xnEntity, xnVerbatimText:
-    result = toKdlNode: "-"(node.text)
+  of xnText, xnVerbatimText:
+    result = initKNode("-", args = toKdlArgs(node.text))
+  of xnEntity:
+    result = initKNode("-", args = toKdlArgs('&' & node.text & ';'))
   of xnComment:
-    if comments:
-      result = toKdlNode: "!"(node.text)
+    if addComments:
+      result = initKNode("!", args = toKdlArgs(node.text))
   of xnElement:
     result = initKNode(node.tag)
-    if node.attrsLen > 0:
+    if not node.attrs.isNil:
       for key, val in node.attrs:
         result.props[key] = initKVal(val)
 
@@ -68,37 +71,66 @@ proc toKdl*(node: XmlNode, comments = false): KdlNode =
       result.args.add initKVal(node[0].text)
     else:
       for child in node:
-        if comments or child.kind != xnComment:
-          result.children.add child.toKdl(comments)
+        if addComments or child.kind != xnComment:
+          result.children.add child.toKdl(addComments)
 
   of xnCData: discard # According to XiK spec CDATA is discarded
 
-proc toXml*(node: KdlNode, comments = false): XmlNode = 
-  ## Converts node into its XML representation.
-  ## - If `comments` preserves comments.
+proc toXmlSingle*(node: KdlNode): XmlNode =
+  assert node.name.len == 1, "in " & $node
+  assert node.args.len == 1, "single argument expected in " & $node
 
+  case node.name[0]
+  of '!':
+    assert node.args.len == 1 and node.children.len == 0 and node.props.len == 0, "comments must have a single string argument in " & $node
+    assert node.args[0].isString
+    newComment(node.args[0].getString)
+  of '-':
+    let val = node.args[0].get(string)
+    if val.len > 1 and val[0] == '&' and val[^1] == ';':
+      newEntity(val[1..^2])
+    else:
+      newText(val)
+  else:
+    raise newException(ValueError, "Expected node named '!' or '-' in " & $node)
+
+proc toXml*(node: KdlNode, addComments = false): XmlNode =
+  ## Converts node into its XML representation.
+  ## - If `addComments` preserves comments in elements, if node is a comment ('! "something"') it DOES return it.
+  runnableExamples:
+    import std/xmltree
+    import kdl
+
+    assert parseKdl("! \"comment\"")[0].toXml().kind == xnComment
+    assert parseKdl("tag { ! \"comment\"; - \"text\" }")[0].toXml().len == 1 # Ignored the comment
+    assert parseKdl("tag { ! \"comment\"; - \"text\" }")[0].toXml(addComments = true).len == 2 # Added the comment
+
+  assert node.name.len > 0
+
+  if node.name == "!" or node.name == "-":
+    return toXmlSingle(node)
+
+  assert node.args.len == 0 or (node.args.len == 1 xor node.children.len > 0), "single-argument and children cannot be mixed in " & $node
   result = newElement(node.name)
 
-  assert (node.args.len > 0 and node.children.len == 0) or (node.args.len == 0 and node.children.len > 0) or (node.args.len == 0 and node.children.len == 0), "nodes have to have either one argument and zero children, zero arguments and zero or more children"
+  result.attrs = newStringTable()
+  for key, val in node.props:
+    result.attrs[key] = val.get(string) # Stringify the values
 
-  if node.props.len > 0:
-    result.attrs = newStringTable()
-    for key, val in node.props:
-      assert val.isString, "properties' values have to be of type string"
-      result.attrs[key] = val.getString
-
-  if node.args.len > 0:
-    assert node.args.len == 1 and node.args[0].isString, "first argument has to be a string and there must be only one argument"
-    result.add newText(node.args[0].getString)
+  if node.args.len == 1:
+    result.add newText(node.args[0].get(string))
   else:
     for child in node.children:
-      case child.name
-      of "-":
-        assert child.args.len == 1 and child.args[0].isString, "first argument has to be a string and there must be only one argument"
-        result.add newText(child.args[0].getString)
-      of "!":
-        assert child.args.len == 1 and child.args[0].isString, "first argument has to be a string and there must be only one argument"
-        if comments:
-          result.add newComment(child.args[0].getString)
+      assert child.name.len > 0
+      if child.name == "!":
+        if addComments:
+          result.add toXmlSingle(child)
+          continue
+        else:
+          continue
+
+      if child.name == "-":
+        result.add toXmlSingle(child)
       else:
-        result.add child.toXml(comments)
+        result.add child.toXml(addComments)
+

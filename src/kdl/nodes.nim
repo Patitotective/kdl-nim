@@ -1,3 +1,4 @@
+## This module implements initializers, comparision, getters, setters, operatores and macros to manipilate `KdlVal`, `KdlNode` and `KdlDoc`.
 import std/[strformat, strutils, options, tables, macros]
 
 import types, utils
@@ -80,7 +81,8 @@ proc getInt*(val: KdlVal): int64 =
   val.num
 
 proc get*[T: Value](val: KdlVal, x: typedesc[T]): T =
-  ## Tries to get and convert val to T, raises an error when it cannot.
+  ## When x is string, stringifies val using `$`.
+  ## when x is SomeNumber, converts val to x.
   runnableExamples:
     let val = initKFloat(3.14)
 
@@ -89,6 +91,7 @@ proc get*[T: Value](val: KdlVal, x: typedesc[T]): T =
     assert val.get(float) == 3.14
     assert val.get(float32) == 3.14f
     assert val.get(range[0f..4f]) == 3.14f
+    assert val.get(string) == "3.14"
 
   when T is string:
     result =
@@ -138,7 +141,7 @@ proc setInt*(val: var KdlVal, x: SomeInteger) =
   check val.isInt()
   val.num = x
 
-proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) =
+proc setTo*[T: Value](val: var KdlVal, x: T) =
   ## Tries to set val to x, raises an error when types are not compatible.
   runnableExamples:
     var val = initKFloat(3.14)
@@ -164,6 +167,7 @@ proc setTo*[T: SomeNumber or string or bool](val: var KdlVal, x: T) =
 # ----- Operators -----
 
 proc `$`*(val: KdlVal): string =
+  ## Returns "(tag)val"
   if val.tag.isSome:
     result = &"({val.tag.get.quoted})"
 
@@ -182,9 +186,51 @@ proc `$`*(val: KdlVal): string =
     of KEmpty:
       "empty"
 
+proc inline*(doc: KdlDoc): string
+
+proc inline*(node: KdlNode): string =
+  ## Returns node's single-line representation
+  if node.tag.isSome:
+    result = &"({node.tag.get.quoted})"
+
+  result.add node.name.quoted()
+
+  if node.args.len > 0:
+    result.add " "
+    for e, val in node.args:
+      if e in 1..node.args.high:
+        result.add " "
+
+      result.add $val
+
+  if node.props.len > 0:
+    result.add " "
+    var count = 0
+    for key, val in node.props:
+      if count in 1..<node.props.len:
+        result.add " "
+
+      result.add &"{key.quoted}={val}"
+
+      inc count
+
+  if node.children.len > 0:
+    result.add " { "
+    result.add inline(node.children)
+    result.add " }"
+
+proc inline*(doc: KdlDoc): string =
+  ## Returns doc's single-line representation
+  for e, node in doc:
+    result.add $node
+    if e < doc.high:
+      result.add "; "
+
 proc `$`*(doc: KdlDoc): string
 
 proc `$`*(node: KdlNode): string =
+  ## The result is always valid KDL.
+
   if node.tag.isSome:
     result = &"({node.tag.get.quoted})"
 
@@ -215,6 +261,7 @@ proc `$`*(node: KdlNode): string =
     result.add "\n}"
 
 proc `$`*(doc: KdlDoc): string =
+  ## The result is always valid KDL.
   for e, node in doc:
     result.add $node
     if e < doc.high:
@@ -237,8 +284,12 @@ proc `==`*(val1, val2: KdlVal): bool =
   of KInt:
     val1.getInt() == val2.getInt()
 
-proc `==`*[T: SomeNumber or string or bool](val: KdlVal, x: T): bool =
+proc `==`*[T: Value](val: KdlVal, x: T): bool =
   ## Checks if val is x, raises an error when they are not comparable.
+  runnableExamples:
+    assert initKVal("a") == "a"
+    assert initKVal(1) == 1
+    assert initKVal(true) == true
 
   when T is string:
     check val.isString
@@ -300,21 +351,22 @@ proc add*(node: var KdlNode, child: KdlNode) =
 
   node.children.add(child)
 
-proc findFirst*(doc: KdlDoc, name: string): KdlNode =
-  ## Returns the first node called name. Raises an exception when it doesn't exist
-  for node in doc:
+proc findFirst*(doc: KdlDoc, name: string): int =
+  ## Returns the index of the first node called name.
+  ## Returns -1 when it doesn't exist
+  result = -1
+
+  for e, node in doc:
     if node.name == name:
-      return node
+      return e
 
-  raise newException(KeyError, &"A node called {name} doesn't exist")
-
-proc findLast*(doc: KdlDoc, name: string): KdlNode =
-  ## Returns the last node called name. Raises an exception when it doesn't exist
+proc findLast*(doc: KdlDoc, name: string): int =
+  ## Returns the index of the last node called name.
+  ## Returns -1 when it doesn't exist
+  result = -1
   for e in countdown(doc.high, 0):
     if doc[e].name == name:
-      return doc[e]
-
-  raise newException(KeyError, &"A node called {name} doesn't exist")
+      return e
 
 proc find*(doc: KdlDoc, name: string): seq[KdlNode] =
   ## Returns all the nodes called name.
@@ -383,7 +435,7 @@ proc toKdlNodeImpl(body: NimNode): NimNode =
 
   if i < body.len: # Children
     body[i].expectKind(nnkStmtList)
-    result.add newTree(nnkExprEqExpr, ident"children", newCall("toKdl", body[i]))
+    result.add newTree(nnkExprEqExpr, ident"children", newCall("toKdlDoc", body[i]))
 
 macro toKdlVal*(body: untyped): KdlVal =
   ## Generate a KdlVal from Nim's AST that is somehat similar to KDL's syntax.
@@ -409,36 +461,44 @@ macro toKdlNode*(body: untyped): KdlNode =
 
   toKdlNodeImpl(body)
 
-macro toKdl*(body: untyped): KdlDoc =
+macro toKdlDoc*(body: untyped): KdlDoc =
   ## Generate a KdlDoc from Nim's AST that is somewhat similar to KDL's syntax.
+  ## body has to be an statement list
   ##
   ## See also [toKdlNode](#toKdlNode.m,untyped).
+  runnableExamples:
+    let doc = toKdlDoc:
+      node
+      numbers(10[u8], 20[i32], myfloat=1.5[f32]):
+        strings("123e4567-e89b-12d3-a456-426614174000"[uuid], "2021-02-03"[date], filter=r"$\d+"[regex])
+        person[author](name="Alex")
+      "i am also a node"
+      color[RGB](r=200, b=100, g=100)
 
-  if body.kind == nnkStmtList:
-    let doc = newNimNode(nnkBracket)
+  body.expectKind nnkStmtList
 
-    for call in body:
-      doc.add toKdlNodeImpl(call)
+  let doc = newNimNode(nnkBracket)
 
-    result = prefix(doc, "@")
-  else:
-    result = toKdlValImpl(body)
+  for call in body:
+    doc.add toKdlNodeImpl(call)
 
-macro toKdlArgs*(args: varargs[typed]): untyped =
+  result = prefix(doc, "@")
+
+macro toKdlArgs*(args: varargs[untyped]): untyped =
   ## Creates an array of `KdlVal`s by calling `initKVal` through `args`.
   runnableExamples:
-    assert toKdlArgs(1, 2, "a") == [1.initKVal, 2.initKVal, "a".initKVal]
+    assert toKdlArgs(1, 2, "a"[tag]) == [1.initKVal, 2.initKVal, "a".initKVal("tag".some)]
     assert initKNode("name", args = toKdlArgs(nil, true, "b")) == initKNode("name", args = [initKNull(), true.initKVal, "b".initKVal])
 
-  args.expectKind nnkBracket
+  args.expectKind nnkArgList
   result = newNimNode(nnkBracket)
   for arg in args:
-    result.add newCall("initKVal", arg)
+    result.add toKdlValImpl(arg)
 
 macro toKdlProps*(props: untyped): Table[string, KdlVal] =
   ## Creates a `Table[string, KdlVal]` from a array-of-tuples/table-constructor by calling `initKVal` through the values.
   runnableExamples:
-    assert toKdlProps({"a": 1, "b": 2}) == {"a": 1.initKVal, "b": 2.initKVal}.toTable
+    assert toKdlProps({"a": 1[i8], "b": 2}) == {"a": 1.initKVal("i8".some), "b": 2.initKVal}.toTable
     assert initKNode("name", props = toKdlProps({"c": nil, "d": true})) == initKNode("name", props = {"c": initKNull(), "d": true.initKVal}.toTable)
 
   props.expectKind nnkTableConstr
@@ -446,6 +506,6 @@ macro toKdlProps*(props: untyped): Table[string, KdlVal] =
   result = newNimNode(nnkTableConstr)
   for i in props:
     i.expectKind nnkExprColonExpr
-    result.add newTree(nnkExprColonExpr, i[0], newCall("initKVal", i[1]))
+    result.add newTree(nnkExprColonExpr, i[0], toKdlValImpl(i[1]))
 
   result = newCall("toTable", result)

@@ -1,12 +1,12 @@
 ## # JiK
 ## This modules implements the JSON-in-KDL (JiK) specification to encode and decode JSON in KDL.
-## 
+##
 ## Checkout the official specification: https://github.com/kdl-org/kdl/blob/main/JSON-IN-KDL.md.
 runnableExamples:
   import std/json
   import kdl
 
-  const data = """
+  let data = """
 {"widget": {
     "debug": "on",
     "window": {
@@ -15,7 +15,7 @@ runnableExamples:
         "width": 500,
         "height": 500
     },
-    "image": { 
+    "image": {
         "src": "Images/Sun.png",
         "name": "sun1",
         "hOffset": 250,
@@ -32,8 +32,8 @@ runnableExamples:
         "alignment": "center",
         "onMouseUp": "sun1.opacity = (sun1.opacity / 100) * 90;"
     }
-}}"""
-  assert data.parseJson().toKdl() == parseKdl("""
+}}""".parseJson()
+  assert data.toKdl() == parseKdl("""
 (object)- {
     (object)widget {
         debug "on"
@@ -43,7 +43,7 @@ runnableExamples:
             width 500
             height 500
         }
-        (object)image { 
+        (object)image {
             src "Images/Sun.png"
             name "sun1"
             hOffset 250
@@ -63,14 +63,17 @@ runnableExamples:
     }
 }""")[0]
 
-  assert data.parseJson() == data.parseJson().toKdl().toJson()
+  assert data == data.toKdl().toJson()
 
 {.used.}
 
-import std/json
+import std/[json, sets]
 import nodes, types
 
-proc toKVal(node: JsonNode): KdlVal = 
+
+proc toKVal(node: JsonNode): KdlVal =
+  assert node.kind in {JString, JInt, JFloat, JBool, JNull}
+
   case node.kind
   of JString:
     result = initKVal(node.getStr)
@@ -85,105 +88,92 @@ proc toKVal(node: JsonNode): KdlVal =
   else: discard
 
 proc toKArray(node: JsonNode): KdlDoc
+proc toKdl*(node: JsonNode, name = "-"): KdlNode
 
-proc toKObject(node: JsonNode): KdlDoc = 
+proc toKObject(node: JsonNode): KdlDoc =
   assert node.kind == JObject
 
   for key, val in node:
-    case val.kind
-    of JObject:
-      result.add initKNode(key, "object".some, children = val.toKObject)
-    of JArray:
-      result.add initKNode(key, "array".some, children = val.toKArray)
-    else:
-      result.add initKNode(key, args = [val.toKVal])
+    result.add val.toKdl(key)
 
-proc toKArray(node: JsonNode): KdlDoc = 
+proc toKArray(node: JsonNode): KdlDoc =
   assert node.kind == JArray
 
   for ele in node:
-    case ele.kind
-    of JObject:
-      result.add initKNode("-", "object".some, children = ele.toKObject)
-    of JArray:
-      result.add initKNode("-", "array".some, children = ele.toKArray)
-    else:
-      result.add initKNode("-", args = [ele.toKVal])
+    result.add ele.toKdl()
 
-proc toKdl*(node: JsonNode): KdlNode = 
-  ## Converts node into its KDL representation.
-
+proc toKdl*(node: JsonNode, name = "-"): KdlNode =
+  ## Converts node into a KDL node.
   case node.kind
   of JObject:
-    initKNode("-", "object".some, children = node.toKObject)
+    initKNode(name, "object".some, children = node.toKObject)
   of JArray:
-    initKNode("-", "array".some, children = node.toKArray)
+    initKNode(name, "array".some, children = node.toKArray)
   else:
-    initKNode("-", args = [node.toKVal])
+    initKNode(name, args = [node.toKVal])
 
-proc toJson(val: KdlVal): JsonNode = 
+proc toJVal(val: KdlVal): JsonNode =
   case val.kind
   of KString:
-    result = newJString(val.getString)
+    newJString(val.getString)
   of KFloat:
-    result = newJFloat(val.getFloat)
+     newJFloat(val.getFloat)
   of KBool:
-    result = newJBool(val.getBool)
+    newJBool(val.getBool)
   of KNull:
-    result = newJNull()
+    newJNull()
   of KInt:
-    result = newJInt(val.getInt)
-  else: discard
-
-proc jsonKind(node: KdlNode): JsonNodeKind = 
-  let tag = node.tag.get("")
-  
-  if tag  == "array":
-    assert node.props.len == 0, "arrays cannot have properties in " & $node
-    result = JArray
-  elif tag == "object" or node.props.len > 0:
-    assert node.args.len == 0, "objects cannot have arguments in " & $node
-    result = JObject
-
-  for child in node.children:
-    if result == JArray:
-      assert child.name == "-", "arrays' children have to be named \"-\" in " & $child
-    elif child.name == "-" and result != JObject:
-      result = JArray
-    elif child.name != "-":
-      result = JObject
-
-    if result == JObject and child.jsonKind notin {JObject, JArray}:
-      assert child.args.len in 0..1, "fields cannot have more than one argument in " & $child
+    newJInt(val.getInt)
+  of KEmpty:
+    nil
 
 proc toJson*(node: KdlNode): JsonNode
 
-proc toJObject(node: KdlNode): JsonNode = 
+proc toJObject(node: KdlNode): JsonNode =
   result = newJObject()
-  
+
   for key, val in node.props:
-    result[key] = val.toJson
+    result[key] = val.toJVal()
 
   for child in node.children:
-    result[child.name] = child.toJson
+    result[child.name] = child.toJson()
 
-proc toJArray(node: KdlNode): JsonNode = 
+proc toJArray(node: KdlNode): JsonNode =
   result = newJArray()
 
   for arg in node.args:
-    result.add arg.toJson
+    result.add arg.toJVal()
 
   for child in node.children:
-    result.add child.toJson
+    result.add child.toJson()
 
-proc toJson*(node: KdlNode): JsonNode = 
+proc toJson*(node: KdlNode): JsonNode =
   ## Converts node into its JSON representation.
+  let tag = node.tag.get("")
+  if tag == "array":
+    node.toJArray()
+  elif tag == "object":
+    node.toJObject()
+  elif node.args.len == 1 and node.props.len == 0 and node.children.len == 0:
+    node.args[0].toJVal()
+  elif node.props.len == 0 and (node.args.len > 0 or node.children.len > 0):
+    for child in node.children:
+      if child.name != "-":
+        raise newException(ValueError, "All node's children must be named - for a JiK Array")
 
-  case node.jsonKind
-  of JArray:
-    node.toJArray
-  of JObject:
-    node.toJObject
+    node.toJArray()
+  elif node.args.len == 0 and (node.props.len > 0 or node.children.len > 0):
+    var names = initHashSet[string]()
+    for key, _ in node.props:
+      names.incl key
+
+    for child in node.children:
+      if child.name in names:
+        raise newException(ValueError, "All node's children must have different names for a JiK Object")
+
+      names.incl child.name
+
+    node.toJObject()
   else:
-    assert node.args.len == 1, "unkown value in " & $node
-    node.args[0].toJson
+    raise newException(ValueError, "Invalid JiK node")
+

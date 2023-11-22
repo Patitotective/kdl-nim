@@ -1,3 +1,4 @@
+## Various utilities for internal use in the library.
 import std/[strformat, strutils, unicode, streams, tables, macros]
 
 import types
@@ -8,7 +9,7 @@ type
 
   Object* = ((object or tuple) and not KdlSome)
   List* = (array or seq)
-  Value* = (SomeNumber or string or bool or range)
+  Value* = (SomeNumber or string or bool) #  or range
   KdlSome* = (KdlDoc or KdlNode or KdlVal)
   SomeTable*[K, V] = (Table[K, V] or OrderedTable[K, V])
 
@@ -70,8 +71,7 @@ proc peekLineFromStart*(s: Stream): string =
   s.setPosition before
 
 proc peekLineFromStart*(s: string, at: int): string =
-  if at >= s.len:
-    return
+  let at = if at >= s.len: s.high else: at
 
   var idx = 0
   for i in countdown(at-1, 0):
@@ -191,7 +191,7 @@ macro getDiscriminants*(a: typedesc): seq[string] =
 
 macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
   ## Does the minimum to construct a valid case object `T`.
-  ## - `discriminatorSetter`: called passing two arguments `(key, typ)` (`key` being the field name and `typ` the field type), last expression should be the value for the field
+  ## - `discriminatorSetter`: called passing two arguments `(key, typ)` (`key` being the field name and `typ` the field type), last expression should be the value for the field. Only for discriminator fields.
   # maybe candidate for std/typetraits
 
   var a = T.getTypeImpl

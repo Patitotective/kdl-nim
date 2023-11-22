@@ -45,7 +45,8 @@ suite "XiK": # Check that kdl-nim can convert XML into KDL forth and back
 
     test "File: " & filename:
       let data = loadXml(path)
-      check $data == $data.toKdl(comments = true).toXml(comments = true)
+      # Here we compare strings otherwise it fails and I can't see why (maybe because they're refs)
+      check $data == $data.toKdl(addComments = true).toXml(addComments = true)
 
 suite "JiK": # Check that kdl-nim can convert JSON into KDL forth and back
   for kind, path in walkDir(testsDir / "jik"):

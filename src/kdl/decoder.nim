@@ -7,11 +7,11 @@
 ## - `SomeNumber`
 ## - `StringTableRef`
 ## - `enum` and `HoleyEnum`
-## - `KdlVal` (object variant)
+## - `KdlVal`
 ## - `seq[T]` and `array[I, T]`
-## - `HashSet[A]` and `OrderedSet[A]`
+## - `set[Ordinal]`, `HashSet[A]` and `OrderedSet[A]`
 ## - `Table[string, T]` and `OrderedTable[string, T]`
-## - `object`, `ref` and `tuple` (including object variants)
+## - `object`, `ref` and `tuple` (including object variants with multiple discriminator fields)
 ## - Plus any type you implement.
 runnableExamples:
   import kdl
@@ -28,7 +28,7 @@ runnableExamples:
 package {
   name "kdl"
   version "0.0.0"
-  description "kat's document language"
+  description "kats document language"
   authors "Kat Marchán <kzm@zkat.tech>"
   license-file "LICENSE.md"
   edition "2018"
@@ -38,139 +38,44 @@ dependencies {
   thiserror "1.0.22"
 }""")
 
-  const package = doc.decode(Package, "package")
-  const dependencies = doc.decode(Deps, "dependencies")
+  const package = doc.decodeKdl(Package, "package")
+  const dependencies = doc.decodeKdl(Deps, "dependencies")
 
   assert package == Package(
     name: "kdl",
     version: "0.0.0",
     authors: @["Kat Marchán <kzm@zkat.tech>"].some,
-    description: "kat's document language".some,
+    description: "kats document language".some,
     licenseFile: "LICENSE.md".some,
     edition: "2018".some
   )
   assert dependencies == {"nom": "6.0.1", "thiserror": "1.0.22"}.toTable
 
 ## ### Custom Hooks
-## #### Decode hook
-## Use custom decode hooks to decode your types, your way.
-##
-## To do it you have to overload the `decodeHook` procedure with the following signature:
+## #### Init hook
+## With init hooks you can initialize types with default values before decoding.
+## Use the following signature when overloading `decodeInitKdl`:
 ## ```nim
-## proc decodeHook*(a: KdlSome, v: var MyType)
+## proc initHookKdl*[T](v: var T) =
 ## ```
-## Where `KdlSome` is one of `KdlDoc`, `KdlNode` or `KdlVal`:
-## - `KdlDoc` is called when `doc.decode()`.
-## - `KdlNode` is called when `doc.decode("node-name")`, or when parsing a field like `MyObj(a: MyType)` in `myobj-node {a "some representation of MyType"}`.
-## - `KdlVal` is called when decoding arguments (`seq[MyType]`) or properties like `MyObj(a: MyType)` in `myobj-node a="another representation of MyType"`.
-runnableExamples:
-  import std/times
-  import kdl
-  import kdl/utils # kdl/utils define some useful internal procedures such as `eqIdent`, which checks the equality of two strings ignore case, underscores and dashes in an efficient way.
-
-  proc decodeHook*(a: KdlVal, v: var DateTime) =
-    assert a.isString
-    v = a.getString.parse("yyyy-MM-dd")
-
-  proc decodeHook*(a: KdlNode, v: var DateTime) =
-    case a.args.len
-    of 6: # year month day hour minute second
-      v = dateTime(
-        a.args[0].decode(int),
-        a.args[1].decode(Month),
-        a.args[2].decode(MonthdayRange),
-        a.args[3].decode(HourRange),
-        a.args[4].decode(MinuteRange),
-        a.args[5].decode(SecondRange)
-      )
-    of 3: # year month day
-      v = dateTime(
-        a.args[0].decode(int),
-        a.args[1].decode(Month),
-        a.args[2].decode(MonthdayRange),
-      )
-    of 1: # yyyy-MM-dd
-      a.args[0].decode(v)
-    else:
-      doAssert a.args.len in {1, 3, 6}
-
-    if "hour" in a.props:
-      v.hour = a.props["hour"].getInt
-    if "minute" in a.props:
-      v.minute = a.props["minute"].getInt
-    if "second" in a.props:
-      v.second = a.props["second"].getInt
-    if "nanosecond" in a.props:
-      v.nanosecond = a.props["nanosecond"].getInt
-    if "offset" in a.props:
-      v.utcOffset = a.props["offset"].get(int)
-
-  proc decodeHook*(a: KdlDoc, v: var DateTime) =
-    if a.len == 0: return
-
-    var
-      year: int
-      month: Month
-      day: MonthdayRange = 1
-      hour: HourRange
-      minute: MinuteRange
-      second: SecondRange
-      nanosecond: NanosecondRange
-
-    for node in a:
-      if node.name.eqIdent "year":
-        node.decode(year)
-      elif node.name.eqIdent "month":
-        node.decode(month)
-      elif node.name.eqIdent "day":
-        node.decode(day)
-      elif node.name.eqIdent "hour":
-        node.decode(hour)
-      elif node.name.eqIdent "minute":
-        node.decode(minute)
-      elif node.name.eqIdent "second":
-        node.decode(second)
-      elif node.name.eqIdent "nanosecond":
-        node.decode(nanosecond)
-
-    v = dateTime(year, month, day, hour, minute, second, nanosecond)
-
-  assert parseKdl("""
-  year 2022
-  month 10 // or "October"
-  day 15
-  hour 12
-  minute 10
-  """).decode(DateTime) == dateTime(2022, mOct, 15, 12, 10)
-
-  assert parseKdl("date 2022 \"October\" 15 12 04 00").decode(DateTime, "date") == dateTime(2022, mOct, 15, 12, 04)
-
-  assert parseKdl("author birthday=\"2000-10-15\" name=\"Nobody\"")[0]["birthday"].decode(DateTime) == dateTime(2000, mOct, 15)
-
-## #### New hook
-## With new hooks you can initialize types with default values before decoding.
-## Use the following signature when overloading `newHook`:
-## ```nim
-## proc newHook*(v: var MyType)
-## ```
-## *Note: by default for object variants modifying a discriminator field will end in a compilation error, if you are sure about it, disable this behavior by compiling with the following flag -d:kdlDecoderNoCaseTransitionError.*
+## *Note: by default if you change a discrimantor field of an object variant in an init hook (`v.kind = kInt`), it will throw a compile error. If you want to disable it, compile with the following flag -d:kdlDecoderNoCaseTransitionError.*
 runnableExamples:
   import kdl
 
   type Foo = object
     x*: int
 
-  proc newHook*(v: var Foo) =
+  proc initHookKdl*(v: var Foo) =
     v.x = 5 # You may also do `v = Foo(x: 5)`
 
-  assert parseKdl("").decode(Foo) == Foo(x: 5)
+  assert parseKdl("").decodeKdl(Foo) == Foo(x: 5)
 
 ## #### Post hook
 ## Post hooks are called after decoding any (default, for custom decode hooks you have to call `postHookable(v)` explicitly) type.
 ##
 ## Overloads of `postHook` must use the following signature:
 ## ```nim
-## proc postHook*(v: var MyType)
+## proc postHookKdl(v: var MyType)
 ## ```
 runnableExamples:
   import kdl
@@ -178,20 +83,20 @@ runnableExamples:
   type Foo = object
     x*: int
 
-  proc postHook*(v: var Foo) =
+  proc postHookKdl(v: var Foo) =
     inc v.x
 
-  assert parseKdl("x 1").decode(Foo) == Foo(x: 2) # 2 because x after postHook got incremented by one
+  assert parseKdl("x 1").decodeKdl(Foo) == Foo(x: 2) # 2 because x after postHook got incremented by one
 
 ## #### Enum hook
 ## Enum hooks are useful for parsing enums in a custom manner.
 ##
 ## You can overload `enumHook` with two different signatures:
 ## ```nim
-## proc enumHook*(a: string, v: var MyEnum)
+## proc enumHookKdl(a: string, v: var MyEnum)
 ## ```
 ## ```nim
-## proc enumHook*(a: int, v: var MyEnum)
+## proc enumHookKdl(a: int, v: var MyEnum)
 ## ```
 ## *Note: by default decoding an integer into a holey enum raises an error, to override this behaviour compile with -d:kdlDecoderAllowHoleyEnums.*
 runnableExamples:
@@ -201,7 +106,7 @@ runnableExamples:
   type MyEnum = enum
     meNorth, meSouth, meWest, meEast
 
-  proc enumHook*(a: string, v: var MyEnum) =
+  proc enumHookKdl(a: string, v: var MyEnum) =
     case a.toLowerAscii
     of "north":
       v = meNorth
@@ -214,7 +119,7 @@ runnableExamples:
     else:
       raise newException(ValueError, &"invalid enum value {a} for {$typeof(v)}")
 
-  proc enumHook*(a: int, v: var MyEnum) =
+  proc enumHookKdl(a: int, v: var MyEnum) =
     case a
     of 0xbeef:
       v = meNorth
@@ -229,18 +134,18 @@ runnableExamples:
 
   assert parseKdl("""
   node "north" "south" "west" "east"
-  """).decode(seq[MyEnum], "node") == @[meNorth, meSouth, meWest, meEast]
+  """).decodeKdl(seq[MyEnum], "node") == @[meNorth, meSouth, meWest, meEast]
 
   assert parseKdl("""
   node 0xbeef 0xcafe 0xface 0xdead
-  """).decode(seq[MyEnum], "node") == @[meNorth, meSouth, meWest, meEast]
+  """).decodeKdl(seq[MyEnum], "node") == @[meNorth, meSouth, meWest, meEast]
 
 ## #### Rename hook
 ## As its name suggests, a rename hook renames the fields of an object in any way you want.
 ##
 ## Follow this signature when overloading `renameHook`:
 ## ```nim
-## proc renameHook*(_: typedesc[MyType], fieldName: var string)
+## proc renameHookKdl(_: typedesc[MyType], fieldName: var string)
 ## ```
 runnableExamples:
   import kdl
@@ -249,7 +154,7 @@ runnableExamples:
     kind*: string
     list*: seq[int]
 
-  proc renameHook*(_: typedesc[Foo], fieldName: var string) =
+  proc renameHookKdl(_: typedesc[Foo], fieldName: var string) =
     fieldName =
       case fieldName
       of "type":
@@ -263,12 +168,123 @@ runnableExamples:
   assert parseKdl("""
   type "string"
   array 1 2 3
-  """).decode(Foo) == Foo(kind: "string", list: @[1, 2, 3])
+  """).decodeKdl(Foo) == Foo(kind: "string", list: @[1, 2, 3])
+## #### Decode hook
+## Use custom decode hooks to decode your types, your way.
+##
+## To do it you have to overload the `decodeKdl` procedure with the following signature:
+## ```nim
+## proc decodeKdl*(a: KdlSome, v: var MyType) =
+## ```
+## Where `KdlSome` is one of `KdlDoc`, `KdlNode` or `KdlVal`:
+## - `KdlDoc` is called to decode a document.
+## - `KdlNode` is called to decode a node inside a document or inside another node's children.
+## - `KdlVal` is called to decode arguments or properties of a node.
+## To use all the hooks explained above you don't call them with `initHookKdl` instead use `decodeInitKdl`:
+## . `decodeInitKdl` instead of `initHookKdl`.
+## . `decodePostKdl` instead of `postHookKdl`.
+## . `decodeEnumKdl` instead of `enumHookKdl`.
+## . `decodeRenameKdl` instead of `renameHookKdl`.
+## *Note: you can check the signatures of those procedures below in the documentation.*
+## Read the following example:
+runnableExamples:
+  import std/times
+  import kdl
+  import kdl/utils # kdl/utils define some useful internal procedures such as `eqIdent`, which checks the equality of two strings ignore case, underscores and dashes in an efficient way.
 
+  proc decodeKdl*(a: KdlVal, v: var DateTime) =
+    decodeInitKdl(v)
+    assert a.isString
+    v = a.getString.parse("yyyy-MM-dd")
+    decodePostKdl(v)
+
+  proc decodeKdl*(a: KdlNode, v: var DateTime) =
+    decodeInitKdl(v)
+    assert a.args.len in {1, 3, 6}
+    case a.args.len
+    of 6: # year month day hour minute second
+      v = dateTime(
+        a.args[0].decodeKdl(int),
+        a.args[1].decodeKdl(Month),
+        a.args[2].decodeKdl(MonthdayRange),
+        a.args[3].decodeKdl(HourRange),
+        a.args[4].decodeKdl(MinuteRange),
+        a.args[5].decodeKdl(SecondRange)
+      )
+    of 3: # year month day
+      v = dateTime(
+        a.args[0].decodeKdl(int),
+        a.args[1].decodeKdl(Month),
+        a.args[2].decodeKdl(MonthdayRange),
+      )
+    of 1: # yyyy-MM-dd
+      a.args[0].decodeKdl(v)
+    else:
+      discard
+
+    if "hour" in a.props:
+      v.hour = a.props["hour"].getInt
+    if "minute" in a.props:
+      v.minute = a.props["minute"].getInt
+    if "second" in a.props:
+      v.second = a.props["second"].getInt
+    if "nanosecond" in a.props:
+      v.nanosecond = a.props["nanosecond"].getInt
+    if "offset" in a.props:
+      v.utcOffset = a.props["offset"].get(int)
+
+    decodePostKdl(v)
+
+  proc decodeKdl*(a: KdlDoc, v: var DateTime) =
+    decodeInitKdl(v)
+    if a.len == 0: return
+
+    var
+      year: int
+      month: Month
+      day: MonthdayRange = 1
+      hour: HourRange
+      minute: MinuteRange
+      second: SecondRange
+      nanosecond: NanosecondRange
+
+    for node in a:
+      if node.name.eqIdent "year":
+        node.decodeKdl(year)
+      elif node.name.eqIdent "month":
+        node.decodeKdl(month)
+      elif node.name.eqIdent "day":
+        node.decodeKdl(day)
+      elif node.name.eqIdent "hour":
+        node.decodeKdl(hour)
+      elif node.name.eqIdent "minute":
+        node.decodeKdl(minute)
+      elif node.name.eqIdent "second":
+        node.decodeKdl(second)
+      elif node.name.eqIdent "nanosecond":
+        node.decodeKdl(nanosecond)
+
+    v = dateTime(year, month, day, hour, minute, second, nanosecond)
+
+    decodePostKdl(v)
+
+  # Here we use the KdlDoc overload
+  assert parseKdl("""
+  year 2022
+  month 10 // or "October"
+  day 15
+  hour 12
+  minute 10
+  """).decodeKdl(DateTime) == dateTime(2022, mOct, 15, 12, 10)
+
+  # Here we use the KdlNode overload
+  assert parseKdl("date 2022 \"October\" 15 12 04 00").decodeKdl(DateTime, "date") == dateTime(2022, mOct, 15, 12, 04)
+  # And here we use the KdlVal overload
+  assert parseKdl("author birthday=\"2000-10-15\" name=\"Nobody\"")[0]["birthday"].decodeKdl(DateTime) == dateTime(2000, mOct, 15)
 ##
 ## ----------
 ##
-## As you may have noticed if you looked through the API, there is `newHook` and `newHookable`, `enumHook` and `enumHookable`.
+## As you may have noticed if you looked through the API, there is `decodeInitKdl` and `initHookable`, `enumHook` and `enumHookable`.
 ## Any hook suffixed -able, actually calls the hook itself after making sure there is an overload that matches it.
 ## You should not overload these as they are meant for internal use, the reason they are exported is because when implementing your custom decode hooks you may also want to use them.
 ##
@@ -281,241 +297,322 @@ runnableExamples:
 import std/[typetraits, strformat, strutils, strtabs, tables, sets]
 import nodes, utils, types
 
-proc rfind(a: KdlDoc, s: string): Option[KdlNode] =
+# ----- Index -----
+
+proc rfindNode(a: KdlDoc, s: string): Option[KdlNode]
+proc findProp(a: KdlNode, s: string): Option[KdlVal]
+proc rfindRenameNode(a: KdlDoc, s: string, T: typedesc): Option[KdlNode]
+proc findRenameProp(a: KdlNode, s: string, T: typedesc): Option[KdlVal]
+
+proc initHookKdl*[T](v: var ref T)
+proc initHookKdl*[T](v: var T)
+proc enumHookKdl*[T: enum](a: int, v: var T)
+proc enumHookKdl*[T: enum](a: string, v: var T)
+proc enumHookKdl*(a: KdlVal, v: var enum)
+proc postHookKdl*(v: var auto)
+proc renameHookKdl*(a: typedesc, fieldName: var string)
+proc decodeInitKdl*(v: var auto)
+proc decodeEnumKdl*[T: enum](a: auto, v: var T)
+proc decodePostKdl*(v: var auto)
+proc decodeRenameKdl*(a: typedesc, fieldName: string): string
+
+proc decodeKdl*[T](a: KdlSome, _: typedesc[T]): T
+proc decodeKdl*[T: KdlSome](a: T, v: var T)
+
+proc decodeKdl*(a: KdlDoc, v: var auto, name: string)
+proc decodeKdl*[T](a: KdlDoc, _: typedesc[T], name: string): T
+proc decodeKdl*(a: KdlDoc, v: var Object)
+proc decodeKdl*(a: KdlDoc, v: var List)
+proc decodeKdl*[T](a: KdlDoc, v: var SomeTable[string, T])
+proc decodeKdl*(a: KdlDoc, v: var StringTableRef)
+proc decodeKdl*[T](a: KdlDoc, v: var SomeSet[T])
+proc decodeKdl*[T: Ordinal](a: KdlDoc, v: var set[T])
+proc decodeKdl*[T](a: KdlDoc, v: var ref T)
+
+proc decodeKdl*(a: KdlNode, v: var Object)
+proc decodeKdl*(a: KdlNode, v: var List)
+proc decodeKdl*[T](a: KdlNode, v: var SomeTable[string, T])
+proc decodeKdl*(a: KdlNode, v: var StringTableRef)
+proc decodeKdl*[T](a: KdlNode, v: var SomeSet[T])
+proc decodeKdl*[T: Ordinal](a: KdlNode, v: var set[T])
+proc decodeKdl*[T](a: KdlNode, v: var Option[T])
+proc decodeKdl*[T](a: KdlNode, v: var ref T)
+proc decodeKdl*(a: KdlNode, v: var auto)
+
+proc decodeKdl*[T: Value](a: KdlVal, v: var T)
+proc decodeKdl*[T: enum](a: KdlVal, v: var T)
+proc decodeKdl*(a: KdlVal, v: var char)
+# proc decodeKdl*(a: KdlVal, v: var cstring)
+proc decodeKdl*[T: array](a: KdlVal, v: var T)
+proc decodeKdl*[T: not KdlNode](a: KdlVal, v: var seq[T])
+proc decodeKdl*(a: KdlVal, v: var Object)
+proc decodeKdl*[T](a: KdlVal, v: var SomeSet[T])
+proc decodeKdl*[T: Ordinal](a: KdlVal, v: var set[T])
+proc decodeKdl*[T](a: KdlVal, v: var Option[T])
+proc decodeKdl*[T](a: KdlVal, v: var ref T)
+proc decodeKdl*[T: KdlNode or KdlDoc](a: KdlVal, v: var T)
+
+# ----- Utils -----
+
+proc rfindNode(a: KdlDoc, s: string): Option[KdlNode] =
   for i in countdown(a.high, 0):
     if a[i].name.eqIdent s:
       return a[i].some
 
-proc find(a: KdlNode, s: string): Option[KdlVal] =
+proc findProp(a: KdlNode, s: string): Option[KdlVal] =
   for key, val in a.props:
     if key.eqIdent s:
       return val.some
 
-proc rfindRename(a: KdlDoc, s: string, T: typedesc): Option[KdlNode] =
+proc rfindRenameNode(a: KdlDoc, s: string, T: typedesc): Option[KdlNode] =
   for i in countdown(a.high, 0):
-    if a[i].name.renameHookable(T).eqIdent s:
+    if decodeRenameKdl(T, a[i].name).eqIdent s:
       return a[i].some
 
-proc findRename(a: KdlNode, s: string, T: typedesc): Option[KdlVal] =
+proc findRenameProp(a: KdlNode, s: string, T: typedesc): Option[KdlVal] =
   for key, val in a.props:
-    if key.renameHookable(T).eqIdent s:
+    if decodeRenameKdl(T, key).eqIdent s:
       return val.some
-
-# ----- Index -----
-
-proc decode*(a: KdlSome, v: var auto)
-proc decode*[T](a: KdlSome, _: typedesc[T]): T
-proc decodeHook*[T: KdlSome](a: T, v: var T)
-proc decodeHook*(a: KdlSome, v: var proc)
-
-proc decode*(a: KdlDoc, v: var auto, name: string)
-proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T
-proc decodeHook*(a: KdlDoc, v: var Object)
-proc decodeHook*(a: KdlDoc, v: var List)
-proc decodeHook*(a: KdlDoc, v: var ref)
-
-proc decodeHook*(a: KdlNode, v: var Object)
-proc decodeHook*(a: KdlNode, v: var List)
-proc decodeHook*(a: KdlNode, v: var auto)
-proc decodeHook*(a: KdlNode, v: var ref)
-
-proc decodeHook*[T: Value](a: KdlVal, v: var T)
-proc decodeHook*[T: enum](a: KdlVal, v: var T)
-proc decodeHook*(a: KdlVal, v: var char)
-# proc decodeHook*(a: KdlVal, v: var cstring)
-proc decodeHook*[T: array](a: KdlVal, v: var T)
-proc decodeHook*(a: KdlVal, v: var seq)
-proc decodeHook*(a: KdlVal, v: var Object)
-proc decodeHook*(a: KdlVal, v: var ref)
 
 # ----- Hooks -----
 
-proc newHook*[T](v: var T) =
-  when v is range:
-    if v notin T.low..T.high:
-      v = T.low
+proc initHookKdl*[T](v: var ref T) =
+  v = new T
 
-proc postHook*(v: var auto) =
-  discard
+proc initHookKdl*[T](v: var T) = # https://github.com/nim-lang/Nim/issues/22878
+  when T is range:
+    v = T.low
 
-proc enumHook*[T: enum](a: int, v: var T) =
+proc enumHookKdl*[T: enum](a: int, v: var T) =
   when T is HoleyEnum and not defined(kdlDecoderAllowHoleyEnums):
     fail &"forbidden int-to-HoleyEnum conversion ({a} -> {$T}); compile with -d:kdlDecoderAllowHoleyEnums"
   else:
     v = T(a)
 
-proc enumHook*[T: enum](a: string, v: var T) =
+proc enumHookKdl*[T: enum](a: string, v: var T) =
   v = parseEnum[T](a)
 
-proc renameHook*(_: typedesc, fieldName: var string) =
-  discard
+proc enumHookKdl*(a: KdlVal, v: var enum) =
+  case a.kind
+  of KString:
+    decodeEnumKdl(a.getString, v)
+  of KInt:
+    decodeEnumKdl(a.get(int), v)
+  else:
+    fail &"expected string or int in {a}"
 
-proc newHookable*(v: var auto) =
+proc postHookKdl*(v: var auto) = discard
+
+proc renameHookKdl*(a: typedesc, fieldName: var string) = discard
+
+proc decodeInitKdl*(v: var auto) =
   when not defined(kdlDecoderNoCaseTransitionError):
     {.push warningAsError[CaseTransition]: on.}
-  mixin newHook
-  newHook(v)
+  mixin initHookKdl
+  initHookKdl(v)
 
-proc postHookable*(v: var auto) =
-  mixin postHook
-  postHook(v)
+proc decodeEnumKdl*[T: enum](a: auto, v: var T) =
+  mixin enumHookKdl
+  enumHookKdl(a, v)
 
-proc enumHookable*[T: enum](a: string or int, v: var T) =
-  mixin enumHook
-  enumHook(a, v)
+proc decodePostKdl*(v: var auto) =
+  mixin postHookKdl
+  postHookKdl(v)
 
-proc enumHookable*[T: enum](_: typedesc[T], a: string or int): T =
-  mixin enumHook
-  enumHook(a, result)
-
-proc renameHookable*(fieldName: string, a: typedesc): string =
-  mixin renameHook
+proc decodeRenameKdl*(a: typedesc, fieldName: string): string =
+  mixin renameHookKdl
   result = fieldName
-  renameHook(a, result)
+  renameHookKdl(a, result)
 
 # ----- KdlSome -----
 
-proc decode*(a: KdlSome, v: var auto) =
-  mixin decodeHook
+proc decodeKdl*[T](a: KdlSome, _: typedesc[T]): T =
+  ## Shortcut to allow:
+  ## ```nim
+  ## assert decodeKdl(doc, MyObj) is MyObj
+  ## ```
+  ## Instead of:
+  ## ```nim
+  ## var obj: MyObj
+  ## decodeKdl(doc, obj)
+  ## ```
+  # var result: T
+  result = default T # Otherwise 'requires initialization' error
+  decodeKdl(a, result)
 
-  # Don't initialize object variants yet
-  when not isObjVariant(typeof v):
-    newHookable(v)
-
-  decodeHook(a, v)
-
-proc decode*[T](a: KdlSome, _: typedesc[T]): T =
-  result = default T
-  decode(a, result)
-
-proc decodeHook*[T: KdlSome](a: T, v: var T) =
+proc decodeKdl*[T: KdlSome](a: T, v: var T) =
+  decodeInitKdl(v)
   v = a
+  decodePostKdl(v)
 
-proc decodeHook*(a: KdlSome, v: var proc) =
-  fail &"{$typeof(v)} not implemented for {$typeof(a)}"
+# proc decodeKdl*(a: KdlSome, v: var proc) =
+#   fail &"{$typeof(v)} not implemented for {$typeof(a)}"
 
 # ----- KdlDoc -----
 
-proc decode*(a: KdlDoc, v: var auto, name: string) =
-  var found = -1
-  for e in countdown(a.high, 0):
-    if a[e].name.eqIdent name:
-      found = e
-      break
+proc decodeKdl*(a: KdlDoc, v: var auto, name: string) =
+  ## Decodes the last node named name in a into v
+  let node = a.rfindNode(name)
 
-  if found < 0:
-    fail "Could not find a any node for " & name.quoted
+  if node.isNone:
+    fail "Could not find any node named " & name.quoted & " in " & $a
+  else:
+    decodeKdl(node.get, v)
 
-  decode(a[found], v)
+proc decodeKdl*[T](a: KdlDoc, _: typedesc[T], name: string): T =
+  decodeKdl(a, result, name)
 
-proc decode*[T](a: KdlDoc, _: typedesc[T], name: string): T =
-  decode(a, result, name)
-
-proc decodeHook*(a: KdlDoc, v: var Object) =
+proc decodeKdl*(a: KdlDoc, v: var Object) =
   type T = typeof(v)
   when T is tuple and not isNamedTuple(T): # Unnamed tuple
     var count = 0
-    for fieldName, field in v.fieldPairs:
-      if count > a.high:
-        fail &"Expected an argument at index {count+1} in {a}"
+    for _, field in v.fieldPairs:
+      if count < a.len:
+        decodeKdl(a[count], field)
+      else:
+        fail &"Expected a node at index {count} in {a}"
 
-      decode(a[count], field)
       inc count
   else:
     const discKeys = getDiscriminants(T) # Object variant discriminator keys
 
-    when discKeys.len > 0:
+    when discKeys.len > 0: # When it's an object variant
       template discriminatorSetter(key, typ): untyped =
-        let discFieldNode = a.rfindRename(key, T)
+        # Tries to find a node with the discriminator key
+        let discrNode = a.rfindRenameNode(key, T)
 
-        if discFieldNode.isSome:
-          decode(discFieldNode.get, typ)
-        else:
+        if discrNode.isSome:
+          decodeKdl(discrNode.get, typ) # Last expression is the field value
+        else: # If the discriminator node isn't found, use the default value
+          when defined(kdlDecoderNoDiscriminatorError):
+            fail &"Expected discriminator field {key} in {a}"
+
           var x: typeofdesc typ
-          newHookable(x)
-          x
+          decodeInitKdl(x)
+          x # Last expression is the field value
 
       v = initCaseObject(T, discriminatorSetter)
-      newHookable(v)
+
+    decodeInitKdl(v)
 
     for fieldName, field in v.fieldPairs:
       when fieldName notin discKeys: # Ignore discriminant field name
-        var found = false
+        let node = a.rfindRenameNode(fieldName, T)
 
-        for node in a:
-          if node.name.renameHookable(T).eqIdent fieldName:
-            decode(node, field)
-            found = true
+        if node.isSome:
+          decodeKdl(node.get, field)
+        else:
+          decodeInitKdl(field)
 
-        if not found:
-          newHookable(field)
+  decodePostKdl(v)
 
-  postHookable(v)
-
-proc decodeHook*(a: KdlDoc, v: var List) =
+proc decodeKdl*(a: KdlDoc, v: var List) =
   when v is seq:
     v.setLen a.len
 
   for e, node in a:
-    decode(node, v[e])
+    decodeKdl(node, v[e])
 
-  postHookable(v)
+  decodePostKdl(v)
 
-proc decodeHook*(a: KdlDoc, v: var ref) =
-  if v.isNil: new v
-  decode(a, v[])
+proc decodeKdl*[T](a: KdlDoc, v: var SomeTable[string, T]) =
+  v.clear()
+
+  for node in a:
+    v[node.name] = decodeKdl(node, T)
+
+  decodePostKdl(v)
+
+proc decodeKdl*(a: KdlDoc, v: var StringTableRef) =
+  if v.isNil:
+    v = newStringTable()
+  else:
+    v.clear()
+
+  for node in a:
+    v[node.name] = decodeKdl(node, string)
+
+  decodePostKdl(v)
+
+proc decodeKdl*[T](a: KdlDoc, v: var SomeSet[T]) =
+  v.clear()
+
+  for node in a:
+    v.incl decodeKdl(node, T)
+
+  decodePostKdl(v)
+
+proc decodeKdl*[T: Ordinal](a: KdlDoc, v: var set[T]) =
+  v.reset()
+  for node in a:
+    v.incl decodeKdl(node, T)
+
+  decodePostKdl(v)
+
+proc decodeKdl*[T](a: KdlDoc, v: var ref T) =
+  if v.isNil:
+    v = new T
+
+  decodeKdl(a, v[])
 
 # ----- KdlNode -----
 
-proc decodeHook*(a: KdlNode, v: var Object) =
+proc decodeKdl*(a: KdlNode, v: var Object) =
+  ## When searching for fields, gives priority to properties over children.
+  ## ```
+  ## node kind=1 name="a" { kind 2; name "b" }
+  ## ```
+  ## The above node would prefer kind=1 and name="a" over kind 2; name "b"
   type T = typeof(v)
   when T is tuple and not isNamedTuple(T): # Unnamed tuple
     var count = 0
-    for fieldName, field in v.fieldPairs:
-      if count > a.args.high:
-        fail &"Expected an argument at index {count+1} in {a}"
+    for _, field in v.fieldPairs:
+      if count < a.args.len:
+        decodeKdl(a.args[count], field)
+      elif count < a.children.len:
+        decodeKdl(a.children[count], field)
+      else:
+        fail &"Expected argument or child at index {count} in {a} "
 
-      decode(a.args[count], field)
       inc count
   else:
     const discKeys = getDiscriminants(T) # Object variant discriminator keys
-    when discKeys.len > 0:
+    when discKeys.len > 0: # When it's an object variant
       template discriminatorSetter(key, typ): untyped =
-        # let key1 = key.renameHookable(T)
-        let discFieldNode = a.children.rfindRename(key, T) # Find a children
-        let discFieldProp = a.findRename(key, T) # Find a property
+        # Tries to find a node with the discriminator key
+        let discNode = a.children.rfindRenameNode(key, T)
+        let discProp = a.findRenameProp(key, T)
+        if discProp.isSome:
+          decodeKdl(discProp.get, typ) # Last expression is the field value
+        elif discNode.isSome:
+          decodeKdl(discNode.get, typ) # Last expression is the field value
+        else: # If the discriminator node isn't found, use the default value
+          when defined(kdlDecoderNoDiscriminatorError):
+            fail &"Expected discriminator field {key} in {a}"
 
-        if discFieldNode.isSome:
-          decode(discFieldNode.get, typ)
-        elif discFieldProp.isSome:
-          decode(discFieldProp.get, typ)
-        else:
           var x: typeofdesc typ
-          newHookable(x)
-          x
+          decodeInitKdl(x)
+          x # Last expression is the field value
 
       v = initCaseObject(T, discriminatorSetter)
-      newHookable(v)
+    decodeInitKdl(v)
 
     for fieldName, field in v.fieldPairs:
       when fieldName notin discKeys: # Ignore discriminant field name
-        var found = false
-        for key, _ in a.props:
-          if key.renameHookable(T).eqIdent fieldName:
-            decode(a.props[key], field)
-            found = true
+        let prop = a.findRenameProp(fieldName, T)
+        let node = a.children.rfindRenameNode(fieldName, T)
 
-        for node in a.children:
-          if node.name.renameHookable(T).eqIdent fieldName:
-            decode(node, field)
-            found = true
+        if prop.isSome:
+          decodeKdl(prop.get, field)
+        elif node.isSome:
+          decodeKdl(node.get, field)
+        else:
+          decodeInitKdl(field)
 
-        if not found:
-          newHookable(field)
+  decodePostKdl(v)
 
-  postHookable(v)
-
-proc decodeHook*(a: KdlNode, v: var List) =
+proc decodeKdl*(a: KdlNode, v: var List) =
+  ## Decodes a arguments and children (in that order) into v.
   when v is seq:
     v.setLen a.args.len + a.children.len
 
@@ -523,164 +620,164 @@ proc decodeHook*(a: KdlNode, v: var List) =
 
   for arg in a.args:
     if count >= v.len: break
-    decode(arg, v[count])
+    decodeKdl(arg, v[count])
 
     inc count
 
   for child in a.children:
     if count >= v.len: break
-    decode(child, v[count])
+    decodeKdl(child, v[count])
     inc count
 
-  postHookable(v)
+  decodePostKdl(v)
 
-proc decodeHook*(a: KdlNode, v: var ref) =
-  if v.isNil: new v
-  decode(a, v[])
+proc decodeKdl*[T](a: KdlNode, v: var SomeTable[string, T]) =
+  v.clear()
 
-proc decodeHook*(a: KdlNode, v: var auto) =
+  for key, val in a.props:
+    v[key] = decodeKdl(val, T)
+
+  for node in a.children:
+    v[node.name] = decodeKdl(node, T)
+
+  decodePostKdl(v)
+
+proc decodeKdl*(a: KdlNode, v: var StringTableRef) =
+  if v.isNil:
+    v = newStringTable()
+  else:
+    v.clear()
+
+  for key, val in a.props:
+    v[key] = decodeKdl(val, string)
+
+  for node in a.children:
+    v[node.name] = decodeKdl(node, string)
+
+  decodePostKdl(v)
+
+proc decodeKdl*[T](a: KdlNode, v: var SomeSet[T]) =
+  v.clear()
+
+  for arg in a.args:
+    v.incl decodeKdl(arg, T)
+
+  for child in a.children:
+    v.incl decodeKdl(child, T)
+
+  decodePostKdl(v)
+
+proc decodeKdl*[T: Ordinal](a: KdlNode, v: var set[T]) =
+  v.reset()
+
+  for arg in a.args:
+    v.incl decodeKdl(arg, T)
+
+  for child in a.children:
+    v.incl decodeKdl(child, T)
+
+  decodePostKdl(v)
+
+proc decodeKdl*[T](a: KdlNode, v: var Option[T]) =
+  ## Decodes a into v, v is none when a's arguments, properties and children are empty.
+
+  v =
+    if a.args.len == 0 and a.props.len == 0 and a.children.len == 0:
+      none[T]()
+    else:
+      decodeKdl(a, T).some
+
+  decodePostKdl(v)
+
+proc decodeKdl*(a: KdlNode, v: var KdlNode) =
+  v = a
+
+proc decodeKdl*[T](a: KdlNode, v: var ref T) =
+  if v.isNil:
+    v = new T
+
+  decodeKdl(a, v[])
+
+proc decodeKdl*(a: KdlNode, v: var auto) =
+  ## Decodes a's first argument into v
   check a.args.len == 1, &"expected exactly one argument in {a}"
-  decode(a.args[0], v)
+  decodeKdl(a.args[0], v)
 
 # ----- KdlVal -----
 
-proc decodeHook*[T: Value](a: KdlVal, v: var T) =
-  v = a.get(T)
-  postHookable(v)
+proc decodeKdl*[T: Value](a: KdlVal, v: var T) =
+  ## Decodes a into v using `nodes.get`
+  v = a.get(typeof v)
+  decodePostKdl(v)
 
-proc decodeHook*[T: enum](a: KdlVal, v: var T) =
-  case a.kind
-  of KString:
-    enumHookable(a.getString, v)
-  of KInt:
-    enumHookable(a.get(int), v)
+proc decodeKdl*[T: enum](a: KdlVal, v: var T) =
+  ## Decodes a into v when a is a string or int using `decodeEnumKdl`
+  decodeInitKdl(v)
+  decodeEnumKdl(a, v)
+  decodePostKdl(v)
 
-  else:
-    fail &"expected string or int in {a}"
-
-  postHookable(v)
-
-proc decodeHook*(a: KdlVal, v: var char) =
-  check a.isString and a.getString.len == 1, &"expected one-character-long string in a"
+proc decodeKdl*(a: KdlVal, v: var char) =
+  ## Decoes a into v when a is one-character-long string
+  check a.isString and a.getString.len == 1, &"expected one-character-long string in {a}"
   v = a.getString[0]
-  postHookable(v)
+  decodePostKdl(v)
 
-# proc decodeHook*(a: KdlVal, v: var cstring) =
+# Not implemented since it's unclear to me where and how should the cstring be stored
+# proc decodeKdl*(a: KdlVal, v: var cstring) =
 #   case a.kind
 #   of KNull:
 #     v = nil
 #   of KString:
-#     v = a.getString
+#     v = cstring a.getString
 #   else:
 #     fail &"expected string or null in {a}"
-#   postHookable(v)
 
-proc decodeHook*[T: array](a: KdlVal, v: var T) =
+#   decodePostKdl(v)
+
+proc decodeKdl*[T: array](a: KdlVal, v: var T) =
   when v.len == 1:
-    decode(a, v[0])
+    decodeKdl(a, v[0])
+  else:
+    fail &"{$typeof(v)} not implemented for {$typeof(a)}, expected a one-length array"
 
-proc decodeHook*(a: KdlVal, v: var seq) =
+# We do 'not KdlNode' so it doesn't match KdlDoc (which is seq[KdlNode])
+proc decodeKdl*[T: not KdlNode](a: KdlVal, v: var seq[T]) =
   v.setLen 1
-  decode(a, v[0])
+  decodeKdl(a, v[0])
 
-proc decodeHook*(a: KdlVal, v: var Object) =
+proc decodeKdl*(a: KdlVal, v: var Object) =
   fail &"{$typeof(v)} not implemented for {$typeof(a)}"
 
-proc decodeHook*(a: KdlVal, v: var ref) =
-  if v.isNil: new v
-  decode(a, v[])
-
-# ----- Non-primitive stdlib hooks -----
-
-# ----- Index -----
-
-proc decodeHook*[T](a: KdlDoc, v: var SomeTable[string, T])
-proc decodeHook*[T](a: KdlDoc, v: var SomeSet[T])
-
-proc decodeHook*[T](a: KdlNode, v: var SomeTable[string, T])
-proc decodeHook*[T](a: KdlNode, v: var SomeSet[T])
-proc decodeHook*(a: KdlNode, v: var StringTableRef)
-proc decodeHook*[T](a: KdlNode, v: var Option[T])
-
-proc decodeHook*[T](a: KdlVal, v: var SomeSet[T])
-proc decodeHook*[T](a: KdlVal, v: var Option[T])
-proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef))
-
-# ----- KdlDoc -----
-
-proc decodeHook*[T](a: KdlDoc, v: var SomeTable[string, T]) =
+proc decodeKdl*[T](a: KdlVal, v: var SomeSet[T]) =
   v.clear()
 
-  for node in a:
-    v[node.name] = decode(node, T)
+  v.incl decodeKdl(a, T)
 
-  postHookable(v)
+  decodePostKdl(v)
 
-proc decodeHook*[T](a: KdlDoc, v: var SomeSet[T]) =
-  v.clear()
+proc decodeKdl*[T: Ordinal](a: KdlVal, v: var set[T]) =
+  v.reset()
 
-  for node in a:
-    v.incl decode(KdlDoc, T)
+  v.incl decodeKdl(a, T)
 
-  postHookable(v)
+  decodePostKdl(v)
 
-# ----- KdlNode -----
+proc decodeKdl*[T](a: KdlVal, v: var Option[T]) =
+  ## Decodes a into v, v is none when a is null.
 
-proc decodeHook*[T](a: KdlNode, v: var SomeTable[string, T]) =
-  v.clear()
-
-  for key, val in a.props:
-    v[key] = decode(val, T)
-
-  for node in a.children:
-    v[node.name] = decode(node, T)
-
-  postHookable(v)
-
-proc decodeHook*[T](a: KdlNode, v: var SomeSet[T]) =
-  v.clear()
-
-  for arg in a.args:
-    v.incl decode(arg, T)
-
-  postHookable(v)
-
-proc decodeHook*(a: KdlNode, v: var StringTableRef) =
-  v = newStringTable()
-
-  for key, val in a.props:
-    v[key] = decode(val, string)
-
-  for node in a.children:
-    v[node.name] = decode(node, string)
-
-  postHookable(v)
-
-proc decodeHook*[T](a: KdlNode, v: var Option[T]) =
-  v =
-    try:
-      decode(a, T).some
-    except KdlError:
-      none[T]()
-
-  postHookable(v)
-
-# ----- KdlVal -----
-
-proc decodeHook*[T](a: KdlVal, v: var SomeSet[T]) =
-  v.clear()
-
-  v.incl decode(a, T)
-
-  postHookable(v)
-
-proc decodeHook*[T](a: KdlVal, v: var Option[T]) =
   if a.isNull:
     v = none[T]()
   else:
-    v = decode(a, T).some
+    v = decodeKdl(a, T).some
 
-  postHookable(v)
+  decodePostKdl(v)
 
-proc decodeHook*(a: KdlVal, v: var (SomeTable[string, auto] or StringTableRef)) =
+proc decodeKdl*[T](a: KdlVal, v: var ref T) =
+  if a.isNull:
+    v = nil
+  else:
+    fail &"{$typeof(v)} not implemented for {$typeof(a)}"
+
+proc decodeKdl*[T: KdlNode or KdlDoc](a: KdlVal, v: var T) =
   fail &"{$typeof(v)} not implemented for {$typeof(a)}"
+

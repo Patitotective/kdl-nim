@@ -1,6 +1,6 @@
 import std/[parseutils, strformat, strutils, unicode, options, streams, tables, macros]
 import lexer, nodes, types, utils
-
+# TODO: add parseKdlVal
 type
   None = object
 
@@ -22,15 +22,15 @@ const
   numbers = integers + {tkNumFloat}
   strings = {tkString, tkRawString}
 
-macro parsing(x: typedesc, body: untyped): untyped = 
+macro parsing(x: typedesc, body: untyped): untyped =
   ## Converts a procedure definition like:
   ## ```nim
-  ## proc foo() {.parsing[T].} = 
+  ## proc foo() {.parsing[T].} =
   ##   echo "hi"
   ## ```
   ## Into
   ## ```nim
-  ## proc foo(parser: var Parser, required: bool = true): Match[T] {.discardable.} = 
+  ## proc foo(parser: var Parser, required: bool = true): Match[T] {.discardable.} =
   ##   let before = getPos(parser)
   ##   echo "hi"
   ## ```
@@ -45,29 +45,29 @@ macro parsing(x: typedesc, body: untyped): untyped =
 
   result.addPragma(ident"discardable")
 
-  if result[^1].kind == nnkStmtList: 
-    result[^1].insert(0, quote do: 
+  if result[^1].kind == nnkStmtList:
+    result[^1].insert(0, quote do:
       let before {.inject.} = parser.current
     )
 
-proc eof(parser: Parser, extra = 0): bool = 
+proc eof(parser: Parser, extra = 0): bool =
   parser.current + extra >= parser.stack.len
 
-proc peek(parser: Parser, next = 0): Token = 
+proc peek(parser: Parser, next = 0): Token =
   if not parser.eof(next):
     result = parser.stack[parser.current + next]
   else:
     let token = parser.stack[parser.current - 1]
     result = Token(start: token.start + token.lexeme.len)
 
-proc error(parser: Parser, msg: string) = 
-  let coord = 
+proc error(parser: Parser, msg: string) =
+  let coord =
     if parser.isStream:
       parser.stream.getCoord(parser.peek().start)
     else:
       parser.source.getCoord(parser.peek().start)
 
-  let errorMsg = 
+  let errorMsg =
     if parser.isStream:
       parser.stream.errorAt(coord)
     else:
@@ -75,10 +75,10 @@ proc error(parser: Parser, msg: string) =
 
   raise newException(KdlParserError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{errorMsg.indent(2)}\n")
 
-proc consume(parser: var Parser, amount = 1) = 
+proc consume(parser: var Parser, amount = 1) =
   parser.current += amount
 
-template invalid[T](x: Match[T]) = 
+template invalid[T](x: Match[T]) =
   ## Returns if x is ok
   let val = x
 
@@ -87,7 +87,7 @@ template invalid[T](x: Match[T]) =
   if val.ok:
     return
 
-template valid[T](x: Match[T]): T = 
+template valid[T](x: Match[T]): T =
   ## Returns if x is not ok and gives x.val back
   let val = x
 
@@ -100,21 +100,21 @@ template valid[T](x: Match[T]): T =
 
   val.val
 
-template hasValue[T](match: Match[T]): bool = 
+template hasValue[T](match: Match[T]): bool =
   let (ok, ignore, val {.inject.}) = match; ok and not ignore
 
-template setValue[T](x: untyped, match: Match[T]) = 
+template setValue[T](x: untyped, match: Match[T]) =
   if hasValue match:
     x = val
 
-proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} = 
+proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} =
   let token = parser.peek()
   let matches =
     when x is TokenKind:
      token.kind == x
    else:
      token.kind in x
-  
+
   if matches:
     result.ok = true
     result.val = token
@@ -125,7 +125,7 @@ proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} =
     else:
       parser.error &"Expected one of {x} but found {token.kind}"
 
-proc skipWhile(parser: var Parser, kinds: set[TokenKind]): int {.discardable.} = 
+proc skipWhile(parser: var Parser, kinds: set[TokenKind]): int {.discardable.} =
   while not parser.eof():
     if parser.peek().kind in kinds:
       parser.consume()
@@ -133,18 +133,18 @@ proc skipWhile(parser: var Parser, kinds: set[TokenKind]): int {.discardable.} =
     else:
       break
 
-proc more(kind: TokenKind) {.parsing: None.} = 
+proc more(kind: TokenKind) {.parsing: None.} =
   ## Matches one or more tokens of `kind`
   discard valid parser.match(kind, required)
   discard parser.skipWhile({kind})
 
-proc parseNumber(token: Token): KdlVal = 
+proc parseNumber(token: Token): KdlVal =
   assert token.kind in numbers
 
   if token.kind in integers:
     result = initKInt()
 
-    result.num = 
+    result.num =
       case token.kind
       of tkNumInt:
         token.lexeme.parseBiggestInt()
@@ -161,7 +161,7 @@ proc parseNumber(token: Token): KdlVal =
     result = initKFloat()
     result.fnum = token.lexeme.parseFloat()
 
-proc escapeString(str: string, x = 0..str.high): string = 
+proc escapeString(str: string, x = 0..str.high): string =
   var i = x.a
   while i <= x.b:
     if str[i] == '\\':
@@ -178,7 +178,7 @@ proc escapeString(str: string, x = 0..str.high): string =
 
     inc i
 
-proc parseString(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVal = 
+proc parseString(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVal =
   assert token.kind in strings
 
   result = initKString()
@@ -205,16 +205,16 @@ proc parseString(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVa
     discard varToken.lexeme.parseUntil(hashes, '"', start = 1) # Count the number of hashes
     result.str = varToken.lexeme[2 + hashes.len..varToken.lexeme.high - hashes.len - 1] # Exlude the starting 'r' + hashes + '#' and ending '"' + hashes
 
-proc parseBool(token: Token): KdlVal = 
+proc parseBool(token: Token): KdlVal =
   assert token.kind == tkBool
   initKBool(token.lexeme.parseBool())
 
-proc parseNull(token: Token): KdlVal = 
+proc parseNull(token: Token): KdlVal =
   assert token.kind == tkNull
   initKNull()
 
-proc parseValue(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVal = 
-  result = 
+proc parseValue(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVal =
+  result =
     case token.kind
     of numbers:
       token.parseNumber()
@@ -227,7 +227,7 @@ proc parseValue(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVal
     else:
       token.parseNull()
 
-proc parseIdent(token: Token, multilineStringsNewLines: seq[(int, int)]): Option[string] = 
+proc parseIdent(token: Token, multilineStringsNewLines: seq[(int, int)]): Option[string] =
   case token.kind
   of strings:
     token.parseString(multilineStringsNewLines).getString().some
@@ -236,31 +236,31 @@ proc parseIdent(token: Token, multilineStringsNewLines: seq[(int, int)]): Option
   else:
     string.none
 
-proc skipLineSpaces(parser: var Parser) = 
+proc skipLineSpaces(parser: var Parser) =
   parser.skipWhile({tkNewLine, tkWhitespace})
 
-proc matchLineCont() {.parsing: None.} = 
+proc matchLineCont() {.parsing: None.} =
   parser.skipWhile({tkWhitespace})
   discard valid parser.match(tkLineCont, required)
   discard parser.skipWhile({tkWhitespace})
 
-proc matchNodeSpace() {.parsing: None.} = 
+proc matchNodeSpace() {.parsing: None.} =
   invalid parser.matchLineCont(required = false)
   discard valid parser.more(tkWhitespace, required)
 
-proc matchSlashDash() {.parsing: None.} = 
+proc matchSlashDash() {.parsing: None.} =
   discard valid parser.match(tkSlashDash, required)
-  while parser.matchNodeSpace(required = false).ok: discard 
+  while parser.matchNodeSpace(required = false).ok: discard
 
-proc matchIdent() {.parsing: Option[string].} = 
+proc matchIdent() {.parsing: Option[string].} =
   result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent(parser.multilineStringsNewLines)
 
-proc matchTag() {.parsing: Option[string].} = 
+proc matchTag() {.parsing: Option[string].} =
   discard valid parser.match(tkOpenPar, required)
   result.val = valid parser.matchIdent(required = true)
   discard parser.match(tkClosePar, true)
 
-proc matchValue(slashdash = false) {.parsing: KdlVal.} = 
+proc matchValue(slashdash = false) {.parsing: KdlVal.} =
   if slashdash:
     result.ignore = parser.matchSlashDash(required = false).ok
 
@@ -269,7 +269,7 @@ proc matchValue(slashdash = false) {.parsing: KdlVal.} =
   result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue(parser.multilineStringsNewLines)
   result.val.tag = tag
 
-proc matchProp(slashdash = true) {.parsing: KdlProp.} = 
+proc matchProp(slashdash = true) {.parsing: KdlProp.} =
   if slashdash:
     result.ignore = parser.matchSlashDash(required = false).ok
 
@@ -281,7 +281,7 @@ proc matchProp(slashdash = true) {.parsing: KdlProp.} =
 
   result.val = (ident.get, value)
 
-proc matchNodeEnd() {.parsing: None.} = 
+proc matchNodeEnd() {.parsing: None.} =
   result.ok = parser.eof()
 
   if not result.ok:
@@ -293,7 +293,7 @@ proc matchNodeEnd() {.parsing: None.} =
 
 proc matchNode(slashdash = true) {.parsing: KdlNode.}
 
-proc matchNodes() {.parsing: KdlDoc.} = 
+proc matchNodes() {.parsing: KdlDoc.} =
   parser.skipLineSpaces()
 
   while not parser.eof():
@@ -305,7 +305,7 @@ proc matchNodes() {.parsing: KdlDoc.} =
 
     parser.skipLineSpaces()
 
-proc matchChildren(slashdash = true) {.parsing: KdlDoc.} = 
+proc matchChildren(slashdash = true) {.parsing: KdlDoc.} =
   if slashdash:
     result.ignore = parser.matchSlashDash(required = false).ok
 
@@ -313,7 +313,7 @@ proc matchChildren(slashdash = true) {.parsing: KdlDoc.} =
   result.val = parser.matchNodes(required = false).val
   discard valid parser.match(tkCloseBra, true)
 
-proc matchNode(slashdash = true) {.parsing: KdlNode.} = 
+proc matchNode(slashdash = true) {.parsing: KdlNode.} =
   if slashdash:
     result.ignore = parser.matchSlashDash(required = false).ok
 
@@ -348,30 +348,30 @@ proc matchNode(slashdash = true) {.parsing: KdlNode.} =
 
   invalid parser.matchNodeEnd(required = true)
 
-proc parseKdl*(lexer: sink Lexer): KdlDoc = 
+proc parseKdl*(lexer: sink Lexer): KdlDoc =
   if lexer.isStream:
     var parser = Parser(isStream: true, multilineStringsNewLines: lexer.multilineStringsNewLines, stack: lexer.stack, stream: lexer.stream)
     defer: parser.stream.close()
     result = parser.matchNodes().val
   else:
     var parser = Parser(isStream: false, multilineStringsNewLines: lexer.multilineStringsNewLines, stack: lexer.stack, source: lexer.source)
-    result = parser.matchNodes().val    
+    result = parser.matchNodes().val
 
-proc parseKdl*(source: string, start = 0): KdlDoc = 
+proc parseKdl*(source: string, start = 0): KdlDoc =
   var lexer = Lexer(isStream: false, source: source, current: start)
   lexer.scanKdl()
   result = lexer.parseKdl()
 
-proc parseKdlFile*(path: string): KdlDoc = 
+proc parseKdlFile*(path: string): KdlDoc =
   parseKdl(readFile(path))
 
-proc parseKdl*(stream: sink Stream): KdlDoc = 
+proc parseKdl*(stream: sink Stream): KdlDoc =
   var lexer = Lexer(isStream: true, stream: stream)
   lexer.scanKdl()
   result = lexer.parseKdl()
 
-proc parseKdlStream*(source: sink string): KdlDoc = 
+proc parseKdlStream*(source: sink string): KdlDoc =
   parseKdl(newStringStream(source))
 
-proc parseKdlFileStream*(path: string): KdlDoc = 
+proc parseKdlFileStream*(path: string): KdlDoc =
   parseKdl(newFileStream(path))

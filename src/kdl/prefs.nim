@@ -98,9 +98,9 @@ proc initKPrefs*[T](path: string, default: T, stream = false): KdlPrefs[T] =
 
   if path.fileExists:
     if stream:
-      parseKdlFileStream(path).decode(result.content)
+      parseKdlFileStream(path).decodeKdl(result.content)
     else:
-      parseKdlFile(path).decode(result.content)
+      parseKdlFile(path).decodeKdl(result.content)
   else:
     result.content = default
 
@@ -112,7 +112,7 @@ proc save*(prefs: KdlPrefs[KdlDoc]) =
 proc save*(prefs: KdlPrefs[auto]) =
   ## Saves the content to the path encoding it to KDL.
   prefs.path.splitPath.head.createDir()
-  prefs.path.writeFile(prefs.content.encode())
+  prefs.path.writeFile(prefs.content.encodeKdlDoc())
 
 proc removeFile*(prefs: KdlPrefs[auto]) =
   ## Deletes the preferences file if it exists.

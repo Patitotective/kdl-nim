@@ -7,3 +7,4 @@ docs
 trial.*
 *.sublime-*
 *.out
+tests/a.nim

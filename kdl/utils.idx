@@ -21,5 +21,5 @@ nim	getDiscriminants	kdl/utils.html#getDiscriminants.m,typedesc	macro getDiscrim
 nim	initCaseObject	kdl/utils.html#initCaseObject.m,typedesc,	macro initCaseObject(T: typedesc; discriminatorSetter): untyped		192
 nim	typeofdesc	kdl/utils.html#typeofdesc.t,typedesc[T]	template typeofdesc[T](b: typedesc[T]): untyped		225
 nimgrp	errorat	kdl/utils.html#errorAt-procs-all	proc		115
-nimgrp	peeklinefromstart	kdl/utils.html#peekLineFromStart-procs-all	proc		59
 nimgrp	getcoord	kdl/utils.html#getCoord-procs-all	proc		90
+nimgrp	peeklinefromstart	kdl/utils.html#peekLineFromStart-procs-all	proc		59

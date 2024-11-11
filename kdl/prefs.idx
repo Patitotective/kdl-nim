@@ -7,6 +7,6 @@ nim	removeFile	prefs.html#removeFile,KdlPrefs[auto]	proc removeFile(prefs: KdlPr
 nim	`[]`	prefs.html#[].t,KdlPrefs[auto],	template `[]`(prefs: KdlPrefs[auto]; field): untyped		122
 nim	`[]=`	prefs.html#[]=.t,KdlPrefs[auto],,	template `[]=`(prefs: KdlPrefs[auto]; field, val): untyped		126
 nim	`{}`	prefs.html#{}.t,KdlPrefs[auto],	template `{}`(prefs: KdlPrefs[auto]; field): untyped		130
-nimgrp	save	prefs.html#save-procs-all	proc		107
 nimgrp	initkprefs	prefs.html#initKPrefs-procs-all	proc		79
+nimgrp	save	prefs.html#save-procs-all	proc		107
 heading	Prefs	prefs.html#prefs	  Prefs		0

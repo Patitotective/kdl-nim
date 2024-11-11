@@ -1,5 +1,5 @@
 nimTitle	nodes	kdl/nodes.html	module src/kdl/nodes		0
-nim	initKNode	kdl/nodes.html#initKNode,string,openArray[KdlVal],openArray[KdlNode]	proc initKNode(name: string; tag = string.none; args: openArray[KdlVal] = newSeq();\n          props = initTable(); children: openArray[KdlNode] = newSeq()): KdlNode		10
+nim	initKNode	kdl/nodes.html#initKNode,string,openArray[KdlVal],openArray[KdlNode]	proc initKNode(name: string; tag = string.none;\n          args: openArray[KdlVal] = newSeq[KdlVal]();\n          props = initTable[string, KdlVal]();\n          children: openArray[KdlNode] = newSeq[KdlNode]()): KdlNode		10
 nim	initKVal	kdl/nodes.html#initKVal,string	proc initKVal(val: string; tag = string.none): KdlVal		13
 nim	initKVal	kdl/nodes.html#initKVal,SomeFloat	proc initKVal(val: SomeFloat; tag = string.none): KdlVal		16
 nim	initKVal	kdl/nodes.html#initKVal,bool	proc initKVal(val: bool; tag = string.none): KdlVal		19
@@ -52,10 +52,10 @@ nim	toKdlNode	kdl/nodes.html#toKdlNode.m,untyped	macro toKdlNode(body: untyped):
 nim	toKdlDoc	kdl/nodes.html#toKdlDoc.m,untyped	macro toKdlDoc(body: untyped): KdlDoc		464
 nim	toKdlArgs	kdl/nodes.html#toKdlArgs.m,varargs[untyped]	macro toKdlArgs(args: varargs[untyped]): untyped		487
 nim	toKdlProps	kdl/nodes.html#toKdlProps.m,untyped	macro toKdlProps(props: untyped): Table[string, KdlVal]		498
-nimgrp	contains	kdl/nodes.html#contains-procs-all	proc		326
-nimgrp	$	kdl/nodes.html#$-procs-all	proc		169
-nimgrp	inline	kdl/nodes.html#inline-procs-all	proc		189
-nimgrp	add	kdl/nodes.html#add-procs-all	proc		344
-nimgrp	initkval	kdl/nodes.html#initKVal-procs-all	proc		13
 nimgrp	==	kdl/nodes.html#==-procs-all	proc		270
+nimgrp	$	kdl/nodes.html#$-procs-all	proc		169
+nimgrp	initkval	kdl/nodes.html#initKVal-procs-all	proc		13
+nimgrp	inline	kdl/nodes.html#inline-procs-all	proc		189
+nimgrp	contains	kdl/nodes.html#contains-procs-all	proc		326
 nimgrp	[]	kdl/nodes.html#[]-procs-all	proc		314
+nimgrp	add	kdl/nodes.html#add-procs-all	proc		344

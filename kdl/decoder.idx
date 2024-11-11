@@ -10,10 +10,10 @@ nim	decodeInitKdl	kdl/decoder.html#decodeInitKdl,auto	proc decodeInitKdl(v: var 
 nim	decodeEnumKdl	kdl/decoder.html#decodeEnumKdl,auto,T	proc decodeEnumKdl[T: enum](a: auto; v: var T)		315
 nim	decodePostKdl	kdl/decoder.html#decodePostKdl,auto	proc decodePostKdl(v: var auto)		316
 nim	decodeRenameKdl	kdl/decoder.html#decodeRenameKdl,typedesc,string	proc decodeRenameKdl(a: typedesc; fieldName: string): string		317
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlSome,typedesc[T]	proc decodeKdl[T](a: KdlSome; __1610612818: typedesc[T]): T		319
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlSome,typedesc[T]	proc decodeKdl[T](a: KdlSome; _: typedesc[T]): T		319
 nim	decodeKdl	kdl/decoder.html#decodeKdl,T,T	proc decodeKdl[T: KdlSome](a: T; v: var T)		320
 nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,auto,string	proc decodeKdl(a: KdlDoc; v: var auto; name: string)		322
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,typedesc[T],string	proc decodeKdl[T](a: KdlDoc; __1610612832: typedesc[T]; name: string): T		323
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,typedesc[T],string	proc decodeKdl[T](a: KdlDoc; _: typedesc[T]; name: string): T		323
 nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,Object	proc decodeKdl(a: KdlDoc; v: var Object)		324
 nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,List	proc decodeKdl(a: KdlDoc; v: var List)		325
 nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,SomeTable[string,T]	proc decodeKdl[T](a: KdlDoc; v: var SomeTable[string, T])		326
@@ -43,8 +43,8 @@ nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,ref.T	proc decodeKdl[T](a: KdlVa
 nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T_4	proc decodeKdl[T: KdlNode or KdlDoc](a: KdlVal; v: var T)		353
 nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,KdlNode	proc decodeKdl(a: KdlNode; v: var KdlNode)		692
 nimgrp	decodekdl	kdl/decoder.html#decodeKdl-procs-all	proc		319
-nimgrp	enumhookkdl	kdl/decoder.html#enumHookKdl-procs-all	proc		309
 nimgrp	inithookkdl	kdl/decoder.html#initHookKdl-procs-all	proc		307
+nimgrp	enumhookkdl	kdl/decoder.html#enumHookKdl-procs-all	proc		309
 heading	Decoder	kdl/decoder.html#decoder	  Decoder		0
 heading	Custom Hooks	kdl/decoder.html#decoder-custom-hooks	   Custom Hooks		0
 heading	Init hook	kdl/decoder.html#custom-hooks-init-hook	    Init hook		0

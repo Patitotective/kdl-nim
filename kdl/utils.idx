@@ -1,25 +1,25 @@
 nimTitle	utils	kdl/utils.html	module src/kdl/utils		0
 nim	Coord	kdl/utils.html#Coord	object Coord		7
 nim	Object	kdl/utils.html#Object	type Object		10
-nim	List	kdl/utils.html#List	type List		11
-nim	Value	kdl/utils.html#Value	type Value		12
-nim	KdlSome	kdl/utils.html#KdlSome	type KdlSome		13
-nim	SomeTable	kdl/utils.html#SomeTable	type SomeTable		14
-nim	fail	kdl/utils.html#fail.t,string	template fail(msg: string)		16
-nim	check	kdl/utils.html#check.t,untyped,string	template check(cond: untyped; msg = "")		19
-nim	quoted	kdl/utils.html#quoted,string	proc quoted(x: string): string		24
-nim	eqIdent	kdl/utils.html#eqIdent,openArray[char],openArray[char]	proc eqIdent(v, a: openArray[char]; ignoreChars = {'_', '-'}): bool		50
-nim	peekRune	kdl/utils.html#peekRune,Stream	proc peekRune(s: Stream): Rune		54
-nim	peekLineFromStart	kdl/utils.html#peekLineFromStart,Stream	proc peekLineFromStart(s: Stream): string		59
-nim	peekLineFromStart	kdl/utils.html#peekLineFromStart,string,int	proc peekLineFromStart(s: string; at: int): string		73
-nim	getCoord	kdl/utils.html#getCoord,Stream,int	proc getCoord(s: Stream; i: int): Coord		90
-nim	getCoord	kdl/utils.html#getCoord,string,int	proc getCoord(s: string; at: int): Coord		105
-nim	errorAt	kdl/utils.html#errorAt,Stream,Coord	proc errorAt(s: Stream; coord: Coord): string		115
-nim	errorAt	kdl/utils.html#errorAt,string,Coord	proc errorAt(s: string; coord: Coord): string		125
-nim	isObjVariant	kdl/utils.html#isObjVariant.m,typedesc	macro isObjVariant(a: typedesc): bool		134
-nim	getDiscriminants	kdl/utils.html#getDiscriminants.m,typedesc	macro getDiscriminants(a: typedesc): seq[string]		157
-nim	initCaseObject	kdl/utils.html#initCaseObject.m,typedesc,	macro initCaseObject(T: typedesc; discriminatorSetter): untyped		192
-nim	typeofdesc	kdl/utils.html#typeofdesc.t,typedesc[T]	template typeofdesc[T](b: typedesc[T]): untyped		225
-nimgrp	errorat	kdl/utils.html#errorAt-procs-all	proc		115
-nimgrp	getcoord	kdl/utils.html#getCoord-procs-all	proc		90
-nimgrp	peeklinefromstart	kdl/utils.html#peekLineFromStart-procs-all	proc		59
+nim	List	kdl/utils.html#List	type List		12
+nim	Value	kdl/utils.html#Value	type Value		13
+nim	KdlSome	kdl/utils.html#KdlSome	type KdlSome		14
+nim	SomeTable	kdl/utils.html#SomeTable	type SomeTable		15
+nim	fail	kdl/utils.html#fail.t,string	template fail(msg: string)		17
+nim	check	kdl/utils.html#check.t,untyped,string	template check(cond: untyped; msg = "")		20
+nim	quoted	kdl/utils.html#quoted,string	proc quoted(x: string): string		25
+nim	eqIdent	kdl/utils.html#eqIdent,openArray[char],openArray[char]	proc eqIdent(v, a: openArray[char]; ignoreChars = {'_', '-'}): bool		51
+nim	peekRune	kdl/utils.html#peekRune,Stream	proc peekRune(s: Stream): Rune		56
+nim	peekLineFromStart	kdl/utils.html#peekLineFromStart,Stream	proc peekLineFromStart(s: Stream): string		61
+nim	peekLineFromStart	kdl/utils.html#peekLineFromStart,string,int	proc peekLineFromStart(s: string; at: int): string		75
+nim	getCoord	kdl/utils.html#getCoord,Stream,int	proc getCoord(s: Stream; i: int): Coord		92
+nim	getCoord	kdl/utils.html#getCoord,string,int	proc getCoord(s: string; at: int): Coord		107
+nim	errorAt	kdl/utils.html#errorAt,Stream,Coord	proc errorAt(s: Stream; coord: Coord): string		117
+nim	errorAt	kdl/utils.html#errorAt,string,Coord	proc errorAt(s: string; coord: Coord): string		127
+nim	isObjVariant	kdl/utils.html#isObjVariant.m,typedesc	macro isObjVariant(a: typedesc): bool		136
+nim	getDiscriminants	kdl/utils.html#getDiscriminants.m,typedesc	macro getDiscriminants(a: typedesc): seq[string]		159
+nim	initCaseObject	kdl/utils.html#initCaseObject.m,typedesc,	macro initCaseObject(T: typedesc; discriminatorSetter): untyped		194
+nim	typeofdesc	kdl/utils.html#typeofdesc.t,typedesc[T]	template typeofdesc[T](b: typedesc[T]): untyped		227
+nimgrp	errorat	kdl/utils.html#errorAt-procs-all	proc		117
+nimgrp	getcoord	kdl/utils.html#getCoord-procs-all	proc		92
+nimgrp	peeklinefromstart	kdl/utils.html#peekLineFromStart-procs-all	proc		61

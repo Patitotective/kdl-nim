@@ -62,7 +62,9 @@
   line*, col*, idx*: int">Coord</a></li>
 <li><a class="reference" href="#KdlSome" title="KdlSome = (KdlDoc or KdlNode or KdlVal)">KdlSome</a></li>
 <li><a class="reference" href="#List" title="List = (array or seq)">List</a></li>
-<li><a class="reference" href="#Object" title="Object = ((object or tuple) and not KdlSome)">Object</a></li>
+<li><a class="reference" href="#Object" title="Object = ((object or tuple) and not KdlSome and not SomeTable and not List and
+    not Value and
+    not SomeSet)">Object</a></li>
 <li><a class="reference" href="#SomeTable" title="SomeTable[K; V] = (Table[K, V] or OrderedTable[K, V])">SomeTable</a></li>
 <li><a class="reference" href="#Value" title="Value = (SomeNumber or string or bool)">Value</a></li>
 
@@ -180,8 +182,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L13" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L13" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L14" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L14" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -190,13 +192,15 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L11" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L11" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L12" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L12" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
 <div id="Object">
-  <dt><pre><a href="utils.html#Object"><span class="Identifier">Object</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="Other">(</span><span class="Keyword">object</span> <span class="Keyword">or</span> <span class="Keyword">tuple</span><span class="Other">)</span> <span class="Keyword">and</span> <span class="Keyword">not</span> <a href="utils.html#KdlSome"><span class="Identifier">KdlSome</span></a><span class="Other">)</span></pre></dt>
+  <dt><pre><a href="utils.html#Object"><span class="Identifier">Object</span></a> <span class="Other">=</span> <span class="Other">(</span><span class="Other">(</span><span class="Keyword">object</span> <span class="Keyword">or</span> <span class="Keyword">tuple</span><span class="Other">)</span> <span class="Keyword">and</span> <span class="Keyword">not</span> <a href="utils.html#KdlSome"><span class="Identifier">KdlSome</span></a> <span class="Keyword">and</span> <span class="Keyword">not</span> <a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a> <span class="Keyword">and</span> <span class="Keyword">not</span> <a href="utils.html#List"><span class="Identifier">List</span></a> <span class="Keyword">and</span>
+    <span class="Keyword">not</span> <a href="utils.html#Value"><span class="Identifier">Value</span></a> <span class="Keyword">and</span>
+    <span class="Keyword">not</span> <span class="Identifier">SomeSet</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -210,8 +214,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L14" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L14" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L15" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L15" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -220,8 +224,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L12" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L12" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L13" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L13" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -238,8 +242,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L50" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L50" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L51" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L51" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -252,8 +256,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L115" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L115" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L117" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L117" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -263,8 +267,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L125" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L125" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L127" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L127" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -277,8 +281,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L90" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L90" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L92" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L92" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -287,8 +291,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L105" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L105" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L107" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L107" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -301,8 +305,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L59" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L59" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L61" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L61" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -312,8 +316,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L73" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L73" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L75" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L75" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -326,8 +330,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L54" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L54" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L56" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L56" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -339,8 +343,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L24" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L24" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L25" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L25" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -358,8 +362,8 @@
   <dd>
     
     return the discriminant keys
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L157" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L157" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L159" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L159" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -373,8 +377,8 @@
     Does the minimum to construct a valid case object <tt class="docutils literal"><span class="pre"><span class="Identifier">T</span></span></tt>.<ul class="simple"><li><tt class="docutils literal"><span class="pre"><span class="Identifier">discriminatorSetter</span></span></tt>: called passing two arguments <tt class="docutils literal"><span class="pre"><span class="Punctuation">(</span><span class="Identifier">key</span><span class="Punctuation">,</span> <span class="Identifier">typ</span><span class="Punctuation">)</span></span></tt> (<tt class="docutils literal"><span class="pre"><span class="Identifier">key</span></span></tt> being the field name and <tt class="docutils literal"><span class="pre"><span class="Identifier">typ</span></span></tt> the field type), last expression should be the value for the field. Only for discriminator fields.</li>
 </ul>
 
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L192" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L192" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L194" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L194" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -386,8 +390,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L134" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L134" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L136" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L136" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -405,8 +409,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L19" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L19" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L20" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L20" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -418,8 +422,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L16" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L16" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L17" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L17" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -431,8 +435,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L225" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L225" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/utils.nim#L227" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/utils.nim#L227" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -448,7 +452,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-11-13 14:46:18 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-11-13 19:46:52 UTC</small>
       </div>
     </div>
   </div>

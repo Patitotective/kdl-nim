@@ -85,6 +85,7 @@
 <li><a class="reference" href="#decodeKdl%2CKdlNode%2CStringTableRef" title="decodeKdl(a: KdlNode; v: var StringTableRef)">decodeKdl(a: KdlNode; v: var StringTableRef)</a></li>
 <li><a class="reference" href="#decodeKdl%2CKdlVal%2Cchar" title="decodeKdl(a: KdlVal; v: var char)">decodeKdl(a: KdlVal; v: var char)</a></li>
 <li><a class="reference" href="#decodeKdl%2CKdlVal%2CObject" title="decodeKdl(a: KdlVal; v: var Object)">decodeKdl(a: KdlVal; v: var Object)</a></li>
+<li><a class="reference" href="#decodeKdl%2CKdlVal%2CSomeTable" title="decodeKdl(a: KdlVal; v: var SomeTable)">decodeKdl(a: KdlVal; v: var SomeTable)</a></li>
 <li><a class="reference" href="#decodeKdl%2CKdlVal%2CT_3" title="decodeKdl[T: array](a: KdlVal; v: var T)">decodeKdl[T: array](a: KdlVal; v: var T)</a></li>
 <li><a class="reference" href="#decodeKdl%2CKdlVal%2CT_2" title="decodeKdl[T: enum](a: KdlVal; v: var T)">decodeKdl[T: enum](a: KdlVal; v: var T)</a></li>
 <li><a class="reference" href="#decodeKdl%2CKdlVal%2CT_4" title="decodeKdl[T: KdlNode or KdlDoc](a: KdlVal; v: var T)">decodeKdl[T: KdlNode or KdlDoc](a: KdlVal; v: var T)</a></li>
@@ -233,7 +234,8 @@ dependencies {
 <span class="Keyword">proc</span> <span class="Identifier">postHookKdl</span><span class="Punctuation">(</span><span class="Identifier">v</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">Foo</span><span class="Punctuation">)</span> <span class="Operator">=</span>
   <span class="Identifier">inc</span> <span class="Identifier">v</span><span class="Operator">.</span><span class="Identifier">x</span>
 
-<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;x 1&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">decodeKdl</span><span class="Punctuation">(</span><span class="Identifier">Foo</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">Foo</span><span class="Punctuation">(</span><span class="Identifier">x</span><span class="Punctuation">:</span> <span class="DecNumber">2</span><span class="Punctuation">)</span> <span class="Comment"># 2 because x after postHook got incremented by one</span></pre>
+<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;x 1&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">decodeKdl</span><span class="Punctuation">(</span><span class="Identifier">Foo</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">Foo</span><span class="Punctuation">(</span>
+    <span class="Identifier">x</span><span class="Punctuation">:</span> <span class="DecNumber">2</span><span class="Punctuation">)</span> <span class="Comment"># 2 because x after postHook got incremented by one</span></pre>
 <h4><a class="toc-backref" id="custom-hooks-enum-hook" href="#custom-hooks-enum-hook">Enum hook</a></h4><p>Enum hooks are useful for parsing enums in a custom manner.</p>
 <p>You can overload <tt class="docutils literal"><span class="pre"><span class="Identifier">enumHook</span></span></tt> with two different signatures:</p>
 <p><pre class="listing"><span class="Keyword">proc</span> <span class="Identifier">enumHookKdl</span><span class="Punctuation">(</span><span class="Identifier">a</span><span class="Punctuation">:</span> <span class="Identifier">string</span><span class="Punctuation">,</span> <span class="Identifier">v</span><span class="Punctuation">:</span> <span class="Keyword">var</span> <span class="Identifier">MyEnum</span><span class="Punctuation">)</span></pre></p>
@@ -408,9 +410,11 @@ dependencies {
   &quot;&quot;&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">decodeKdl</span><span class="Punctuation">(</span><span class="Identifier">DateTime</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">dateTime</span><span class="Punctuation">(</span><span class="DecNumber">2022</span><span class="Punctuation">,</span> <span class="Identifier">mOct</span><span class="Punctuation">,</span> <span class="DecNumber">15</span><span class="Punctuation">,</span> <span class="DecNumber">12</span><span class="Punctuation">,</span> <span class="DecNumber">10</span><span class="Punctuation">)</span>
 
 <span class="Comment"># Here we use the KdlNode overload</span>
-<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;date 2022 </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">October</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> 15 12 04 00&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">decodeKdl</span><span class="Punctuation">(</span><span class="Identifier">DateTime</span><span class="Punctuation">,</span> <span class="StringLit">&quot;date&quot;</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">dateTime</span><span class="Punctuation">(</span><span class="DecNumber">2022</span><span class="Punctuation">,</span> <span class="Identifier">mOct</span><span class="Punctuation">,</span> <span class="DecNumber">15</span><span class="Punctuation">,</span> <span class="DecNumber">12</span><span class="Punctuation">,</span> <span class="DecNumber">04</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;date 2022 </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">October</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> 15 12 04 00&quot;</span><span class="Punctuation">)</span><span class="Operator">.</span><span class="Identifier">decodeKdl</span><span class="Punctuation">(</span><span class="Identifier">DateTime</span><span class="Punctuation">,</span>
+    <span class="StringLit">&quot;date&quot;</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">dateTime</span><span class="Punctuation">(</span><span class="DecNumber">2022</span><span class="Punctuation">,</span> <span class="Identifier">mOct</span><span class="Punctuation">,</span> <span class="DecNumber">15</span><span class="Punctuation">,</span> <span class="DecNumber">12</span><span class="Punctuation">,</span> <span class="DecNumber">04</span><span class="Punctuation">)</span>
 <span class="Comment"># And here we use the KdlVal overload</span>
-<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;author birthday=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">2000-10-15</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> name=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">Nobody</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span><span class="StringLit">&quot;birthday&quot;</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">decodeKdl</span><span class="Punctuation">(</span><span class="Identifier">DateTime</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">dateTime</span><span class="Punctuation">(</span><span class="DecNumber">2000</span><span class="Punctuation">,</span> <span class="Identifier">mOct</span><span class="Punctuation">,</span> <span class="DecNumber">15</span><span class="Punctuation">)</span></pre><hr />
+<span class="Identifier">assert</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;author birthday=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">2000-10-15</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> name=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">Nobody</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Punctuation">[</span>
+    <span class="StringLit">&quot;birthday&quot;</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">decodeKdl</span><span class="Punctuation">(</span><span class="Identifier">DateTime</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">dateTime</span><span class="Punctuation">(</span><span class="DecNumber">2000</span><span class="Punctuation">,</span> <span class="Identifier">mOct</span><span class="Punctuation">,</span> <span class="DecNumber">15</span><span class="Punctuation">)</span></pre><hr />
 <p>As you may have noticed if you looked through the API, there is <tt class="docutils literal"><span class="pre"><span class="Identifier">decodeInitKdl</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">initHookable</span></span></tt>, <tt class="docutils literal"><span class="pre"><span class="Identifier">enumHook</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">enumHookable</span></span></tt>. Any hook suffixed -able, actually calls the hook itself after making sure there is an overload that matches it. You should not overload these as they are meant for internal use, the reason they are exported is because when implementing your custom decode hooks you may also want to use them.</p>
 <p>So remember: for custom behaviour, overload -hook suffixed procedures; to make use of these hooks call the -hookable suffixed procedures, you don't call these unless you want their behavior within your custom decode hooks.</p>
 <hr />
@@ -431,8 +435,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L315" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L315" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L318" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L318" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -444,8 +448,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L314" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L314" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L317" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L317" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -457,8 +461,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L322" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L322" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L325" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L325" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -467,8 +471,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L325" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L325" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L328" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L328" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -477,8 +481,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L324" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L324" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L327" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L327" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -488,8 +492,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L327" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L327" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L330" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L330" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -498,8 +502,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L340" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L340" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L343" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L343" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -508,8 +512,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L692" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L692" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L696" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L696" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -518,8 +522,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L333" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L333" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L336" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L336" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -528,8 +532,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L332" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L332" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L335" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L335" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -539,8 +543,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L335" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L335" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L338" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L338" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -550,8 +554,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L344" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L344" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L347" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L347" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -560,33 +564,13 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L348" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L348" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L352" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L352" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="decodeKdl,KdlVal,T_3">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CT_3"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L346" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L346" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="decodeKdl,KdlVal,T_2">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CT_2"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">enum</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L343" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L343" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="decodeKdl,KdlVal,T_4">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CT_4"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a> <span class="Keyword">or</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+<div id="decodeKdl,KdlVal,SomeTable">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CSomeTable"><span class="Identifier">decodeKdl</span></a><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a><span class="Other">)</span></pre></dt>
   <dd>
     
     
@@ -595,68 +579,38 @@ dependencies {
 
   </dd>
 </div>
+<div id="decodeKdl,KdlVal,T_3">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CT_3"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L349" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L349" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="decodeKdl,KdlVal,T_2">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CT_2"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">enum</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L346" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L346" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="decodeKdl,KdlVal,T_4">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CT_4"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a> <span class="Keyword">or</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L357" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L357" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
 <div id="decodeKdl,T,T">
   <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CT%2CT"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <a href="utils.html#KdlSome"><span class="Identifier">KdlSome</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <span class="Identifier">T</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L320" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L320" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="decodeKdl,KdlVal,seq[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2Cseq%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L347" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L347" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="decodeKdl,KdlDoc,set[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2Cset%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">Ordinal</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L329" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L329" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="decodeKdl,KdlNode,set[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlNode%2Cset%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">Ordinal</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L337" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L337" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="decodeKdl,KdlVal,set[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2Cset%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">Ordinal</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L350" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L350" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="decodeKdl,KdlVal,T">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CT"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <a href="utils.html#Value"><span class="Identifier">Value</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
-  <dd>
-    
-    
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L342" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L342" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
-
-  </dd>
-</div>
-<div id="decodeKdl,KdlDoc,typedesc[T],string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2Ctypedesc%5BT%5D%2Cstring"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Operator">_</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
   <dd>
     
     
@@ -665,28 +619,58 @@ dependencies {
 
   </dd>
 </div>
-<div id="decodeKdl,KdlDoc,ref.T">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2Cref.T"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Keyword">ref</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+<div id="decodeKdl,KdlVal,seq[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2Cseq%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Keyword">not</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L330" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L330" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L350" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L350" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="decodeKdl,KdlDoc,SomeSet[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2CSomeSet%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">SomeSet</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<div id="decodeKdl,KdlDoc,set[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2Cset%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">Ordinal</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L328" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L328" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L332" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L332" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
-<div id="decodeKdl,KdlDoc,SomeTable[string,T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2CSomeTable%5Bstring%2CT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+<div id="decodeKdl,KdlNode,set[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlNode%2Cset%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">Ordinal</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L340" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L340" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="decodeKdl,KdlVal,set[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2Cset%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <span class="Identifier">Ordinal</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">set</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L354" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L354" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="decodeKdl,KdlVal,T">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlVal%2CT"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">:</span> <a href="utils.html#Value"><span class="Identifier">Value</span></a><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlVal"><span class="Identifier">KdlVal</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L345" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L345" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="decodeKdl,KdlDoc,typedesc[T],string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2Ctypedesc%5BT%5D%2Cstring"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Operator">_</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">T</span></pre></dt>
   <dd>
     
     
@@ -695,13 +679,43 @@ dependencies {
 
   </dd>
 </div>
+<div id="decodeKdl,KdlDoc,ref.T">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2Cref.T"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Keyword">ref</span> <span class="Identifier">T</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L333" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L333" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="decodeKdl,KdlDoc,SomeSet[T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2CSomeSet%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">SomeSet</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L331" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L331" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
+<div id="decodeKdl,KdlDoc,SomeTable[string,T]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlDoc%2CSomeTable%5Bstring%2CT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlDoc"><span class="Identifier">KdlDoc</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="utils.html#SomeTable"><span class="Identifier">SomeTable</span></a><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
+  <dd>
+    
+    
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L329" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L329" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+
+  </dd>
+</div>
 <div id="decodeKdl,KdlNode,Option[T]">
   <dt><pre><span class="Keyword">proc</span> <a href="#decodeKdl%2CKdlNode%2COption%5BT%5D"><span class="Identifier">decodeKdl</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">a</span><span class="Other">:</span> <a href="types.html#KdlNode"><span class="Identifier">KdlNode</span></a><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span></pre></dt>
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L338" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L338" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L341" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L341" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -710,8 +724,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L339" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L339" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L342" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L342" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -720,8 +734,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L336" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L336" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L339" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L339" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -730,8 +744,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L334" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L334" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L337" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L337" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -740,8 +754,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L319" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L319" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L322" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L322" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -750,8 +764,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L351" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L351" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L355" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L355" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -760,8 +774,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L352" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L352" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L356" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L356" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -770,8 +784,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L349" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L349" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L351" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L351" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -783,8 +797,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L316" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L316" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L319" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L319" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -796,8 +810,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L317" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L317" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L320" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L320" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -809,8 +823,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L311" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L311" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L314" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L314" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -819,8 +833,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L309" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L309" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L312" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L312" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -829,8 +843,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L310" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L310" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L313" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L313" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -842,8 +856,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L307" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L307" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L310" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L310" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -852,8 +866,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L308" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L308" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L311" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L311" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -865,8 +879,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L312" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L312" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L315" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L315" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -878,8 +892,8 @@ dependencies {
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L313" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L313" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl/decoder.nim#L316" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl/decoder.nim#L316" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -895,7 +909,7 @@ dependencies {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-11-13 14:46:22 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-11-13 19:46:56 UTC</small>
       </div>
     </div>
   </div>

@@ -1,50 +1,51 @@
 nimTitle	decoder	kdl/decoder.html	module src/kdl/decoder		0
-nim	initHookKdl	kdl/decoder.html#initHookKdl,ref.T	proc initHookKdl[T](v: var ref T)		307
-nim	initHookKdl	kdl/decoder.html#initHookKdl,T	proc initHookKdl[T](v: var T)		308
-nim	enumHookKdl	kdl/decoder.html#enumHookKdl,int,T	proc enumHookKdl[T: enum](a: int; v: var T)		309
-nim	enumHookKdl	kdl/decoder.html#enumHookKdl,string,T	proc enumHookKdl[T: enum](a: string; v: var T)		310
-nim	enumHookKdl	kdl/decoder.html#enumHookKdl,KdlVal,	proc enumHookKdl(a: KdlVal; v: var enum)		311
-nim	postHookKdl	kdl/decoder.html#postHookKdl,auto	proc postHookKdl(v: var auto)		312
-nim	renameHookKdl	kdl/decoder.html#renameHookKdl,typedesc,string	proc renameHookKdl(a: typedesc; fieldName: var string)		313
-nim	decodeInitKdl	kdl/decoder.html#decodeInitKdl,auto	proc decodeInitKdl(v: var auto)		314
-nim	decodeEnumKdl	kdl/decoder.html#decodeEnumKdl,auto,T	proc decodeEnumKdl[T: enum](a: auto; v: var T)		315
-nim	decodePostKdl	kdl/decoder.html#decodePostKdl,auto	proc decodePostKdl(v: var auto)		316
-nim	decodeRenameKdl	kdl/decoder.html#decodeRenameKdl,typedesc,string	proc decodeRenameKdl(a: typedesc; fieldName: string): string		317
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlSome,typedesc[T]	proc decodeKdl[T](a: KdlSome; _: typedesc[T]): T		319
-nim	decodeKdl	kdl/decoder.html#decodeKdl,T,T	proc decodeKdl[T: KdlSome](a: T; v: var T)		320
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,auto,string	proc decodeKdl(a: KdlDoc; v: var auto; name: string)		322
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,typedesc[T],string	proc decodeKdl[T](a: KdlDoc; _: typedesc[T]; name: string): T		323
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,Object	proc decodeKdl(a: KdlDoc; v: var Object)		324
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,List	proc decodeKdl(a: KdlDoc; v: var List)		325
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,SomeTable[string,T]	proc decodeKdl[T](a: KdlDoc; v: var SomeTable[string, T])		326
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,StringTableRef	proc decodeKdl(a: KdlDoc; v: var StringTableRef)		327
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,SomeSet[T]	proc decodeKdl[T](a: KdlDoc; v: var SomeSet[T])		328
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,set[T]	proc decodeKdl[T: Ordinal](a: KdlDoc; v: var set[T])		329
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,ref.T	proc decodeKdl[T](a: KdlDoc; v: var ref T)		330
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,Object	proc decodeKdl(a: KdlNode; v: var Object)		332
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,List	proc decodeKdl(a: KdlNode; v: var List)		333
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,SomeTable[string,T]	proc decodeKdl[T](a: KdlNode; v: var SomeTable[string, T])		334
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,StringTableRef	proc decodeKdl(a: KdlNode; v: var StringTableRef)		335
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,SomeSet[T]	proc decodeKdl[T](a: KdlNode; v: var SomeSet[T])		336
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,set[T]	proc decodeKdl[T: Ordinal](a: KdlNode; v: var set[T])		337
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,Option[T]	proc decodeKdl[T](a: KdlNode; v: var Option[T])		338
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,ref.T	proc decodeKdl[T](a: KdlNode; v: var ref T)		339
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,auto	proc decodeKdl(a: KdlNode; v: var auto)		340
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T	proc decodeKdl[T: Value](a: KdlVal; v: var T)		342
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T_2	proc decodeKdl[T: enum](a: KdlVal; v: var T)		343
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,char	proc decodeKdl(a: KdlVal; v: var char)		344
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T_3	proc decodeKdl[T: array](a: KdlVal; v: var T)		346
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,seq[T]	proc decodeKdl[T: not KdlNode](a: KdlVal; v: var seq[T])		347
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,Object	proc decodeKdl(a: KdlVal; v: var Object)		348
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,SomeSet[T]	proc decodeKdl[T](a: KdlVal; v: var SomeSet[T])		349
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,set[T]	proc decodeKdl[T: Ordinal](a: KdlVal; v: var set[T])		350
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,Option[T]	proc decodeKdl[T](a: KdlVal; v: var Option[T])		351
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,ref.T	proc decodeKdl[T](a: KdlVal; v: var ref T)		352
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T_4	proc decodeKdl[T: KdlNode or KdlDoc](a: KdlVal; v: var T)		353
-nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,KdlNode	proc decodeKdl(a: KdlNode; v: var KdlNode)		692
-nimgrp	decodekdl	kdl/decoder.html#decodeKdl-procs-all	proc		319
-nimgrp	inithookkdl	kdl/decoder.html#initHookKdl-procs-all	proc		307
-nimgrp	enumhookkdl	kdl/decoder.html#enumHookKdl-procs-all	proc		309
+nim	initHookKdl	kdl/decoder.html#initHookKdl,ref.T	proc initHookKdl[T](v: var ref T)		310
+nim	initHookKdl	kdl/decoder.html#initHookKdl,T	proc initHookKdl[T](v: var T)		311
+nim	enumHookKdl	kdl/decoder.html#enumHookKdl,int,T	proc enumHookKdl[T: enum](a: int; v: var T)		312
+nim	enumHookKdl	kdl/decoder.html#enumHookKdl,string,T	proc enumHookKdl[T: enum](a: string; v: var T)		313
+nim	enumHookKdl	kdl/decoder.html#enumHookKdl,KdlVal,	proc enumHookKdl(a: KdlVal; v: var enum)		314
+nim	postHookKdl	kdl/decoder.html#postHookKdl,auto	proc postHookKdl(v: var auto)		315
+nim	renameHookKdl	kdl/decoder.html#renameHookKdl,typedesc,string	proc renameHookKdl(a: typedesc; fieldName: var string)		316
+nim	decodeInitKdl	kdl/decoder.html#decodeInitKdl,auto	proc decodeInitKdl(v: var auto)		317
+nim	decodeEnumKdl	kdl/decoder.html#decodeEnumKdl,auto,T	proc decodeEnumKdl[T: enum](a: auto; v: var T)		318
+nim	decodePostKdl	kdl/decoder.html#decodePostKdl,auto	proc decodePostKdl(v: var auto)		319
+nim	decodeRenameKdl	kdl/decoder.html#decodeRenameKdl,typedesc,string	proc decodeRenameKdl(a: typedesc; fieldName: string): string		320
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlSome,typedesc[T]	proc decodeKdl[T](a: KdlSome; _: typedesc[T]): T		322
+nim	decodeKdl	kdl/decoder.html#decodeKdl,T,T	proc decodeKdl[T: KdlSome](a: T; v: var T)		323
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,auto,string	proc decodeKdl(a: KdlDoc; v: var auto; name: string)		325
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,typedesc[T],string	proc decodeKdl[T](a: KdlDoc; _: typedesc[T]; name: string): T		326
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,Object	proc decodeKdl(a: KdlDoc; v: var Object)		327
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,List	proc decodeKdl(a: KdlDoc; v: var List)		328
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,SomeTable[string,T]	proc decodeKdl[T](a: KdlDoc; v: var SomeTable[string, T])		329
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,StringTableRef	proc decodeKdl(a: KdlDoc; v: var StringTableRef)		330
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,SomeSet[T]	proc decodeKdl[T](a: KdlDoc; v: var SomeSet[T])		331
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,set[T]	proc decodeKdl[T: Ordinal](a: KdlDoc; v: var set[T])		332
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlDoc,ref.T	proc decodeKdl[T](a: KdlDoc; v: var ref T)		333
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,Object	proc decodeKdl(a: KdlNode; v: var Object)		335
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,List	proc decodeKdl(a: KdlNode; v: var List)		336
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,SomeTable[string,T]	proc decodeKdl[T](a: KdlNode; v: var SomeTable[string, T])		337
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,StringTableRef	proc decodeKdl(a: KdlNode; v: var StringTableRef)		338
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,SomeSet[T]	proc decodeKdl[T](a: KdlNode; v: var SomeSet[T])		339
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,set[T]	proc decodeKdl[T: Ordinal](a: KdlNode; v: var set[T])		340
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,Option[T]	proc decodeKdl[T](a: KdlNode; v: var Option[T])		341
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,ref.T	proc decodeKdl[T](a: KdlNode; v: var ref T)		342
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,auto	proc decodeKdl(a: KdlNode; v: var auto)		343
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T	proc decodeKdl[T: Value](a: KdlVal; v: var T)		345
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T_2	proc decodeKdl[T: enum](a: KdlVal; v: var T)		346
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,char	proc decodeKdl(a: KdlVal; v: var char)		347
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T_3	proc decodeKdl[T: array](a: KdlVal; v: var T)		349
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,seq[T]	proc decodeKdl[T: not KdlNode](a: KdlVal; v: var seq[T])		350
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,SomeSet[T]	proc decodeKdl[T](a: KdlVal; v: var SomeSet[T])		351
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,Object	proc decodeKdl(a: KdlVal; v: var Object)		352
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,SomeTable	proc decodeKdl(a: KdlVal; v: var SomeTable)		353
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,set[T]	proc decodeKdl[T: Ordinal](a: KdlVal; v: var set[T])		354
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,Option[T]	proc decodeKdl[T](a: KdlVal; v: var Option[T])		355
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,ref.T	proc decodeKdl[T](a: KdlVal; v: var ref T)		356
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlVal,T_4	proc decodeKdl[T: KdlNode or KdlDoc](a: KdlVal; v: var T)		357
+nim	decodeKdl	kdl/decoder.html#decodeKdl,KdlNode,KdlNode	proc decodeKdl(a: KdlNode; v: var KdlNode)		696
+nimgrp	decodekdl	kdl/decoder.html#decodeKdl-procs-all	proc		322
+nimgrp	inithookkdl	kdl/decoder.html#initHookKdl-procs-all	proc		310
+nimgrp	enumhookkdl	kdl/decoder.html#enumHookKdl-procs-all	proc		312
 heading	Decoder	kdl/decoder.html#decoder	  Decoder		0
 heading	Custom Hooks	kdl/decoder.html#decoder-custom-hooks	   Custom Hooks		0
 heading	Init hook	kdl/decoder.html#custom-hooks-init-hook	    Init hook		0

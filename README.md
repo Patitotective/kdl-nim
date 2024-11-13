@@ -31,26 +31,25 @@ var doc = parseKdl("""
 title \
   "Some title"
 
+  // Files must be utf8 encoded!
+  smile (emoji)"😁" {
+        upside-down (emoji)"🙃"
+  }
 
-// Files must be utf8 encoded!
-smile (emoji)"😁" {
-  upside-down (emoji)"🙃"
-}
+  // Instead of anonymous nodes, nodes and properties can be wrapped
+  // in "" for arbitrary node names.
+  "!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
 
-// Instead of anonymous nodes, nodes and properties can be wrapped
-// in "" for arbitrary node names.
-"!@#$@$%Q#$%~@!40" "1.2.3" "!!!!!"=true
+  // The following is a legal bare identifier:
+  foo123~!@#$%^&*.:'|?+ "weeee"
 
-// The following is a legal bare identifier:
-foo123~!@#$%^&*.:'|?+ "weeee"
+  // And you can also use unicode!
+  ノード お名前="☜(ﾟヮﾟ☜)"
 
-// And you can also use unicode!
-ノード　お名前="☜(ﾟヮﾟ☜)"
-
-// kdl specifically allows properties and values to be
-// interspersed with each other, much like CLI commands.
-foo bar=true "baz" quux=false 1 2 3
-""") # You can also read files using parseKdlFile("file.kdl")
+  // kdl specifically allows properties and values to be
+  // interspersed with each other, much like CLI commands.
+  foo bar=true "baz" quux=false 1 2 3
+  """) # You can also read files using parseKdlFile("file.kdl")
 
 # Nodes are represented like:
 # type KdlNode* = object
@@ -60,28 +59,28 @@ foo bar=true "baz" quux=false 1 2 3
 #   props*: Table[string, KdlVal]
 #   children*: seq[KdlNode]
 
-assert doc[0][0].isString() # title "Some title"
+assert doc[0].args[0].isString() # title "Some title"
 
-assert doc[1][0] == "😁" # smile node
-assert doc[1][0].tag.isSome and doc[1][0].tag.get == "emoji" # Type annotation
-assert doc[1].children[0][0] == "🙃" # smile node's upside-down child
+assert doc[1].args[0] == "😁" # smile node
+assert doc[1].args[0].tag.isSome and doc[1].args[0].tag.get == "emoji" # Type annotation
+assert doc[1].children[0].args[0] == "🙃" # smile node's upside-down child
 
 assert doc[2].name == "!@#$@$%Q#$%~@!40"
 
 assert doc[^1]["quux"] == false
 
-doc[0][0].setString("New title")
+doc[0].args[0].setString("New title")
 
 # toKdlNode is a macro that facilitates the creation of `KdlNode`s, there's also toKdl (to create documents) and toKdlVal
 doc[1].children[0] = toKdlNode: sunglasses("😎"[emoji], 3.14)
 
 assert $doc[1].children[0] == "\"sunglasses\" (\"emoji\")\"😎\" 3.14"
 
-assert doc[1].children[0][1].get(uint8) == 3u8 # Converts 3.14 into an uint8
+assert doc[1].children[0].args[1].get(uint8) == 3u8 # Converts 3.14 into an uint8
 
 doc[^1]["bar"].setTo(false) # Same as setBool(false)
 
-doc.writeFile("doc.kdl")
+writeFile("doc.kdl", doc)
 ```
 
 ## Docs

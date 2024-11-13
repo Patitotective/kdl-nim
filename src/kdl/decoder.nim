@@ -86,7 +86,8 @@ runnableExamples:
   proc postHookKdl(v: var Foo) =
     inc v.x
 
-  assert parseKdl("x 1").decodeKdl(Foo) == Foo(x: 2) # 2 because x after postHook got incremented by one
+  assert parseKdl("x 1").decodeKdl(Foo) == Foo(
+      x: 2) # 2 because x after postHook got incremented by one
 
 ## #### Enum hook
 ## Enum hooks are useful for parsing enums in a custom manner.
@@ -278,9 +279,11 @@ runnableExamples:
   """).decodeKdl(DateTime) == dateTime(2022, mOct, 15, 12, 10)
 
   # Here we use the KdlNode overload
-  assert parseKdl("date 2022 \"October\" 15 12 04 00").decodeKdl(DateTime, "date") == dateTime(2022, mOct, 15, 12, 04)
+  assert parseKdl("date 2022 \"October\" 15 12 04 00").decodeKdl(DateTime,
+      "date") == dateTime(2022, mOct, 15, 12, 04)
   # And here we use the KdlVal overload
-  assert parseKdl("author birthday=\"2000-10-15\" name=\"Nobody\"")[0]["birthday"].decodeKdl(DateTime) == dateTime(2000, mOct, 15)
+  assert parseKdl("author birthday=\"2000-10-15\" name=\"Nobody\"")[0][
+      "birthday"].decodeKdl(DateTime) == dateTime(2000, mOct, 15)
 ##
 ## ----------
 ##
@@ -345,8 +348,9 @@ proc decodeKdl*(a: KdlVal, v: var char)
 # proc decodeKdl*(a: KdlVal, v: var cstring)
 proc decodeKdl*[T: array](a: KdlVal, v: var T)
 proc decodeKdl*[T: not KdlNode](a: KdlVal, v: var seq[T])
-proc decodeKdl*(a: KdlVal, v: var Object)
 proc decodeKdl*[T](a: KdlVal, v: var SomeSet[T])
+proc decodeKdl*(a: KdlVal, v: var Object)
+proc decodeKdl*(a: KdlVal, v: var SomeTable)
 proc decodeKdl*[T: Ordinal](a: KdlVal, v: var set[T])
 proc decodeKdl*[T](a: KdlVal, v: var Option[T])
 proc decodeKdl*[T](a: KdlVal, v: var ref T)
@@ -745,15 +749,18 @@ proc decodeKdl*[T: not KdlNode](a: KdlVal, v: var seq[T]) =
   v.setLen 1
   decodeKdl(a, v[0])
 
-proc decodeKdl*(a: KdlVal, v: var Object) =
-  fail &"{$typeof(v)} not implemented for {$typeof(a)}"
-
 proc decodeKdl*[T](a: KdlVal, v: var SomeSet[T]) =
   v.clear()
 
   v.incl decodeKdl(a, T)
 
   decodePostKdl(v)
+
+proc decodeKdl*(a: KdlVal, v: var Object) =
+  fail &"{$typeof(v)} not implemented for {$typeof(a)}"
+
+proc decodeKdl*(a: KdlVal, v: var SomeTable) =
+  fail &"{$typeof(v)} not implemented for {$typeof(a)}"
 
 proc decodeKdl*[T: Ordinal](a: KdlVal, v: var set[T]) =
   v.reset()

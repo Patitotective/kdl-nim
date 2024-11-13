@@ -204,7 +204,8 @@ proc encodeKdl*[T: Ordinal](a: set[T], v: var KdlNode, name: string) =
   for e, i in enumerate(a):
     v.args[e] = encodeKdlVal(i)
 
-proc encodeKdl*(a: SomeTable[string, auto] or SomeSet[auto], v: var KdlNode, name: string) =
+proc encodeKdl*(a: SomeTable[string, auto] or SomeSet[auto], v: var KdlNode,
+    name: string) =
   v = initKNode(name)
   encodeKdl(a, v.children)
 

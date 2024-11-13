@@ -1,5 +1,5 @@
 ## Various utilities for internal use in the library.
-import std/[strformat, strutils, unicode, streams, tables, macros]
+import std/[strformat, strutils, unicode, streams, tables, macros, sets]
 
 import types
 
@@ -7,7 +7,8 @@ type
   Coord* = object
     line*, col*, idx*: int
 
-  Object* = ((object or tuple) and not KdlSome)
+  Object* = ((object or tuple) and not KdlSome and not SomeTable and
+      not List and not Value and not SomeSet)
   List* = (array or seq)
   Value* = (SomeNumber or string or bool) #  or range
   KdlSome* = (KdlDoc or KdlNode or KdlVal)
@@ -47,7 +48,8 @@ proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
     inc i
     inc j
 
-proc eqIdent*(v, a: openarray[char], ignoreChars = {'_', '-'}): bool = cmpIgnoreStyle(v, a, ignoreChars) == 0
+proc eqIdent*(v, a: openarray[char], ignoreChars = {'_',
+    '-'}): bool = cmpIgnoreStyle(v, a, ignoreChars) == 0
 
 # ----- Streams -----
 

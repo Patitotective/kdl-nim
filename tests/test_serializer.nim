@@ -242,7 +242,10 @@ suite "Decoder":
       package = doc.decodeKdl(Package, "package")
       dependencies = doc.decodeKdl(Deps, "dependencies")
 
-    check package == Package(name: "kdl", version: "0.0.0", authors: @["Kat Marchán <kzm@zkat.tech>"].some, description: "kats document language".some, licenseFile: "LICENSE.md".some, edition: "2018".some)
+    check package == Package(name: "kdl", version: "0.0.0", authors: @[
+        "Kat Marchán <kzm@zkat.tech>"].some,
+        description: "kats document language".some,
+        licenseFile: "LICENSE.md".some, edition: "2018".some)
     check dependencies == {"nom": "6.0.1", "thiserror": "1.0.22"}.toTable
 
   test "Nimble":
@@ -263,28 +266,36 @@ suite "Decoder":
         requires "nim >= 0.10.0" "foobar >= 0.1.0" "fizzbuzz >= 1.0"""")
       package = doc.decodeKdl(Package)
 
-    check package == Package(version: "0.0.0", author: "Kat Marchán <kzm@zkat.tech>", description: "kats document language", license: "CC BY-SA 4.0", requires: @["nim >= 0.10.0", "foobar >= 0.1.0", "fizzbuzz >= 1.0"], obj: (num: 3.14f.some))
+    check package == Package(version: "0.0.0",
+        author: "Kat Marchán <kzm@zkat.tech>",
+        description: "kats document language", license: "CC BY-SA 4.0",
+        requires: @["nim >= 0.10.0", "foobar >= 0.1.0", "fizzbuzz >= 1.0"],
+        obj: (num: 3.14f.some))
 
   test "Seq":
     type Foo = object
       a*, b*: int
 
-    check parseKdl("node 1 2 3").decodeKdl(seq[seq[int]], "node") == @[@[1], @[2], @[3]]
+    check parseKdl("node 1 2 3").decodeKdl(seq[seq[int]], "node") == @[@[1], @[
+        2], @[3]]
     check parseKdl("node 1 2 3").decodeKdl(seq[int], "node") == @[1, 2, 3]
 
-    check parseKdl("node {a 1; b 2}; node {a 3; b 3}").decodeKdl(seq[Foo]) == @[Foo(a: 1, b: 2), Foo(a: 3, b: 3)]
+    check parseKdl("node {a 1; b 2}; node {a 3; b 3}").decodeKdl(seq[Foo]) == @[
+        Foo(a: 1, b: 2), Foo(a: 3, b: 3)]
     check parseKdl("node 1; node 2").decodeKdl(seq[int]) == @[1, 2]
 
   test "Array":
     type Foo = object
       a*, b*: int
 
-    check parseKdl("node 1 2 3").decodeKdl(array[3, array[1, int]], "node") == [[1], [2], [3]]
+    check parseKdl("node 1 2 3").decodeKdl(array[3, array[1, int]], "node") == [
+        [1], [2], [3]]
     check parseKdl("node 1 2").decodeKdl(array[2, int], "node") == [1, 2]
     check parseKdl("node 1 2 3").decodeKdl(array[1, int], "node") == [1]
     check parseKdl("node 1 2 3").decodeKdl(array[0, int], "node") == []
 
-    check parseKdl("node {a 1; b 2}; node {a 3; b 3}").decodeKdl(array[2, Foo]) == @[Foo(a: 1, b: 2), Foo(a: 3, b: 3)]
+    check parseKdl("node {a 1; b 2}; node {a 3; b 3}").decodeKdl(array[2,
+        Foo]) == @[Foo(a: 1, b: 2), Foo(a: 3, b: 3)]
     check parseKdl("node 1; node 2").decodeKdl(array[2, int]) == @[1, 2]
 
   test "Option":
@@ -292,26 +303,32 @@ suite "Decoder":
       name*: string
       surname*: Option[string]
 
-    check parseKdl("node \"Nah\"; node \"Pat\"; node").decodeKdl(seq[Option[string]]) == @["Nah".some, "Pat".some, string.none]
-    check parseKdl("node name=\"Beef\"; node name=\"Pat\" surname=\"ito\"").decodeKdl(seq[Person]) == @[Person(name: "Beef", surname: none(string)), Person(name: "Pat", surname: some("ito"))]
+    check parseKdl("node \"Nah\"; node \"Pat\"; node").decodeKdl(seq[Option[
+        string]]) == @["Nah".some, "Pat".some, string.none]
+    check parseKdl("node name=\"Beef\"; node name=\"Pat\" surname=\"ito\"").decodeKdl(
+        seq[Person]) == @[Person(name: "Beef", surname: none(string)), Person(
+        name: "Pat", surname: some("ito"))]
 
   test "Tables":
-    check parseKdl("key \"value\"; alive true").decodeKdl(Table[string, KdlVal]) == {
+    check parseKdl("key \"value\"; alive true").decodeKdl(Table[string,
+        KdlVal]) == {
       "key": "value".initKVal,
       "alive": true.initKVal
     }.toTable
-    check parseKdl("person age=10 name=\"Phil\" {other-name \"Isofruit\"}").decodeKdl(Table[string, KdlVal], "person") == {
+    check parseKdl("person age=10 name=\"Phil\" {other-name \"Isofruit\"}").decodeKdl(
+        Table[string, KdlVal], "person") == {
       "age": 10.initKVal,
       "name": "Phil".initKVal,
       "other-name": "Isofruit".initKVal
     }.toTable
 
-    check parseKdl("key \"value\"; alive true").decodeKdl(OrderedTable[string, KdlVal]) == {
+    check parseKdl("key \"value\"; alive true").decodeKdl(OrderedTable[string,
+        KdlVal]) == {
       "key": "value".initKVal,
       "alive": true.initKVal
     }.toOrderedTable
-    check parseKdl("person age=10 name=\"Phil\" {other-name \"Isofruit\"}").decodeKdl(OrderedTable[string, KdlVal], "person") == {
-        "age": 10.initKVal,
+    check parseKdl("person age=10 name=\"Phil\" {other-name \"Isofruit\"}").decodeKdl(
+        OrderedTable[string, KdlVal], "person") == {"age": 10.initKVal,
         "name": "Phil".initKVal,
         "other-name": "Isofruit".initKVal
       }.toOrderedTable
@@ -325,9 +342,13 @@ suite "Decoder":
       Game = object
         name*, version*, author*, license*: string
 
-    check parseKdl("person age=20 {name \"Rika\"}").decodeKdl(Person, "person") == Person(age: 20, name: "Rika")
-    check parseKdl("person age=20 {name \"Rika\"}").decodeKdl(tuple[age: int, name: string], "person") == (age: 20, name: "Rika")
-    check parseKdl("name \"Mindustry\"; version \"126.2\"; author \"Anuken\"; license \"GNU General Public License v3.0\"").decodeKdl(Game) == Game(name: "Mindustry", version: "126.2", author: "Anuken", license: "GNU General Public License v3.0")
+    check parseKdl("person age=20 {name \"Rika\"}").decodeKdl(Person,
+        "person") == Person(age: 20, name: "Rika")
+    check parseKdl("person age=20 {name \"Rika\"}").decodeKdl(tuple[age: int,
+        name: string], "person") == (age: 20, name: "Rika")
+    check parseKdl("name \"Mindustry\"; version \"126.2\"; author \"Anuken\"; license \"GNU General Public License v3.0\"").decodeKdl(
+        Game) == Game(name: "Mindustry", version: "126.2", author: "Anuken",
+        license: "GNU General Public License v3.0")
 
   test "Ref Object":
     type
@@ -349,16 +370,22 @@ suite "Decoder":
       else:
         false
 
-    check parseKdl("person age=20 {name \"Rika\"}").decodeKdl(Person, "person")[] == Person(age: 20, name: "Rika")[]
-    check parseKdl("name \"Mindustry\"; version \"126.2\"; author \"Anuken\"; license \"GNU General Public License v3.0\"").decodeKdl(Game)[] == Game(name: "Mindustry", version: "126.2", author: "Anuken", license: "GNU General Public License v3.0")[]
-    check parseKdl("refobj { next next=null }").decodeKdl(RefObj, "refobj")  == RefObj(next: RefObj(next: nil))
+    check parseKdl("person age=20 {name \"Rika\"}").decodeKdl(Person, "person")[
+      ] == Person(age: 20, name: "Rika")[]
+    check parseKdl("name \"Mindustry\"; version \"126.2\"; author \"Anuken\"; license \"GNU General Public License v3.0\"").decodeKdl(
+        Game)[] == Game(name: "Mindustry", version: "126.2", author: "Anuken",
+        license: "GNU General Public License v3.0")[]
+    check parseKdl("refobj { next next=null }").decodeKdl(RefObj, "refobj") ==
+        RefObj(next: RefObj(next: nil))
 
   test "Object Variant":
     check parseKdl("""
     node kind="moString" stringV="Hello"
     node kind="moInt" intV=12
     node kind="moString" stringV="Beef" kind2="moInt" intV2=0xbeef
-    """).decodeKdl(seq[MyObj]) == @[MyObj(kind: moString, stringV: "Hello"), MyObj(kind: moInt, intV: 12), MyObj(kind: moString, stringV: "Beef", kind2: moInt, intV2: 0xbeef)]
+    """).decodeKdl(seq[MyObj]) == @[MyObj(kind: moString, stringV: "Hello"),
+        MyObj(kind: moInt, intV: 12), MyObj(kind: moString, stringV: "Beef",
+        kind2: moInt, intV2: 0xbeef)]
 
     check parseKdl("""
     kind "moString"
@@ -375,19 +402,27 @@ suite "Decoder":
     check parseKdl("dir \"north\" 1").decodeKdl(seq[Dir], "dir") == @[north, south]
 
     when defined(kdlDecoderAllowHoleyEnums):
-      check parseKdl("dir 2 3").decodeKdl(seq[HoleyDir], "dir") == @[HoleyDir(2), hSouth]
+      check parseKdl("dir 2 3").decodeKdl(seq[HoleyDir], "dir") == @[HoleyDir(
+          2), hSouth]
     else:
       expect KdlError:
         discard parseKdl("dir 2 3").decodeKdl(seq[HoleyDir], "dir")
 
   test "Char":
-    check parseKdl("rows \"a\" \"b\" \"c\"").decodeKdl(seq[char], "rows") == @['a', 'b', 'c']
+    check parseKdl("rows \"a\" \"b\" \"c\"").decodeKdl(seq[char], "rows") == @[
+        'a', 'b', 'c']
     check parseKdl("char \"#\"").decodeKdl(char, "char") == '#'
     expect KdlError:
       discard parseKdl("char \"abc\"").decodeKdl(char, "char")
 
   # test "Cstring":
   #   check parseKdl("node null \"not null\"").decodeKdl(seq[cstring], "node") == @[cstring nil, cstring "not null"]
+
+  test "HashSet and OrderedSet":
+    check parseKdl("- \"a\" \"b\" \"c\"")[0].decodeKdl(HashSet[string]) == ["a",
+        "b", "c"].toHashSet
+    check parseKdl("- \"4\" \"x\" \"c\"")[0].decodeKdl(OrderedSet[string]) == [
+        "4", "x", "c"].toOrderedSet
 
   test "Extra":
     check parseKdl("node 1").decodeKdl(int, "node") == 1
@@ -407,8 +442,10 @@ suite "Decoder":
       items: @['o', 'v', 'e'], items2: [114, 108],
       items3: {'o', 'r', 'd'}, items4: ["ognmoma", "vole"].toHashSet,
       items5: ["rame", "kisu"].toOrderedSet,
-      obj: MyObj(kind: moString, stringV: "mclitneen", kind2: moInt, intV2: 0xdead),
-      table: {"mlicb": 'F'}.toTable, table2: {"hakumuse": 500i16}.toOrderedTable,
+      obj: MyObj(kind: moString, stringV: "mclitneen", kind2: moInt,
+          intV2: 0xdead),
+      table: {"mlicb": 'F'}.toTable, table2: {
+          "hakumuse": 500i16}.toOrderedTable,
       table3: {"a": "b", "c": "d"}.newStringTable,
       option: meWest.some
     )
@@ -451,9 +488,11 @@ table mlicb="F"; table2 hakumuse=500; table3 a="b" c="d"
     minute 10
     """).decodeKdl(DateTime) == dateTime(2022, mOct, 15, 12, 10)
 
-    check parseKdl("date 2022 \"October\" 15 12 04 00").decodeKdl(DateTime, "date") == dateTime(2022, mOct, 15, 12, 04)
+    check parseKdl("date 2022 \"October\" 15 12 04 00").decodeKdl(DateTime,
+        "date") == dateTime(2022, mOct, 15, 12, 04)
 
-    check parseKdl("author birthday=\"2000-10-15\" name=\"Nobody\"")[0]["birthday"].decodeKdl(DateTime) == dateTime(2000, mOct, 15)
+    check parseKdl("author birthday=\"2000-10-15\" name=\"Nobody\"")[0][
+        "birthday"].decodeKdl(DateTime) == dateTime(2000, mOct, 15)
 
   test "decodeInitKdl":
     check parseKdl("").decodeKdl(DateTime) == dateTime(2000, mMar, 30)
@@ -488,14 +527,16 @@ table mlicb="F"; table2 hakumuse=500; table3 a="b" c="d"
     stringV "hello"
     type2 "moInt"
     intV2 0xbeef
-    """).decodeKdl(MyObj) == MyObj(kind: moString, stringV: "hello", kind2: moInt, intV2: 0xbeef)
+    """).decodeKdl(MyObj) == MyObj(kind: moString, stringV: "hello",
+        kind2: moInt, intV2: 0xbeef)
 
     check parseKdl("""
     node type="moString" type2="moInt" {
       stringV "bye"
       intV2 0xdead
     }
-    """).decodeKdl(MyObj, "node") == MyObj(kind: moString, stringV: "bye", kind2: moInt, intV2: 0xdead)
+    """).decodeKdl(MyObj, "node") == MyObj(kind: moString, stringV: "bye",
+        kind2: moInt, intV2: 0xdead)
 
 
 suite "Encoder":
@@ -506,7 +547,10 @@ suite "Encoder":
         authors*: Option[seq[string]]
         description*, licenseFile*, edition*: Option[string]
 
-    check encodeDecodesDoc Package(name: "kdl", version: "0.0.0", authors: @["Kat Marchán <kzm@zkat.tech>"].some, description: "kat's document language".some, licenseFile: "LICENSE.md".some, edition: "2018".some)
+    check encodeDecodesDoc Package(name: "kdl", version: "0.0.0", authors: @[
+        "Kat Marchán <kzm@zkat.tech>"].some,
+        description: "kat's document language".some,
+        licenseFile: "LICENSE.md".some, edition: "2018".some)
     check encodeDecodesDoc {"nom": "6.0.1", "thiserror": "1.0.22"}.toTable
 
   test "Nimble":
@@ -516,7 +560,11 @@ suite "Encoder":
         requires*: seq[string]
         obj*: tuple[num: Option[float32]]
 
-    check encodeDecodesDoc Package(version: "0.0.0", author: "Kat Marchán <kzm@zkat.tech>", description: "kat's document language", license: "CC BY-SA 4.0", requires: @["nim >= 0.10.0", "foobar >= 0.1.0", "fizzbuzz >= 1.0"], obj: (num: 3.14f.some))
+    check encodeDecodesDoc Package(version: "0.0.0",
+        author: "Kat Marchán <kzm@zkat.tech>",
+        description: "kat's document language", license: "CC BY-SA 4.0",
+        requires: @["nim >= 0.10.0", "foobar >= 0.1.0", "fizzbuzz >= 1.0"],
+        obj: (num: 3.14f.some))
 
   test "Seqs and arrays":
     type Foo = object
@@ -539,7 +587,8 @@ suite "Encoder":
       surname*: Option[string]
 
     check encodeDecodesDoc @["Nah".some, "Pat".some, string.none]
-    check encodeDecodesDoc @[Person(name: "Beef", surname: none(string)), Person(name: "Pat", surname: some("ito"))]
+    check encodeDecodesDoc @[Person(name: "Beef", surname: none(string)),
+        Person(name: "Pat", surname: some("ito"))]
 
   test "Tables":
     check encodeDecodesDoc {
@@ -573,7 +622,8 @@ suite "Encoder":
 
     check encodeDecodesDoc Person(age: 20, name: "Rika")
     check encodeDecodesDoc (age: 20, name: "Rika")
-    check encodeDecodesDoc Game(name: "Mindustry", version: "126.2", author: "Anuken", license: "GNU General Public License v3.0")
+    check encodeDecodesDoc Game(name: "Mindustry", version: "126.2",
+        author: "Anuken", license: "GNU General Public License v3.0")
 
   test "Refs":
     type
@@ -586,10 +636,13 @@ suite "Encoder":
 
     check encodeDecodesDoc Person(age: 20, name: "Rika")
     check encodeDecodesDoc (age: 20, name: "Rika")
-    check encodeDecodesDoc Game(name: "Mindustry", version: "126.2", author: "Anuken", license: "GNU General Public License v3.0")
+    check encodeDecodesDoc Game(name: "Mindustry", version: "126.2",
+        author: "Anuken", license: "GNU General Public License v3.0")
 
   test "Object variants":
-    check encodeDecodesDoc @[MyObj(kind: moString, stringV: "Hello"), MyObj(kind: moInt, intV: 12), MyObj(kind: moString, stringV: "Beef", kind2: moInt, intV2: 0xbeef)]
+    check encodeDecodesDoc @[MyObj(kind: moString, stringV: "Hello"), MyObj(
+        kind: moInt, intV: 12), MyObj(kind: moString, stringV: "Beef",
+        kind2: moInt, intV2: 0xbeef)]
 
     check encodeDecodesDoc MyObj(kind: moString, stringV: "World")
 
@@ -604,6 +657,12 @@ suite "Encoder":
 
     when defined(kdlDecoderAllowHoleyEnums):
       check encodeDecodesDoc @[HoleyDir(2), hSouth]
+
+  test "HashSet and OrderedSet":
+    check encodeDecodesDoc ["a", "b", "c"].toHashSet
+    check encodeDecodesDoc ["4", "x", "c"].toOrderedSet
+    check encodeDecodesNode([10, 32, 54].toHashSet, "node")
+    check encodeDecodesNode([03, 45, 12].toOrderedSet, "node")
 
   test "Chars":
     check encodeDecodesDoc @['a', 'b', 'c']
@@ -632,8 +691,10 @@ suite "Encoder":
       items: @['o', 'v', 'e'], items2: [114, 108],
       items3: {'o', 'r', 'd'}, items4: ["ognmoma", "vole"].toHashSet,
       items5: ["rame", "kisu"].toOrderedSet,
-      obj: MyObj(kind: moString, stringV: "mclitneen", kind2: moInt, intV2: 0xdead),
-      table: {"mlicb": 'F'}.toTable, table2: {"hakumuse": 500i16}.toOrderedTable,
+      obj: MyObj(kind: moString, stringV: "mclitneen", kind2: moInt,
+          intV2: 0xdead),
+      table: {"mlicb": 'F'}.toTable, table2: {
+          "hakumuse": 500i16}.toOrderedTable,
       table3: {"mlicb": "ikudais", "lang": "jp"}.newStringTable,
       option: meWest.some
     )

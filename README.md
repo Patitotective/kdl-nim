@@ -2,7 +2,7 @@
 [![Nim](https://img.shields.io/badge/Made%20with%3A-Nim-yellow?style=flat&logo=nim&logoColor=white)](https://nim-lang.org)
 [![Tests](https://github.com/Patitotective/kdl-nim/actions/workflows/tests.yml/badge.svg)](https://github.com/Patitotective/kdl-nim/actions/workflows/tests.yml)
 
-KDL Nim implementation.
+[KDL](https://kdl.dev/) Nim implementation.
 
 ## Installation
 ```

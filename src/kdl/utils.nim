@@ -16,16 +16,19 @@ type
   KdlSome* = (KdlDoc or KdlNode or KdlVal)
   SomeTable*[K, V] = (Table[K, V] or OrderedTable[K, V])
 
-const escapeTable* = {
-  'n': "\u000A", # Line Feed
-  'r': "\u000D", # Carriage Return
-  't': "\u0009", # Character Tabulation (Tab)
-  '\\': "\u005C", # Reverse Solidus (Backslash)
-  '/': "\u002F", # Solidus (Forwardslash)
-  '"': "\u0022", # Quotation Mark (Double Quote)
-  'b': "\u0008", # Backspace
-  'f': "\u000C", # Form Feed
-}.toTable
+const
+	newLines* = ["\c\l", "\r", "\n", "\u0085", "\f", "\u2028", "\u2029"]
+	escapeTable* = {
+	  'n': "\u000A", # Line Feed
+  	'r': "\u000D", # Carriage Return
+ 	 't': "\u0009", # Character Tabulation (Tab)
+ 	 '\\': "\u005C", # Reverse Solidus (Backslash)
+ 	 '/': "\u002F", # Solidus (Forwardslash)
+ 	 '"': "\u0022", # Quotation Mark (Double Quote)
+ 	 'b': "\u0008", # Backspace
+ 	 'f': "\u000C", # Form Feed
+	}.toTable
+
 
 template fail*(msg: string) =
   raise newException(KdlError, msg)
@@ -132,43 +135,80 @@ proc getCoord*(s: Stream, i: int): Coord =
   let before = s.getPosition()
   s.setPosition 0
   while s.getPosition() < i:
-    if (let str = s.peekStr(2); str == "\c\l" or str[0] == '\n'):
-      inc result.line
-      result.col = 0
-    else:
-      inc result.col
+    var isNewLine = false
+    for n in newlines:
+      if (let str = s.peekStr(n.len); str == n):
+        inc result.line
+        result.col = 0
+        result.idx.inc n.len
+        isNewLine = true
+        s.setPosition(s.getPosition() + n.len)
 
-    s.setPosition(s.getPosition() + 1)
-    inc result.idx
+    if not isNewLine:
+      inc result.col
+      inc result.idx
+      s.setPosition(s.getPosition() + 1)
 
   s.setPosition before
 
 proc getCoord*(s: string, at: int): Coord =
-  for i in 0 ..< at:
-    if s.continuesWith("\c\l", i) or s[i] in Newlines:
-      inc result.line
-      result.col = 0
-    else:
+  var i, col = 0
+  while i < at:
+    var isNewLine = false
+    for n in newLines:
+      if s.continuesWith(n, i):
+        inc result.line
+        result.col = 0
+        i.inc n.len
+        isNewLine = true
+
+    if not isNewLine:
+      inc i
       inc result.col
 
-    inc result.idx
+  result.idx = i
 
-proc errorAt*(s: Stream, coord: Coord): string =
-  let before = s.getPosition()
-  s.setPosition coord.idx
-  let line = s.peekLineFromStart()
-  s.setPosition before
+proc isDisallowedRune*(r: Rune or int32): bool =
+  when r is Rune:
+    let r = r.int32
+  else:
+    let r = r
+
+  r in 0xD800i32 .. 0xDFFFi32 or r in 0x0000i32 .. 0x0008i32 or
+    r in 0x000Ei32 .. 0x001Fi32 or r == 0x007Fi32 or r in 0x200Ei32 .. 0x200Fi32 or
+    r in 0x202A .. 0x202Ei32 or r in 0x2066i32 .. 0x2069i32
+
+proc escapeRunes(s: string, until: int): tuple[s: string, extraLen: int] =
+  ## Escapes all disallowed runes in s with their unicode code and returns the escaped
+  ## string as well as the difference in length between the escaped string and the 
+  ## original string until until
+  var e = 0
+  for r in s.runes:
+    if r.int32 == 0xFEFFi32 or r.isDisallowedRune():
+      let escaped = &"<{r.int32.toHex(4).toLowerAscii}>"
+      result.s.add escaped
+      if e < until:
+        result.extraLen.inc escaped.len - 1
+    else:
+      result.s.add r
+
+    e.inc
+
+proc errorAt*(s: Stream or string, coord: Coord): string =
+  when s is Stream:
+    let before = s.getPosition()
+    s.setPosition coord.idx
+    var line = s.peekLineFromStart()
+    s.setPosition before
+  else:
+    var line = s.peekLineFromStart(coord.idx)
+
+  var extraLen: int
+  (line, extraLen) = line.escapeRunes(coord.col)
 
   let lineNum = &"{coord.line + 1} | "
   result.add(&"{lineNum}{line}\n")
-  result.add(&"{repeat(' ', lineNum.len + coord.col)}^")
-
-proc errorAt*(s: string, coord: Coord): string =
-  let line = s.peekLineFromStart(coord.idx)
-
-  let lineNum = &"{coord.line + 1} | "
-  result.add(&"{lineNum}{line}\n")
-  result.add(&"{repeat(' ', lineNum.len + coord.col)}^")
+  result.add(&"{repeat(' ', lineNum.len + coord.col + extraLen)}^")
 
 # ----- Object variants -----
 

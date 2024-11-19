@@ -11,7 +11,8 @@ type
     else:
       source*: string
 
-    multilineStringsNewLines*: seq[tuple[idx, length: int]] # Indexes and length of new lines in multiline strings that have to be converted to a single \n
+    # Indexes and length of new lines in multiline strings that have to be converted to a single \n
+    multilineStringsNewLines*: seq[tuple[idx, length: int]]
     stack*: seq[Token]
     current*: int
 
@@ -40,14 +41,18 @@ macro parsing(x: typedesc, body: untyped): untyped =
   result = body.copyNimTree()
 
   result.params[0] = nnkBracketExpr.newTree(ident"Match", x) # Return type
-  result.params.insert(1, newIdentDefs(ident"parser", newNimNode(nnkVarTy).add(ident"Parser")))
+  result.params.insert(
+    1, newIdentDefs(ident"parser", newNimNode(nnkVarTy).add(ident"Parser"))
+  )
   result.params.add(newIdentDefs(ident"required", ident"bool", newLit(true)))
 
   result.addPragma(ident"discardable")
 
   if result[^1].kind == nnkStmtList:
-    result[^1].insert(0, quote do:
-      let before {.inject.} = parser.current
+    result[^1].insert(
+      0,
+      quote do:
+        let before {.inject.} = parser.current,
     )
 
 proc eof(parser: Parser, extra = 0): bool =
@@ -73,7 +78,9 @@ proc error(parser: Parser, msg: string) =
     else:
       parser.source.errorAt(coord)
 
-  raise newException(KdlParserError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{errorMsg.indent(2)}\n")
+  raise newException(
+    KdlParserError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{errorMsg.indent(2)}\n"
+  )
 
 proc consume(parser: var Parser, amount = 1) =
   parser.current += amount
@@ -101,7 +108,8 @@ template valid[T](x: Match[T]): T =
   val.val
 
 template hasValue[T](match: Match[T]): bool =
-  let (ok, ignore, val {.inject.}) = match; ok and not ignore
+  let (ok, ignore, val {.inject.}) = match
+  ok and not ignore
 
 template setValue[T](x: untyped, match: Match[T]) =
   if hasValue match:
@@ -111,9 +119,9 @@ proc match(x: TokenKind | set[TokenKind]) {.parsing: Token.} =
   let token = parser.peek()
   let matches =
     when x is TokenKind:
-     token.kind == x
-   else:
-     token.kind in x
+      token.kind == x
+    else:
+      token.kind in x
 
   if matches:
     result.ok = true
@@ -156,12 +164,11 @@ proc parseNumber(token: Token): KdlVal =
         token.lexeme.parseOctInt()
       else:
         0
-
   else:
     result = initKFloat()
     result.fnum = token.lexeme.parseFloat()
 
-proc escapeString(str: string, x = 0..str.high): string =
+proc escapeString(str: string, x = 0 .. str.high): string =
   var i = x.a
   while i <= x.b:
     if str[i] == '\\':
@@ -199,11 +206,15 @@ proc parseString(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVa
       inc i
 
   if token.kind == tkString:
-    result.str = escapeString(varToken.lexeme, 1..<varToken.lexeme.high) # Escape the string body, excluding the quotes
+    result.str = escapeString(varToken.lexeme, 1 ..< varToken.lexeme.high)
+      # Escape the string body, excluding the quotes
   else: # Raw string
     var hashes: string
-    discard varToken.lexeme.parseUntil(hashes, '"', start = 1) # Count the number of hashes
-    result.str = varToken.lexeme[2 + hashes.len..varToken.lexeme.high - hashes.len - 1] # Exlude the starting 'r' + hashes + '#' and ending '"' + hashes
+    discard
+      varToken.lexeme.parseUntil(hashes, '"', start = 1) # Count the number of hashes
+    result.str =
+      varToken.lexeme[2 + hashes.len .. varToken.lexeme.high - hashes.len - 1]
+      # Exlude the starting 'r' + hashes + '#' and ending '"' + hashes
 
 proc parseBool(token: Token): KdlVal =
   assert token.kind == tkBool
@@ -227,7 +238,9 @@ proc parseValue(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVal
     else:
       token.parseNull()
 
-proc parseIdent(token: Token, multilineStringsNewLines: seq[(int, int)]): Option[string] =
+proc parseIdent(
+    token: Token, multilineStringsNewLines: seq[(int, int)]
+): Option[string] =
   case token.kind
   of strings:
     token.parseString(multilineStringsNewLines).getString().some
@@ -250,10 +263,13 @@ proc matchNodeSpace() {.parsing: None.} =
 
 proc matchSlashDash() {.parsing: None.} =
   discard valid parser.match(tkSlashDash, required)
-  while parser.matchNodeSpace(required = false).ok: discard
+  while parser.matchNodeSpace(required = false).ok:
+    discard
 
 proc matchIdent() {.parsing: Option[string].} =
-  result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent(parser.multilineStringsNewLines)
+  result.val = valid(parser.match({tkIdent} + strings, required)).parseIdent(
+      parser.multilineStringsNewLines
+    )
 
 proc matchTag() {.parsing: Option[string].} =
   discard valid parser.match(tkOpenPar, required)
@@ -266,7 +282,8 @@ proc matchValue(slashdash = false) {.parsing: KdlVal.} =
 
   let (_, _, tag) = parser.matchTag(required = false)
 
-  result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required)).parseValue(parser.multilineStringsNewLines)
+  result.val = valid(parser.match({tkBool, tkNull} + strings + numbers, required))
+    .parseValue(parser.multilineStringsNewLines)
   result.val.tag = tag
 
 proc matchProp(slashdash = true) {.parsing: KdlProp.} =
@@ -300,8 +317,8 @@ proc matchNodes() {.parsing: KdlDoc.} =
     if hasValue parser.matchNode(required = required):
       result.ok = true
       result.val.add val
-
-    elif not required: break
+    elif not required:
+      break
 
     parser.skipLineSpaces()
 
@@ -350,11 +367,22 @@ proc matchNode(slashdash = true) {.parsing: KdlNode.} =
 
 proc parseKdl*(lexer: sink Lexer): KdlDoc =
   if lexer.isStream:
-    var parser = Parser(isStream: true, multilineStringsNewLines: lexer.multilineStringsNewLines, stack: lexer.stack, stream: lexer.stream)
-    defer: parser.stream.close()
+    var parser = Parser(
+      isStream: true,
+      multilineStringsNewLines: lexer.multilineStringsNewLines,
+      stack: lexer.stack,
+      stream: lexer.stream,
+    )
+    defer:
+      parser.stream.close()
     result = parser.matchNodes().val
   else:
-    var parser = Parser(isStream: false, multilineStringsNewLines: lexer.multilineStringsNewLines, stack: lexer.stack, source: lexer.source)
+    var parser = Parser(
+      isStream: false,
+      multilineStringsNewLines: lexer.multilineStringsNewLines,
+      stack: lexer.stack,
+      source: lexer.source,
+    )
     result = parser.matchNodes().val
 
 proc parseKdl*(source: string, start = 0): KdlDoc =

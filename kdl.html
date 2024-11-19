@@ -107,12 +107,16 @@
 
 <p><strong class="examples_text">Example:</strong></p>
 <pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
-<span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;node (i8)1 null key=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">val</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> {child </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> true}&quot;</span><span class="Punctuation">)</span> <span class="Comment"># You can also read files using parseKdlFile(&quot;file.kdl&quot;)</span>
-<span class="Identifier">assert</span> <span class="Identifier">doc</span> <span class="Operator">==</span> <span class="Operator">@</span><span class="Punctuation">[</span>
-  <span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;node&quot;</span><span class="Punctuation">,</span>
-    <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="StringLit">&quot;i8&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="Identifier">initKNull</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">,</span>
-    <span class="Identifier">props</span> <span class="Operator">=</span> <span class="Punctuation">{</span><span class="StringLit">&quot;key&quot;</span><span class="Punctuation">:</span> <span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;val&quot;</span><span class="Punctuation">)</span><span class="Punctuation">}</span><span class="Operator">.</span><span class="Identifier">toTable</span><span class="Punctuation">,</span>
-    <span class="Identifier">children</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;child&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;abc&quot;</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="Identifier">true</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span>
+<span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;node (i8)1 null key=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">val</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> {child </span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> true}&quot;</span><span class="Punctuation">)</span>
+  <span class="Comment"># You can also read files using parseKdlFile(&quot;file.kdl&quot;)</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span> <span class="Operator">==</span>
+  <span class="Operator">@</span><span class="Punctuation">[</span>
+    <span class="Identifier">initKNode</span><span class="Punctuation">(</span>
+      <span class="StringLit">&quot;node&quot;</span><span class="Punctuation">,</span>
+      <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="StringLit">&quot;i8&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="Identifier">initKNull</span><span class="Punctuation">(</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">,</span>
+      <span class="Identifier">props</span> <span class="Operator">=</span> <span class="Punctuation">{</span><span class="StringLit">&quot;key&quot;</span><span class="Punctuation">:</span> <span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;val&quot;</span><span class="Punctuation">)</span><span class="Punctuation">}</span><span class="Operator">.</span><span class="Identifier">toTable</span><span class="Punctuation">,</span>
+      <span class="Identifier">children</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">initKNode</span><span class="Punctuation">(</span><span class="StringLit">&quot;child&quot;</span><span class="Punctuation">,</span> <span class="Identifier">args</span> <span class="Operator">=</span> <span class="Operator">@</span><span class="Punctuation">[</span><span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;abc&quot;</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="Identifier">true</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">)</span><span class="Punctuation">]</span><span class="Punctuation">,</span>
+    <span class="Punctuation">)</span>
   <span class="Punctuation">]</span></pre>
 <h3><a class="toc-backref" id="overview-reading-nodes" href="#overview-reading-nodes">Reading nodes</a></h3>
 <p><strong class="examples_text">Example:</strong></p>
@@ -168,21 +172,24 @@
 <p><strong class="examples_text">Example:</strong></p>
 <pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
 <span class="Keyword">let</span> <span class="Identifier">doc</span> <span class="Operator">=</span> <span class="Identifier">toKdlDoc</span><span class="Punctuation">:</span>
-  <span class="Identifier">node</span><span class="Punctuation">[</span><span class="Identifier">tag</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="Identifier">true</span><span class="Punctuation">,</span> <span class="Keyword">nil</span><span class="Punctuation">,</span> <span class="Identifier">key</span><span class="Operator">=</span><span class="StringLit">&quot;val&quot;</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
+  <span class="Identifier">node</span><span class="Punctuation">[</span><span class="Identifier">tag</span><span class="Punctuation">]</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="Identifier">true</span><span class="Punctuation">,</span> <span class="Keyword">nil</span><span class="Punctuation">,</span> <span class="Identifier">key</span> <span class="Operator">=</span> <span class="StringLit">&quot;val&quot;</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
     <span class="Identifier">child</span><span class="Punctuation">(</span><span class="FloatNumber">3.14</span><span class="Punctuation">[</span><span class="Identifier">pi</span><span class="Punctuation">]</span><span class="Punctuation">)</span>
 
-  <span class="Identifier">person</span><span class="Punctuation">(</span><span class="Identifier">name</span><span class="Operator">=</span><span class="StringLit">&quot;pat&quot;</span><span class="Punctuation">)</span>
+  <span class="Identifier">person</span><span class="Punctuation">(</span><span class="Identifier">name</span> <span class="Operator">=</span> <span class="StringLit">&quot;pat&quot;</span><span class="Punctuation">)</span>
 
-<span class="Identifier">assert</span> <span class="Identifier">doc</span> <span class="Operator">==</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;(tag)node 1 true null key=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">val</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> {child (pi)3.14}; person name=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">pat</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">&quot;</span><span class="Punctuation">)</span>
+<span class="Identifier">assert</span> <span class="Identifier">doc</span> <span class="Operator">==</span>
+  <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;(tag)node 1 true null key=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">val</span><span class="EscapeSequence">\&quot;</span><span class="StringLit"> {child (pi)3.14}; person name=</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">pat</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">&quot;</span><span class="Punctuation">)</span>
 
-<span class="Keyword">let</span> <span class="Identifier">node</span> <span class="Operator">=</span> <span class="Identifier">toKdlNode</span><span class="Punctuation">:</span> <span class="Identifier">numbers</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="FloatNumber">2.13</span><span class="Punctuation">,</span> <span class="FloatNumber">3.1e-10</span><span class="Punctuation">)</span>
+<span class="Keyword">let</span> <span class="Identifier">node</span> <span class="Operator">=</span> <span class="Identifier">toKdlNode</span><span class="Punctuation">:</span>
+  <span class="Identifier">numbers</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="FloatNumber">2.13</span><span class="Punctuation">,</span> <span class="FloatNumber">3.1e-10</span><span class="Punctuation">)</span>
 <span class="Identifier">assert</span> <span class="Identifier">node</span> <span class="Operator">==</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;numbers 1 2.13 3.1e-10&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span>
 
 <span class="Identifier">assert</span> <span class="Identifier">toKdlVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;abc&quot;</span><span class="Punctuation">[</span><span class="Identifier">tag</span><span class="Punctuation">]</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Identifier">parseKdl</span><span class="Punctuation">(</span><span class="StringLit">&quot;node (tag)</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">abc</span><span class="EscapeSequence">\&quot;</span><span class="StringLit">&quot;</span><span class="Punctuation">)</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span><span class="Operator">.</span><span class="Identifier">args</span><span class="Punctuation">[</span><span class="DecNumber">0</span><span class="Punctuation">]</span></pre>Furthermore there are the <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdlArgs</span></span></tt> and <tt class="docutils literal"><span class="pre"><span class="Identifier">toKdlProps</span></span></tt> macros, they provide shortcuts for creating a sequence and a table of <tt class="docutils literal"><span class="pre"><span class="Identifier">KdlVal</span></span></tt>:
 <p><strong class="examples_text">Example:</strong></p>
 <pre class="listing"><span class="Keyword">import</span> <span class="Identifier">src</span><span class="Operator">/</span><span class="Identifier">kdl</span>
 <span class="Identifier">assert</span> <span class="Identifier">toKdlArgs</span><span class="Punctuation">(</span><span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="DecNumber">2</span><span class="Punctuation">[</span><span class="Identifier">tag</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="StringLit">&quot;a&quot;</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Punctuation">[</span><span class="FloatNumber">1.</span><span class="Identifier">initKVal</span><span class="Punctuation">,</span> <span class="FloatNumber">2.</span><span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;tag&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="StringLit">&quot;a&quot;</span><span class="Operator">.</span><span class="Identifier">initKVal</span><span class="Punctuation">]</span>
-<span class="Identifier">assert</span> <span class="Identifier">toKdlProps</span><span class="Punctuation">(</span><span class="Punctuation">{</span><span class="StringLit">&quot;a&quot;</span><span class="Punctuation">:</span> <span class="DecNumber">1</span><span class="Punctuation">[</span><span class="Identifier">tag</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="StringLit">&quot;b&quot;</span><span class="Punctuation">:</span> <span class="DecNumber">2</span><span class="Punctuation">}</span><span class="Punctuation">)</span> <span class="Operator">==</span> <span class="Punctuation">{</span><span class="StringLit">&quot;a&quot;</span><span class="Punctuation">:</span> <span class="FloatNumber">1.</span><span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;tag&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="StringLit">&quot;b&quot;</span><span class="Punctuation">:</span> <span class="FloatNumber">2.</span><span class="Identifier">initKVal</span><span class="Punctuation">}</span><span class="Operator">.</span><span class="Identifier">toTable</span></pre>
+<span class="Identifier">assert</span> <span class="Identifier">toKdlProps</span><span class="Punctuation">(</span><span class="Punctuation">{</span><span class="StringLit">&quot;a&quot;</span><span class="Punctuation">:</span> <span class="DecNumber">1</span><span class="Punctuation">[</span><span class="Identifier">tag</span><span class="Punctuation">]</span><span class="Punctuation">,</span> <span class="StringLit">&quot;b&quot;</span><span class="Punctuation">:</span> <span class="DecNumber">2</span><span class="Punctuation">}</span><span class="Punctuation">)</span> <span class="Operator">==</span>
+  <span class="Punctuation">{</span><span class="StringLit">&quot;a&quot;</span><span class="Punctuation">:</span> <span class="FloatNumber">1.</span><span class="Identifier">initKVal</span><span class="Punctuation">(</span><span class="StringLit">&quot;tag&quot;</span><span class="Operator">.</span><span class="Identifier">some</span><span class="Punctuation">)</span><span class="Punctuation">,</span> <span class="StringLit">&quot;b&quot;</span><span class="Punctuation">:</span> <span class="FloatNumber">2.</span><span class="Identifier">initKVal</span><span class="Punctuation">}</span><span class="Operator">.</span><span class="Identifier">toTable</span></pre>
 <h2><a class="toc-backref" id="kdlminusnim-compile-flags" href="#kdlminusnim-compile-flags">Compile flags</a></h2><p><tt class="docutils literal"><span class="pre"><span class="Operator">-</span><span class="Identifier">d</span><span class="Punctuation">:</span><span class="Identifier">kdlDecoderAllowHoleyEnums</span></span></tt>: to allow converting integers into holey enums. <tt class="docutils literal"><span class="pre"><span class="Operator">-</span><span class="Identifier">d</span><span class="Punctuation">:</span><span class="Identifier">kdlDecoderNoCaseTransitionError</span></span></tt>: to not get a compile error when trying to change a discriminator field from an object variant in an init hook.</p>
 
 <h2><a class="toc-backref" id="kdlminusnim-more" href="#kdlminusnim-more">More</a></h2><p>Checkout these other useful modules:</p>
@@ -210,8 +217,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L149" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L149" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L156" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L156" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -221,8 +228,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L151" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L151" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L158" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L158" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -232,8 +239,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L130" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L130" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L137" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L137" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -246,8 +253,8 @@
   <dd>
     
     
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L124" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L124" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L131" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L131" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -261,8 +268,8 @@
   <dd>
     
     Writes <tt class="docutils literal"><span class="pre"><span class="Identifier">doc</span></span></tt> to path. Set <tt class="docutils literal"><span class="pre"><span class="Identifier">pretty</span></span></tt> to true to use <tt class="docutils literal"><span class="pre"><span class="Identifier">pretty</span></span></tt> instead of <tt class="docutils literal"><span class="pre"><span class="Operator">$</span></span></tt>.
-    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L189" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
-<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L189" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
+    <a href="https://github.com/Patitotective/kdl-nim/tree/main/src/kdl.nim#L197" class="link-seesrc" target="_blank">Source</a>&nbsp;&nbsp;
+<a href="https://github.com/Patitotective/kdl-nim/edit/devel/src/kdl.nim#L197" class="link-seesrc" target="_blank" >Edit</a>&nbsp;&nbsp;
 
   </dd>
 </div>
@@ -278,7 +285,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2024-11-15 13:25:07 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-11-19 15:25:09 UTC</small>
       </div>
     </div>
   </div>

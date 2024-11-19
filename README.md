@@ -14,6 +14,7 @@ nimble install https://github.com/Patitotective/kdl-nim
 ```
 
 ## Features
+- Pure Nim with no dependencies.
 - Streams support
 - Compile-time parsing support
 - [Decoder/Desializer](https://patitotective.github.io/kdl-nim/kdl/decoder.html)

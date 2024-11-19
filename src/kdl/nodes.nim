@@ -7,7 +7,13 @@ export options, tables
 
 # ----- Initializers -----
 
-proc initKNode*(name: string, tag = string.none, args: openarray[KdlVal] = newSeq[KdlVal](), props = initTable[string, KdlVal](), children: openarray[KdlNode] = newSeq[KdlNode]()): KdlNode =
+proc initKNode*(
+    name: string,
+    tag = string.none,
+    args: openarray[KdlVal] = newSeq[KdlVal](),
+    props = initTable[string, KdlVal](),
+    children: openarray[KdlNode] = newSeq[KdlNode](),
+): KdlNode =
   KdlNode(tag: tag, name: name, args: @args, props: props, children: @children)
 
 proc initKVal*(val: string, tag = string.none): KdlVal =
@@ -25,7 +31,8 @@ proc initKVal*(val: SomeInteger, tag = string.none): KdlVal =
 proc initKVal*(val: typeof(nil), tag = string.none): KdlVal =
   KdlVal(tag: tag, kind: KNull)
 
-proc initKVal*(val: KdlVal): KdlVal = val
+proc initKVal*(val: KdlVal): KdlVal =
+  val
 
 proc initKString*(val = string.default, tag = string.none): KdlVal =
   initKVal(val, tag)
@@ -90,7 +97,7 @@ proc get*[T: Value](val: KdlVal, x: typedesc[T]): T =
     assert val.get(uint) == 3u
     assert val.get(float) == 3.14
     assert val.get(float32) == 3.14f
-    assert val.get(range[0f..4f]) == 3.14f
+    assert val.get(range[0f .. 4f]) == 3.14f
     assert val.get(string) == "3.14"
 
   when T is string:
@@ -198,7 +205,7 @@ proc inline*(node: KdlNode): string =
   if node.args.len > 0:
     result.add " "
     for e, val in node.args:
-      if e in 1..node.args.high:
+      if e in 1 .. node.args.high:
         result.add " "
 
       result.add $val
@@ -207,7 +214,7 @@ proc inline*(node: KdlNode): string =
     result.add " "
     var count = 0
     for key, val in node.props:
-      if count in 1..<node.props.len:
+      if count in 1 ..< node.props.len:
         result.add " "
 
       result.add &"{key.quoted}={val}"
@@ -239,7 +246,7 @@ proc `$`*(node: KdlNode): string =
   if node.args.len > 0:
     result.add " "
     for e, val in node.args:
-      if e in 1..node.args.high:
+      if e in 1 .. node.args.high:
         result.add " "
 
       result.add $val
@@ -248,7 +255,7 @@ proc `$`*(node: KdlNode): string =
     result.add " "
     var count = 0
     for key, val in node.props:
-      if count in 1..<node.props.len:
+      if count in 1 ..< node.props.len:
         result.add " "
 
       result.add &"{key.quoted}={val}"
@@ -450,9 +457,13 @@ macro toKdlNode*(body: untyped): KdlNode =
   ## - For children pass a block to a node: `node(args, props): ...`
   runnableExamples:
     let node = toKdlNode:
-      numbers(10[u8], 20[i32], myfloat=1.5[f32]):
-        strings("123e4567-e89b-12d3-a456-426614174000"[uuid], "2021-02-03"[date], filter=r"$\d+"[regex])
-        person[author](name="Alex")
+      numbers(10[u8], 20[i32], myfloat = 1.5[f32]):
+        strings(
+          "123e4567-e89b-12d3-a456-426614174000"[uuid],
+          "2021-02-03"[date],
+          filter = r"$\d+"[regex],
+        )
+        person[author](name = "Alex")
     # It is the same as:
     # numbers (u8)10 (i32)20 myfloat=(f32)1.5 {
     #   strings (uuid)"123e4567-e89b-12d3-a456-426614174000" (date)"2021-02-03" filter=(regex)r"$\d+"
@@ -469,11 +480,15 @@ macro toKdlDoc*(body: untyped): KdlDoc =
   runnableExamples:
     let doc = toKdlDoc:
       node
-      numbers(10[u8], 20[i32], myfloat=1.5[f32]):
-        strings("123e4567-e89b-12d3-a456-426614174000"[uuid], "2021-02-03"[date], filter=r"$\d+"[regex])
-        person[author](name="Alex")
+      numbers(10[u8], 20[i32], myfloat = 1.5[f32]):
+        strings(
+          "123e4567-e89b-12d3-a456-426614174000"[uuid],
+          "2021-02-03"[date],
+          filter = r"$\d+"[regex],
+        )
+        person[author](name = "Alex")
       "i am also a node"
-      color[RGB](r=200, b=100, g=100)
+      color[RGB](r = 200, b = 100, g = 100)
 
   body.expectKind nnkStmtList
 
@@ -487,8 +502,10 @@ macro toKdlDoc*(body: untyped): KdlDoc =
 macro toKdlArgs*(args: varargs[untyped]): untyped =
   ## Creates an array of `KdlVal`s by calling `initKVal` through `args`.
   runnableExamples:
-    assert toKdlArgs(1, 2, "a"[tag]) == [1.initKVal, 2.initKVal, "a".initKVal("tag".some)]
-    assert initKNode("name", args = toKdlArgs(nil, true, "b")) == initKNode("name", args = [initKNull(), true.initKVal, "b".initKVal])
+    assert toKdlArgs(1, 2, "a"[tag]) ==
+      [1.initKVal, 2.initKVal, "a".initKVal("tag".some)]
+    assert initKNode("name", args = toKdlArgs(nil, true, "b")) ==
+      initKNode("name", args = [initKNull(), true.initKVal, "b".initKVal])
 
   args.expectKind nnkArgList
   result = newNimNode(nnkBracket)
@@ -498,8 +515,10 @@ macro toKdlArgs*(args: varargs[untyped]): untyped =
 macro toKdlProps*(props: untyped): Table[string, KdlVal] =
   ## Creates a `Table[string, KdlVal]` from a array-of-tuples/table-constructor by calling `initKVal` through the values.
   runnableExamples:
-    assert toKdlProps({"a": 1[i8], "b": 2}) == {"a": 1.initKVal("i8".some), "b": 2.initKVal}.toTable
-    assert initKNode("name", props = toKdlProps({"c": nil, "d": true})) == initKNode("name", props = {"c": initKNull(), "d": true.initKVal}.toTable)
+    assert toKdlProps({"a": 1[i8], "b": 2}) ==
+      {"a": 1.initKVal("i8".some), "b": 2.initKVal}.toTable
+    assert initKNode("name", props = toKdlProps({"c": nil, "d": true})) ==
+      initKNode("name", props = {"c": initKNull(), "d": true.initKVal}.toTable)
 
   props.expectKind nnkTableConstr
 

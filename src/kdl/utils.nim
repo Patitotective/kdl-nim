@@ -7,12 +7,25 @@ type
   Coord* = object
     line*, col*, idx*: int
 
-  Object* = ((object or tuple) and not KdlSome and not SomeTable and
-      not List and not Value and not SomeSet)
+  Object* = (
+    (object or tuple) and not KdlSome and not SomeTable and not List and not Value and
+    not SomeSet
+  )
   List* = (array or seq)
   Value* = (SomeNumber or string or bool) #  or range
   KdlSome* = (KdlDoc or KdlNode or KdlVal)
   SomeTable*[K, V] = (Table[K, V] or OrderedTable[K, V])
+
+const escapeTable* = {
+  'n': "\u000A", # Line Feed
+  'r': "\u000D", # Carriage Return
+  't': "\u0009", # Character Tabulation (Tab)
+  '\\': "\u005C", # Reverse Solidus (Backslash)
+  '/': "\u002F", # Solidus (Forwardslash)
+  '"': "\u0022", # Quotation Mark (Double Quote)
+  'b': "\u0008", # Backspace
+  'f': "\u000C", # Form Feed
+}.toTable
 
 template fail*(msg: string) =
   raise newException(KdlError, msg)
@@ -22,7 +35,16 @@ template check*(cond: untyped, msg = "") =
     let txt = msg
     fail astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
 
-proc quoted*(x: string): string = result.addQuoted(x)
+proc quoted*(x: string): string =
+  var i = 0
+  while i < x.len:
+    for k, v in escapeTable:
+      if x.continuesWith(v, i):
+        result.add &"\\{k}"
+        i.inc v.len
+      else:
+        result.add x[i]
+        i.inc
 
 proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
   let aLen = a.len
@@ -31,16 +53,28 @@ proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
   var j = 0
 
   while true:
-    while i < aLen and a[i] in ignoreChars: inc i
-    while j < bLen and b[j] in ignoreChars: inc j
-    let aa = if i < aLen: toLowerAscii(a[i]) else: '\0'
-    let bb = if j < bLen: toLowerAscii(b[j]) else: '\0'
+    while i < aLen and a[i] in ignoreChars:
+      inc i
+    while j < bLen and b[j] in ignoreChars:
+      inc j
+    let aa =
+      if i < aLen:
+        toLowerAscii(a[i])
+      else:
+        '\0'
+    let bb =
+      if j < bLen:
+        toLowerAscii(b[j])
+      else:
+        '\0'
     result = ord(aa) - ord(bb)
-    if result != 0: return result
+    if result != 0:
+      return result
     # the characters are identical:
     if i >= aLen:
       # both cursors at the end:
-      if j >= bLen: return 0
+      if j >= bLen:
+        return 0
       # not yet at the end of 'b':
       return -1
     elif j >= bLen:
@@ -48,8 +82,8 @@ proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
     inc i
     inc j
 
-proc eqIdent*(v, a: openarray[char], ignoreChars = {'_',
-    '-'}): bool = cmpIgnoreStyle(v, a, ignoreChars) == 0
+proc eqIdent*(v, a: openarray[char], ignoreChars = {'_', '-'}): bool =
+  cmpIgnoreStyle(v, a, ignoreChars) == 0
 
 # ----- Streams -----
 
@@ -76,18 +110,18 @@ proc peekLineFromStart*(s: string, at: int): string =
   let at = if at >= s.len: s.high else: at
 
   var idx = 0
-  for i in countdown(at-1, 0):
+  for i in countdown(at - 1, 0):
     if s[i] in Newlines:
       idx = i + 1
       if idx == s.high:
         dec idx
       break
 
-  for i in idx..s.high:
+  for i in idx .. s.high:
     if s[i] in Newlines:
-      return s[idx..<i]
+      return s[idx ..< i]
 
-  result = s[idx..^1]
+  result = s[idx ..^ 1]
 
 proc getCoord*(s: Stream, i: int): Coord =
   let before = s.getPosition()
@@ -105,7 +139,7 @@ proc getCoord*(s: Stream, i: int): Coord =
   s.setPosition before
 
 proc getCoord*(s: string, at: int): Coord =
-  for i in 0..<at:
+  for i in 0 ..< at:
     if s.continuesWith("\c\l", i) or s[i] in Newlines:
       inc result.line
       result.col = 0
@@ -161,18 +195,18 @@ macro getDiscriminants*(a: typedesc): seq[string] =
   # candidate for std/typetraits
   var a = a.getTypeImpl
   if a.kind != nnkBracketExpr:
-    return quote do:
+    return quote:
       newSeq[string]()
 
   let sym = a[1]
   let t = sym.getTypeImpl
   if t.kind != nnkObjectTy:
-    return quote do:
+    return quote:
       newSeq[string]()
 
   let t2 = t[2]
   if t2.kind != nnkRecList:
-    return quote do:
+    return quote:
       newSeq[string]()
 
   result = newTree(nnkBracket)
@@ -185,10 +219,10 @@ macro getDiscriminants*(a: typedesc): seq[string] =
 
   result =
     if result.len > 0:
-      quote do:
+      quote:
         @`result`
     else:
-      quote do:
+      quote:
         newSeq[string]()
 
 macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
@@ -205,9 +239,13 @@ macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
   var t2: NimNode
 
   case t.kind
-  of nnkObjectTy: t2 = t[2]
-  of nnkRefTy: t2 = t[0].getTypeImpl[2]
-  else: doAssert false, $t.kind # xxx `nnkPtrTy` could be handled too
+  of nnkObjectTy:
+    t2 = t[2]
+  of nnkRefTy:
+    t2 = t[0].getTypeImpl[2]
+  else:
+    doAssert false, $t.kind
+    # xxx `nnkPtrTy` could be handled too
 
   doAssert t2.kind == nnkRecList
 
@@ -219,10 +257,10 @@ macro initCaseObject*(T: typedesc, discriminatorSetter): untyped =
       let key = ti[0][0]
       let typ = ti[0][1]
       let key2 = key.strVal
-      let val = quote do:
+      let val = quote:
         `discriminatorSetter`(`key2`, typedesc[`typ`])
 
       result.add newTree(nnkExprColonExpr, key, val)
 
-template typeofdesc*[T](b: typedesc[T]): untyped = T
-
+template typeofdesc*[T](b: typedesc[T]): untyped =
+  T

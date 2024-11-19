@@ -3,28 +3,38 @@ import utils, types
 
 type
   TokenKind* = enum
-    tkEmpty = "empty",
-    tkNull = "null",
-    tkStar = "star",
-    tkPlus = "plus",
-    tkBool = "bool",
-    tkTilde = "tilde",
-    tkComma = "comma",
-    tkCaret = "caret",
-    tkDollar = "dollar",
-    tkIdent = "identifier",
-    tkSemicolon = "semicolon",
-    tkGreater = "greater_than",
-    tkSlashDash = "slash_dash",
-    tkDoublePipe = "double_pipe",
+    tkEmpty = "empty"
+    tkNull = "null"
+    tkStar = "star"
+    tkPlus = "plus"
+    tkBool = "bool"
+    tkTilde = "tilde"
+    tkComma = "comma"
+    tkCaret = "caret"
+    tkDollar = "dollar"
+    tkIdent = "identifier"
+    tkSemicolon = "semicolon"
+    tkGreater = "greater_than"
+    tkSlashDash = "slash_dash"
+    tkDoublePipe = "double_pipe"
     tkLineCont = "line_continuation"
-    tkEqual = "equal", tkNotEqual = "not_equal",
-    tkString = "string", tkRawString = "raw_string",
-    tkWhitespace = "whitespace", tkNewLine = "new_line",
-    tkOpenPar = "open_parenthesis", tkClosePar = "close_parenthesis", # Type tagation
-    tkOpenBra = "open_bracket", tkCloseBra = "close_bracket", # Children block
-    tkOpenSqu = "open_square_bracket", tkCloseSqu = "close_square_bracket",
-    tkNumFloat = "float_number", tkNumInt = "integer_number", tkNumHex = "hexadecimal_number", tkNumBin = "binary_number", tkNumOct = "octagonal_number",
+    tkEqual = "equal"
+    tkNotEqual = "not_equal"
+    tkString = "string"
+    tkRawString = "raw_string"
+    tkWhitespace = "whitespace"
+    tkNewLine = "new_line"
+    tkOpenPar = "open_parenthesis"
+    tkClosePar = "close_parenthesis" # Type tagation
+    tkOpenBra = "open_bracket"
+    tkCloseBra = "close_bracket" # Children block
+    tkOpenSqu = "open_square_bracket"
+    tkCloseSqu = "close_square_bracket"
+    tkNumFloat = "float_number"
+    tkNumInt = "integer_number"
+    tkNumHex = "hexadecimal_number"
+    tkNumBin = "binary_number"
+    tkNumOct = "octagonal_number"
 
   Token* = object
     lexeme*: string
@@ -38,26 +48,18 @@ type
     else:
       source*: string
       current*: int
-    multilineStringsNewLines*: seq[tuple[idx, length: int]] # Indexes and length of new lines in multiline strings that have to be converted to a single \n
+    multilineStringsNewLines*: seq[tuple[idx, length: int]]
+      # Indexes and length of new lines in multiline strings that have to be converted to a single \n
     stack*: seq[Token]
 
 const
   nonIdenChars = {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'}
   nonInitialChars = Digits + nonIdenChars
-  whitespaces = [0x0009, 0x0020, 0x00A0, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005, 0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000]
+  whitespaces = [
+    0x0009, 0x0020, 0x00A0, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005,
+    0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000,
+  ]
   newLines = ["\c\l", "\r", "\n", "\u0085", "\f", "\u2028", "\u2029"]
-  escapeTable* = {
-    'n': "\u000A", # Line Feed
-    'r': "\u000D", # Carriage Return
-    't': "\u0009", # Character Tabulation (Tab)
-    '\\': "\u005C", # Reverse Solidus (Backslash)
-    '/': "\u002F", # Solidus (Forwardslash)
-    '"': "\u0022", # Quotation Mark (Double Quote)
-    'b': "\u0008", # Backspace
-    'f': "\u000C", # Form Feed
-    'u': "", # Unicode
-  }.toTable
-
   litMatches = {
     "*": tkStar,
     "+": tkPlus,
@@ -72,10 +74,14 @@ const
     ";": tkSemicolon,
     "/-": tkSlashDash,
     "||": tkDoublePipe,
-    "=": tkEqual, "!=": tkNotEqual,
-    "(": tkOpenPar, ")": tkClosePar,
-    "{": tkOpenBra, "}": tkCloseBra,
-    "[": tkOpenSqu, "]": tkCloseSqu,
+    "=": tkEqual,
+    "!=": tkNotEqual,
+    "(": tkOpenPar,
+    ")": tkClosePar,
+    "{": tkOpenBra,
+    "}": tkCloseBra,
+    "[": tkOpenSqu,
+    "]": tkCloseSqu,
   }
 
 proc `$`*(lexer: Lexer): string =
@@ -136,21 +142,26 @@ macro lexing(token: TokenKind, body: untyped) =
 
   # Modify the procedure statements list (body)
 
-  body[^1].insert(0, quote do:
-    let before {.inject.} = getPos(lexer)
+  body[^1].insert(
+    0,
+    quote do:
+      let before {.inject.} = getPos(lexer),
   )
-  body[^1].add(quote do:
-    result = before != getPos(lexer)
+  body[^1].add(
+    quote do:
+      result = before != getPos(lexer)
   )
-  body[^1].add(quote do:
-    if not consume:
-      setPos(lexer, before)
+  body[^1].add(
+    quote do:
+      if not consume:
+        setPos(lexer, before)
   )
 
   if token != bindSym"tkEmpty":
-    body[^1].add(quote do:
-      if result and addToStack:
-        lexer.add(`token`, before)
+    body[^1].add(
+      quote do:
+        if result and addToStack:
+          lexer.add(`token`, before)
     )
 
   result = body
@@ -181,19 +192,21 @@ proc peek(lexer: var Lexer, next = 0): char =
     lexer.setPos before
 
 proc peekStr(lexer: var Lexer, until: int): string =
-  if lexer.eof(until-1): return
+  if lexer.eof(until - 1):
+    return
 
   if lexer.isStream:
     lexer.stream.peekStr(until)
   else:
-    lexer.source[lexer.current..<lexer.current + until]
+    lexer.source[lexer.current ..< lexer.current + until]
 
 proc peek(lexer: var Lexer, x: string): bool =
   if not lexer.eof(x.high):
     result = lexer.peekStr(x.len) == x
 
 proc peekRune(lexer: var Lexer): Rune =
-  if lexer.eof(): return
+  if lexer.eof():
+    return
 
   if lexer.isStream:
     lexer.stream.peekRune()
@@ -203,7 +216,9 @@ proc peekRune(lexer: var Lexer): Rune =
 proc add(lexer: var Lexer, kind: TokenKind, start: int) =
   let before = lexer.getPos()
   lexer.setPos start
-  lexer.stack.add(Token(kind: kind, lexeme: lexer.peekStr(before - start), start: start))
+  lexer.stack.add(
+    Token(kind: kind, lexeme: lexer.peekStr(before - start), start: start)
+  )
   lexer.setPos before
 
 proc error(lexer: Lexer, msg: string) =
@@ -219,7 +234,9 @@ proc error(lexer: Lexer, msg: string) =
     else:
       lexer.source.errorAt(coord)
 
-  raise newException(KdlLexerError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{errorMsg.indent(2)}\n")
+  raise newException(
+    KdlLexerError, &"{msg} at {coord.line + 1}:{coord.col + 1}\n{errorMsg.indent(2)}\n"
+  )
 
 proc literal(lexer: var Lexer, lit: string, consume = true): bool {.discardable.} =
   result = lexer.peek(lit)
@@ -278,7 +295,6 @@ proc tokenNumFloat() {.lexing: tkNumFloat.} =
 
     if lexer.peek().toLowerAscii() == 'e':
       lexer.tokenNumExp()
-
   elif lexer.peek().toLowerAscii() == 'e':
     lexer.tokenNumExp()
   else:
@@ -307,16 +323,17 @@ proc tokenNumHex*() {.lexing: tkNumHex.} =
 proc tokenNumOct*() {.lexing: tkNumOct.} =
   if lexer.peek("0o"):
     lexer.inc 2
-    if lexer.peek() notin {'0'..'7'}:
+    if lexer.peek() notin {'0' .. '7'}:
       lexer.error "Expected one or more octal digits"
 
-    lexer.skipWhile({'0'..'7', '_'})
+    lexer.skipWhile({'0' .. '7', '_'})
 
 proc tokenStringBody(lexer: var Lexer, raw = false) =
   let before = lexer.getPos()
 
   if raw:
-    if lexer.peek() != 'r': return
+    if lexer.peek() != 'r':
+      return
 
     inc lexer
 
@@ -343,7 +360,7 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
         continue
 
       let next = lexer.peek(1)
-      if next notin escapeTable:
+      if next notin escapeTable or next != 'u':
         lexer.error &"Invalid escape '{next}'"
 
       lexer.inc 2
@@ -355,12 +372,11 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
         inc lexer
 
         let digits = lexer.skipWhile(HexDigits)
-        if digits notin 1..6:
+        if digits notin 1 .. 6:
           lexer.error &"Expected 1-6 hexadecimal digits but found {digits}"
 
         if lexer.peek() != '}':
           lexer.error "Expected closing bracket '}'"
-
     of '"':
       inc lexer
       let endHashes = lexer.skipWhile({'#'})
@@ -418,15 +434,21 @@ proc tokenIdent*() {.lexing: tkIdent.} =
 
   # Check the identifier is similar to a boolean, null or number, and if it is it should follow the EOF, a whitespace, a new line or any non-ident char in order to be discarded.
   if (
-      lexer.literal("true") or lexer.literal("false") or lexer.literal("null") or
-      lexer.tokenNumHex(addToStack = false) or lexer.tokenNumBin(addToStack = false) or lexer.tokenNumOct(addToStack = false) or lexer.tokenNumFloat(addToStack = false) or lexer.tokenNumInt(addToStack = false)
+    lexer.literal("true") or lexer.literal("false") or lexer.literal("null") or
+    lexer.tokenNumHex(addToStack = false) or lexer.tokenNumBin(addToStack = false) or
+    lexer.tokenNumOct(addToStack = false) or lexer.tokenNumFloat(addToStack = false) or
+    lexer.tokenNumInt(addToStack = false)
+  ):
+    if (
+      lexer.eof() or lexer.tokenWhitespace(addToStack = false) or
+      lexer.tokenNewLine(addToStack = false) or lexer.peek() in nonIdenChars
     ):
-    if (lexer.eof() or lexer.tokenWhitespace(addToStack = false) or lexer.tokenNewLine(addToStack = false) or lexer.peek() in nonIdenChars):
       lexer.setPos before
       return
 
   block outer:
-    while not lexer.eof() or not lexer.tokenWhitespace(consume = false) or not lexer.tokenNewLine(consume = false):
+    while not lexer.eof() or not lexer.tokenWhitespace(consume = false) or
+        not lexer.tokenNewLine(consume = false):
       let rune = lexer.peekRune()
       if rune.int <= 0x20 or rune.int > 0x10FFFF:
         break
@@ -456,8 +478,9 @@ proc tokenLineCont*() {.lexing: tkLineCont.} =
   inc lexer
 
   lexer.skipwhitespaces()
-  if not lexer.tokenSingleLineComment(addToStack = false) and not lexer.tokenNewLine(addToStack = false):
-      lexer.error "Expected a new line"
+  if not lexer.tokenSingleLineComment(addToStack = false) and
+      not lexer.tokenNewLine(addToStack = false):
+    lexer.error "Expected a new line"
 
 proc tokenLitMatches() {.lexing: tkEmpty.} =
   ## Tries to match any of the litMatches literals.
@@ -466,7 +489,10 @@ proc tokenLitMatches() {.lexing: tkEmpty.} =
       lexer.add(kind, before)
       break
 
-proc validToken*(source: sink string, token: proc(lexer: var Lexer, consume = true, addToStack = true): bool): bool =
+proc validToken*(
+    source: sink string,
+    token: proc(lexer: var Lexer, consume = true, addToStack = true): bool,
+): bool =
   var lexer = Lexer(isStream: true, stream: newStringStream(source))
 
   try:
@@ -476,19 +502,9 @@ proc validToken*(source: sink string, token: proc(lexer: var Lexer, consume = tr
 
 proc scanKdl*(lexer: var Lexer) =
   const choices = [
-    tokenWhitespace,
-    tokenNewLine,
-    tokenLineCont,
-    tokenSingleLineComment,
-    tokenRawString,
-    tokenString,
-    tokenIdent,
-    tokenNumHex,
-    tokenNumBin,
-    tokenNumOct,
-    tokenNumFloat,
-    tokenNumInt,
-    tokenLitMatches,
+    tokenWhitespace, tokenNewLine, tokenLineCont, tokenSingleLineComment,
+    tokenRawString, tokenString, tokenIdent, tokenNumHex, tokenNumBin, tokenNumOct,
+    tokenNumFloat, tokenNumInt, tokenLitMatches,
   ]
 
   while not lexer.eof():
@@ -511,7 +527,8 @@ proc scanKdlFile*(path: string): Lexer =
 
 proc scanKdl*(stream: sink Stream): Lexer =
   result = Lexer(isStream: true, stream: stream)
-  defer: result.stream.close()
+  defer:
+    result.stream.close()
   result.scanKdl()
 
 proc scanKdlStream*(source: sink string): Lexer =

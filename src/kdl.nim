@@ -14,12 +14,16 @@
 ## Arguments are a sequence of values, while properties are an unordered table of string and values.
 ## Arguments and properties' values are represented by the object variant `KdlVal`. `KdlVal` can be of any kind `KString`, `KFloat`, `KBool`, `KNull` or `KInt`.
 runnableExamples:
-  let doc = parseKdl("node (i8)1 null key=\"val\" {child \"abc\" true}") # You can also read files using parseKdlFile("file.kdl")
-  assert doc == @[
-    initKNode("node",
-      args = @[initKVal(1, "i8".some), initKNull()],
-      props = {"key": initKVal("val")}.toTable,
-      children = @[initKNode("child", args = @[initKVal("abc"), initKVal(true)])])
+  let doc = parseKdl("node (i8)1 null key=\"val\" {child \"abc\" true}")
+    # You can also read files using parseKdlFile("file.kdl")
+  assert doc ==
+    @[
+      initKNode(
+        "node",
+        args = @[initKVal(1, "i8".some), initKNull()],
+        props = {"key": initKVal("val")}.toTable,
+        children = @[initKNode("child", args = @[initKVal("abc"), initKVal(true)])],
+      )
     ]
 
 ## ### Reading nodes
@@ -75,14 +79,16 @@ runnableExamples:
 ## To create KDL documents, nodes or values without parsing or object constructors you can use the `toKdlDoc`, `toKdlNode` and`toKdlVal` macros which have a similar syntax to KDL:
 runnableExamples:
   let doc = toKdlDoc:
-    node[tag](1, true, nil, key="val"):
+    node[tag](1, true, nil, key = "val"):
       child(3.14[pi])
 
-    person(name="pat")
+    person(name = "pat")
 
-  assert doc == parseKdl("(tag)node 1 true null key=\"val\" {child (pi)3.14}; person name=\"pat\"")
+  assert doc ==
+    parseKdl("(tag)node 1 true null key=\"val\" {child (pi)3.14}; person name=\"pat\"")
 
-  let node = toKdlNode: numbers(1, 2.13, 3.1e-10)
+  let node = toKdlNode:
+    numbers(1, 2.13, 3.1e-10)
   assert node == parseKdl("numbers 1 2.13 3.1e-10")[0]
 
   assert toKdlVal("abc"[tag]) == parseKdl("node (tag)\"abc\"")[0].args[0]
@@ -90,7 +96,8 @@ runnableExamples:
 ## Furthermore there are the `toKdlArgs` and `toKdlProps` macros, they provide shortcuts for creating a sequence and a table of `KdlVal`:
 runnableExamples:
   assert toKdlArgs(1, 2[tag], "a") == [1.initKVal, 2.initKVal("tag".some), "a".initKVal]
-  assert toKdlProps({"a": 1[tag], "b": 2}) == {"a": 1.initKVal("tag".some), "b": 2.initKVal}.toTable
+  assert toKdlProps({"a": 1[tag], "b": 2}) ==
+    {"a": 1.initKVal("tag".some), "b": 2.initKVal}.toTable
 
 ## ## Compile flags
 ## `-d:kdlDecoderAllowHoleyEnums`: to allow converting integers into holey enums.
@@ -116,7 +123,7 @@ func indent(s: string, count: Natural, padding = " ", newLine = "\n"): string =
     if e > 0:
       result.add newLine
 
-    for j in 1..count:
+    for j in 1 .. count:
       result.add padding
 
     result.add line
@@ -157,7 +164,7 @@ proc pretty*(node: KdlNode): string =
   if node.args.len > 0:
     result.add " "
     for e, val in node.args:
-      if e in 1..node.args.high:
+      if e in 1 .. node.args.high:
         result.add " "
 
       result.add val.pretty()
@@ -165,7 +172,7 @@ proc pretty*(node: KdlNode): string =
   if node.props.len > 0:
     result.add " "
     for e, (key, val) in node.props.pairs.toSeq.sortedByIt(it[0]):
-      if e in 1..<node.props.len:
+      if e in 1 ..< node.props.len:
         result.add " "
 
       result.add &"{key.prettyIdent}={val.pretty}"
@@ -184,7 +191,8 @@ proc pretty*(doc: KdlDoc, newLine = true): string =
     if e < doc.high:
       result.add "\p"
 
-  if newLine: result.add "\p"
+  if newLine:
+    result.add "\p"
 
 proc writeFile*(path: string, doc: KdlDoc, pretty = false) =
   ## Writes `doc` to path. Set `pretty` to true to use `pretty` instead of `$`.
@@ -192,4 +200,3 @@ proc writeFile*(path: string, doc: KdlDoc, pretty = false) =
     writeFile(path, doc.pretty())
   else:
     writeFile(path, $doc & '\n')
-

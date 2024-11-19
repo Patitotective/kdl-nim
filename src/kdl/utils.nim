@@ -36,15 +36,20 @@ template check*(cond: untyped, msg = "") =
     fail astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
 
 proc quoted*(x: string): string =
+  result.add '"'
   var i = 0
   while i < x.len:
+    var isEscape = false
     for k, v in escapeTable:
-      if x.continuesWith(v, i):
+      # Don't escape forward slash
+      if k != '/' and x.continuesWith(v, i):
         result.add &"\\{k}"
         i.inc v.len
-      else:
-        result.add x[i]
-        i.inc
+        isEscape = true
+    if not isEscape:
+      result.add x[i]
+      i.inc
+  result.add '"'
 
 proc cmpIgnoreStyle(a, b: openarray[char], ignoreChars = {'_', '-'}): int =
   let aLen = a.len

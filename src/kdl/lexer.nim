@@ -360,7 +360,7 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
         continue
 
       let next = lexer.peek(1)
-      if next notin escapeTable or next != 'u':
+      if next != 'u' and next notin escapeTable:
         lexer.error &"Invalid escape '{next}'"
 
       lexer.inc 2

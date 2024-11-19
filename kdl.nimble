@@ -1,11 +1,11 @@
 # Package
 
-version       = "2.0.2"
-author        = "Patitotective"
-description   = "KDL document language Nim implementation"
-license       = "MIT"
-srcDir        = "src"
-skipFiles     = @["src/kdl/query.nim", "src/kdl/schema.nim"]
+version = "2.0.3"
+author = "Patitotective"
+description = "KDL document language Nim implementation"
+license = "MIT"
+srcDir = "src"
+skipFiles = @["src/kdl/query.nim", "src/kdl/schema.nim"]
 
 # Dependencies
 

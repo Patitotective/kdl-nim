@@ -54,10 +54,6 @@ type
 const
   nonIdenChars = {'\\', '/', '(', ')', '{', '}', '<', '>', ';', '[', ']', '=', ',', '"'}
   nonInitialChars = Digits + nonIdenChars
-  whitespaces = [
-    0x0009, 0x0020, 0x00A0, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005,
-    0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000,
-  ]
   equals = [0x003D, 0xFE66, 0xFF1D, 0x1F7F0]
   litMatches = {
     "*": tkStar,
@@ -84,9 +80,9 @@ const
 proc `$`*(lexer: Lexer): string =
   result =
     if lexer.isStream:
-      &"{(if lexer.stream.atEnd: \"SUCCESS\" else: \"FAIL\")}\n\t"
+      &"{(if lexer.stream.atEnd: \"SUCCESS\" else: \"FAIL\")}\n  "
     else:
-      &"{(if lexer.current == lexer.source.len: \"SUCCESS\" else: \"FAIL\")} {lexer.current}/{lexer.source.len}\n\t"
+      &"{(if lexer.current == lexer.source.len: \"SUCCESS\" else: \"FAIL\")} {lexer.current}/{lexer.source.len}\n  "
 
   for token in lexer.stack:
     result.add &"({token.kind})"
@@ -257,11 +253,50 @@ proc disallowedRunes() {.lexing: tkEmpty.} =
   elif isDisallowedRune(r):
     lexer.error &"The code point U+{r.toHex(4)} isn't allowed on a KDL document"
 
+proc tokenMultiLineComment*() {.lexing: tkEmpty.} =
+  if not lexer.peek("/*"):
+    return
+
+  lexer.inc 2
+
+  var nested = 1
+
+  while not lexer.eof() and nested > 0:
+    if lexer.peek("*/"):
+      dec nested
+      lexer.inc 2
+    elif lexer.peek("/*"):
+      inc nested
+      lexer.inc 2
+    else:
+      inc lexer
+
+  if nested > 0:
+    lexer.error "Expected end of multi-line comment"
+
 proc tokenNewLine*() {.lexing: tkNewLine.} =
   for nl in newLines:
     if lexer.peek(nl):
       lexer.inc nl.len
       break
+
+proc tokenWhitespace*() {.lexing: tkWhitespace.} =
+  ## This treats multline comments as whitespaces
+  if not lexer.eof() and (let rune = lexer.peekRune(); rune.int in whitespaces):
+    lexer.inc rune.size
+  else:
+    lexer.tokenMultiLineComment()
+
+proc skipWhitespaceOrNewline*() {.lexing: tkEmpty.} =
+  if not lexer.eof():
+    if (let rune = lexer.peekRune(); rune.int in whitespaces):
+      lexer.inc rune.size
+    else:
+      lexer.tokenNewLine(addToStack = false)
+
+proc skipWhitespaces*() {.lexing: tkEmpty.} =
+  while lexer.tokenWhitespace(addToStack = addToStack, consume = consume):
+    discard
 
 proc tokenNumWhole() {.lexing: tkEmpty.} =
   if lexer.peek() in {'-', '+'}:
@@ -368,6 +403,7 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
 
   while not lexer.eof():
     lexer.disallowedRunes()
+
     let before = lexer.getPos()
     if lexer.tokenNewLine(addToStack = false):
       lexer.multilineStringsNewLines.add((before, lexer.getPos() - before))
@@ -380,11 +416,18 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
         inc lexer
         continue
 
+      lexer.inc
+
+      if lexer.skipWhitespaceOrNewline():
+        while lexer.skipWhitespaceOrNewline():
+          discard
+        continue
+
       let next = lexer.peek(1)
       if next notin escapeTable and next != 'u':
         lexer.error &"Invalid escape '{next}'"
 
-      lexer.inc 2
+      lexer.inc
 
       if next == 'u':
         if lexer.peek() != '{':
@@ -418,37 +461,6 @@ proc tokenString*() {.lexing: tkString.} =
 
 proc tokenRawString*() {.lexing: tkRawString.} =
   lexer.tokenStringBody(raw = true)
-
-proc tokenMultiLineComment*() {.lexing: tkEmpty.} =
-  if not lexer.peek("/*"):
-    return
-
-  lexer.inc 2
-
-  var nested = 1
-
-  while not lexer.eof() and nested > 0:
-    if lexer.peek("*/"):
-      dec nested
-      lexer.inc 2
-    elif lexer.peek("/*"):
-      inc nested
-      lexer.inc 2
-    else:
-      inc lexer
-
-  if nested > 0:
-    lexer.error "Expected end of multi-line comment"
-
-proc tokenWhitespace*() {.lexing: tkWhitespace.} =
-  if not lexer.eof() and (let rune = lexer.peekRune(); rune.int in whitespaces):
-    lexer.inc rune.size
-  else:
-    lexer.tokenMultiLineComment()
-
-proc skipWhitespaces*() {.lexing: tkEmpty.} =
-  while lexer.tokenWhitespace():
-    discard
 
 proc tokenIdent*() {.lexing: tkIdent.} =
   if lexer.eof() or lexer.peek() in nonInitialChars:

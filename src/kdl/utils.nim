@@ -1,5 +1,7 @@
 ## Various utilities for internal use in the library.
 import std/[strformat, strutils, unicode, streams, tables, macros, sets]
+import unicodedb/widths
+import graphemes
 
 import types
 
@@ -7,9 +9,6 @@ type
   Coord* = object
     line*, idx*: int
     col*: int # col counts each unicode character (rune) as one
-    colNonAscii*: int # number of non ascii (unicode chars) until col
-    # this is a weird way of dealing with non-fixed width characters until an apporach
-    # lice rust's unicode-width appears...
 
   Object* = (
     (object or tuple) and not KdlSome and not SomeTable and not List and not Value and
@@ -22,15 +21,19 @@ type
 
 const
   newLines* = ["\c\l", "\r", "\n", "\u0085", "\f", "\u2028", "\u2029"]
+  whitespaces* = [
+    0x0009, 0x0020, 0x00A0, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005,
+    0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000,
+  ]
   escapeTable* = {
     'n': "\u000A", # Line Feed
     'r': "\u000D", # Carriage Return
     't': "\u0009", # Character Tabulation (Tab)
     '\\': "\u005C", # Reverse Solidus (Backslash)
-    '/': "\u002F", # Solidus (Forwardslash)
     '"': "\u0022", # Quotation Mark (Double Quote)
     'b': "\u0008", # Backspace
     'f': "\u000C", # Form Feed
+    's': "\u0020", # Space
   }.toTable
 
 template fail*(msg: string) =
@@ -51,7 +54,7 @@ proc quoted*(x: string): string =
     var isEscape = false
     for k, v in escapeTable:
       # Don't escape forward slash
-      if k != '/' and x.continuesWith(v, i):
+      if x.continuesWith(v, i):
         result.add &"\\{k}"
         i.inc v.len
         isEscape = true
@@ -147,7 +150,6 @@ proc getCoord*(s: Stream, i: int): Coord =
       if (let str = s.peekStr(n.len); str == n):
         inc result.line
         result.col = 0
-        result.colNonAscii = 0
         result.idx.inc n.len
         isNewLine = true
         s.setPosition(s.getPosition() + n.len)
@@ -156,8 +158,6 @@ proc getCoord*(s: Stream, i: int): Coord =
       let r = s.peekRune()
       inc result.col
       result.idx.inc r.size
-      if r.size > 1:
-        inc result.colNonAscii
       s.setPosition(s.getPosition() + r.size)
 
   s.setPosition before
@@ -170,7 +170,6 @@ proc getCoord*(s: string, at: int): Coord =
       if s.continuesWith(n, i):
         inc result.line
         i.inc n.len
-        result.colNonAscii = 0
         result.col = 0
         isNewLine = true
 
@@ -178,8 +177,6 @@ proc getCoord*(s: string, at: int): Coord =
       let r = s.runeAt(i)
       i.inc r.size
       inc result.col
-      if r.size > 1:
-        inc result.colNonAscii
 
   result.idx = i
 
@@ -209,6 +206,20 @@ proc escapeRunes(s: string, until: int): tuple[s: string, extraLen: int] =
 
     e.inc
 
+proc properWidth(s: string, until: int): int =
+  ## Calculate the unicode-aware width of s until the rune until
+  var e = 0
+  for c in s.graphemes:
+    if e >= until:
+      return
+
+    case c.runeAt(0).unicodeWidth()
+    of uwdtFull, uwdtWide, uwdtAmbiguous:
+      result += 2
+    else:
+      result += 1
+    inc e
+
 proc errorAt*(s: Stream or string, coord: Coord): string =
   when s is Stream:
     let before = s.getPosition()
@@ -223,7 +234,7 @@ proc errorAt*(s: Stream or string, coord: Coord): string =
 
   let lineNum = &"{coord.line + 1} | "
   result.add &"{lineNum}{line}\n"
-  result.add unicode.align("^", lineNum.len + coord.col + extraLen + coord.colNonAscii)
+  result.add unicode.align("^", lineNum.len + line.properWidth(coord.col) - 1)
 
 # ----- Object variants -----
 

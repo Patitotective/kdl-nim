@@ -168,22 +168,45 @@ proc parseNumber(token: Token): KdlVal =
     result = initKFloat()
     result.fnum = token.lexeme.parseFloat()
 
+proc continuesWithNewLine(s: string, at: var int, consume = true): bool =
+  ## Checks if there's a new line in s at at and increments at by the lenght
+  ## of the new line if consume is true
+  for nl in newLines:
+    if s.continuesWith(nl, at):
+      if consume:
+        at.inc nl.len
+      return true
+
+proc continuesWithWhitespace(s: string, at: var int, consume = true): bool =
+  ## Checks if there's a whitespace in s at at and increments at by the lenght
+  ## of the whitespace if consume is true
+  for w in whitespaces:
+    if s.continuesWith($Rune(w), at):
+      if consume:
+        at.inc w.Rune.size
+      return true
+
 proc escapeString(str: string, x = 0 .. str.high): string =
   var i = x.a
   while i <= x.b:
     if str[i] == '\\':
       inc i # Consume backslash
-      if str[i] == 'u':
+
+      if str.continuesWithNewLine(i) or str.continuesWithWhitespace(i):
+        while str.continuesWithNewLine(i) or str.continuesWithWhitespace(i):
+          discard
+      elif str[i] == 'u':
         inc i, 2 # Consume u and opening {
         var hex: string
         inc i, str.parseWhile(hex, HexDigits, i)
         result.add Rune(parseHexInt(hex))
+        inc i
       else:
         result.add escapeTable[str[i]]
+        inc i
     else:
       result.add str[i]
-
-    inc i
+      inc i
 
 proc parseString(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVal =
   assert token.kind in strings
@@ -224,12 +247,16 @@ proc parseNull(token: Token): KdlVal =
   assert token.kind == tkNull
   initKNull()
 
+# TODO: don't parse identifier/string twice to know if it's a prop or a value
+# should save a temp parsed value and then use it
+
 proc parseValue(token: Token, multilineStringsNewLines: seq[(int, int)]): KdlVal =
   result =
     case token.kind
     of numbers:
       token.parseNumber()
     of strings:
+      echo getStackTrace()
       token.parseString(multilineStringsNewLines)
     of tkBool:
       token.parseBool()
@@ -243,6 +270,7 @@ proc parseIdent(
 ): Option[string] =
   case token.kind
   of strings:
+    echo getStackTrace()
     token.parseString(multilineStringsNewLines).getString().some
   of tkIdent:
     token.lexeme.some

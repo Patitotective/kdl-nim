@@ -246,6 +246,8 @@ proc skipWhile(lexer: var Lexer, x: set[char]): int {.discardable.} =
     inc lexer
 
 proc disallowedRunes() {.lexing: tkEmpty.} =
+  if lexer.eof():
+    return
   let r = lexer.peekRune.int32
   if r == 0xFEFFi32:
     if lexer.getPos() == 0:
@@ -463,6 +465,7 @@ proc tokenIdent*() {.lexing: tkIdent.} =
       lexer.eof() or lexer.tokenWhitespace(addToStack = false) or
       lexer.tokenNewLine(addToStack = false) or lexer.peek() in nonIdenChars
     ):
+      lexer.setPos before
       return
 
   block outer:
@@ -522,9 +525,9 @@ proc validToken*(
 
 proc scanKdl*(lexer: var Lexer) =
   const choices = [
-    tokenWhitespace, tokenNewLine, tokenLineCont, tokenSingleLineComment, tokenEqual,
-    tokenRawString, tokenString, tokenIdent, tokenNumHex, tokenNumBin, tokenNumOct,
-    tokenNumFloat, tokenNumInt, tokenLitMatches,
+    disallowedRunes, tokenWhitespace, tokenNewLine, tokenLineCont,
+    tokenSingleLineComment, tokenEqual, tokenRawString, tokenString, tokenIdent,
+    tokenNumHex, tokenNumBin, tokenNumOct, tokenNumFloat, tokenNumInt, tokenLitMatches,
   ]
 
   while not lexer.eof():

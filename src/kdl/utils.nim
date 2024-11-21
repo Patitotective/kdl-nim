@@ -223,7 +223,7 @@ proc errorAt*(s: Stream or string, coord: Coord): string =
 
   let lineNum = &"{coord.line + 1} | "
   result.add &"{lineNum}{line}\n"
-  result.add align("^", lineNum.len + coord.col + extraLen + coord.colNonAscii)
+  result.add unicode.align("^", lineNum.len + coord.col + extraLen + coord.colNonAscii)
 
 # ----- Object variants -----
 

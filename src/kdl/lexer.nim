@@ -58,18 +58,6 @@ const
     0x0009, 0x0020, 0x00A0, 0x1680, 0x2000, 0x2001, 0x2002, 0x2003, 0x2004, 0x2005,
     0x2006, 0x2007, 0x2008, 0x2009, 0x200A, 0x202F, 0x205F, 0x3000,
   ]
-  escapeTable* = {
-    'n': "\u000A", # Line Feed
-    'r': "\u000D", # Carriage Return
-    't': "\u0009", # Character Tabulation (Tab)
-    '\\': "\u005C", # Reverse Solidus (Backslash)
-    '/': "\u002F", # Solidus (Forwardslash)
-    '"': "\u0022", # Quotation Mark (Double Quote)
-    'b': "\u0008", # Backspace
-    'f': "\u000C", # Form Feed
-    'u': "", # Unicode
-  }.toTable
-
   equals = [0x003D, 0xFE66, 0xFF1D, 0x1F7F0]
   litMatches = {
     "*": tkStar,
@@ -391,7 +379,7 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
         continue
 
       let next = lexer.peek(1)
-      if next notin escapeTable:
+      if next notin escapeTable and next != 'u':
         lexer.error &"Invalid escape '{next}'"
 
       lexer.inc 2
@@ -417,7 +405,8 @@ proc tokenStringBody(lexer: var Lexer, raw = false) =
       elif endHashes > hashes:
         lexer.error &"Expected {hashes} hashes but found {endHashes}"
     else:
-      lexer.inc r.size
+      lexer.disallowedRunes()
+      inc lexer
 
   if not terminated:
     lexer.error "Unterminated string"
@@ -474,7 +463,6 @@ proc tokenIdent*() {.lexing: tkIdent.} =
       lexer.eof() or lexer.tokenWhitespace(addToStack = false) or
       lexer.tokenNewLine(addToStack = false) or lexer.peek() in nonIdenChars
     ):
-      lexer.setPos before
       return
 
   block outer:

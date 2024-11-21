@@ -5,7 +5,11 @@ import types
 
 type
   Coord* = object
-    line*, col*, idx*: int
+    line*, idx*: int
+    col*: int # col counts each unicode character (rune) as one
+    colNonAscii*: int # number of non ascii (unicode chars) until col
+    # this is a weird way of dealing with non-fixed width characters until an apporach
+    # lice rust's unicode-width appears...
 
   Object* = (
     (object or tuple) and not KdlSome and not SomeTable and not List and not Value and
@@ -17,18 +21,17 @@ type
   SomeTable*[K, V] = (Table[K, V] or OrderedTable[K, V])
 
 const
-	newLines* = ["\c\l", "\r", "\n", "\u0085", "\f", "\u2028", "\u2029"]
-	escapeTable* = {
-	  'n': "\u000A", # Line Feed
-  	'r': "\u000D", # Carriage Return
- 	 't': "\u0009", # Character Tabulation (Tab)
- 	 '\\': "\u005C", # Reverse Solidus (Backslash)
- 	 '/': "\u002F", # Solidus (Forwardslash)
- 	 '"': "\u0022", # Quotation Mark (Double Quote)
- 	 'b': "\u0008", # Backspace
- 	 'f': "\u000C", # Form Feed
-	}.toTable
-
+  newLines* = ["\c\l", "\r", "\n", "\u0085", "\f", "\u2028", "\u2029"]
+  escapeTable* = {
+    'n': "\u000A", # Line Feed
+    'r': "\u000D", # Carriage Return
+    't': "\u0009", # Character Tabulation (Tab)
+    '\\': "\u005C", # Reverse Solidus (Backslash)
+    '/': "\u002F", # Solidus (Forwardslash)
+    '"': "\u0022", # Quotation Mark (Double Quote)
+    'b': "\u0008", # Backspace
+    'f': "\u000C", # Form Feed
+  }.toTable
 
 template fail*(msg: string) =
   raise newException(KdlError, msg)
@@ -37,6 +40,9 @@ template check*(cond: untyped, msg = "") =
   if not cond:
     let txt = msg
     fail astToStr(cond) & " failed" & (if txt.len > 0: ": " & txt else: "")
+
+proc `$`*(c: Coord): string =
+  &"{c.line+1}:{c.col+1}"
 
 proc quoted*(x: string): string =
   result.add '"'
@@ -131,6 +137,7 @@ proc peekLineFromStart*(s: string, at: int): string =
 
   result = s[idx ..^ 1]
 
+## colNonAscii is the number of colNonAscii unicode chars in the input
 proc getCoord*(s: Stream, i: int): Coord =
   let before = s.getPosition()
   s.setPosition 0
@@ -140,14 +147,18 @@ proc getCoord*(s: Stream, i: int): Coord =
       if (let str = s.peekStr(n.len); str == n):
         inc result.line
         result.col = 0
+        result.colNonAscii = 0
         result.idx.inc n.len
         isNewLine = true
         s.setPosition(s.getPosition() + n.len)
 
     if not isNewLine:
+      let r = s.peekRune()
       inc result.col
-      inc result.idx
-      s.setPosition(s.getPosition() + 1)
+      result.idx.inc r.size
+      if r.size > 1:
+        inc result.colNonAscii
+      s.setPosition(s.getPosition() + r.size)
 
   s.setPosition before
 
@@ -158,13 +169,17 @@ proc getCoord*(s: string, at: int): Coord =
     for n in newLines:
       if s.continuesWith(n, i):
         inc result.line
-        result.col = 0
         i.inc n.len
+        result.colNonAscii = 0
+        result.col = 0
         isNewLine = true
 
     if not isNewLine:
-      inc i
+      let r = s.runeAt(i)
+      i.inc r.size
       inc result.col
+      if r.size > 1:
+        inc result.colNonAscii
 
   result.idx = i
 
@@ -207,8 +222,8 @@ proc errorAt*(s: Stream or string, coord: Coord): string =
   (line, extraLen) = line.escapeRunes(coord.col)
 
   let lineNum = &"{coord.line + 1} | "
-  result.add(&"{lineNum}{line}\n")
-  result.add(&"{repeat(' ', lineNum.len + coord.col + extraLen)}^")
+  result.add &"{lineNum}{line}\n"
+  result.add align("^", lineNum.len + coord.col + extraLen + coord.colNonAscii)
 
 # ----- Object variants -----
 
